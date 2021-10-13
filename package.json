@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node server/index",
     "server": "nodemon server/index",
-    "client": "npm start --prefix client",
-    "build": "npm run build --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "yarn start --prefix client",
+    "build": "yarn run build --prefix client",
+    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "production": "cross-env NODE_ENV=production node server/index",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+    "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "repository": {
     "type": "git",

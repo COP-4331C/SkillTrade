@@ -1,5 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import Button from "@mui/material/Button";
 
 function App() {
   return (
@@ -17,6 +18,13 @@ function App() {
         >
           Learn React
         </a>
+        <Button
+          style={{ color: "white" }}
+          variant="contained"
+          onClick={() => alert("Hello World")}
+        >
+          Some Button
+        </Button>
       </header>
     </div>
   );

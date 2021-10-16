@@ -1,20 +1,38 @@
 const express = require("express");
 const cors = require("cors");
-var path = require("path");
+const mongoose = require("mongoose");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
-
-if (process.env.NODE_ENV === "production") {
-  app.use("/", express.static(path.resolve("client/build")));
-}
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 5000;
+if (process.env.NODE_ENV === "production") {
+  app.use("/", express.static(path.resolve("client/build")));
+}
+app.use("/api/auth", require("./routes/auth.routes.js"));
+app.use("/api/user", require("./routes/user.routes.js"));
+connect();
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
+function listen() {
+  const port = process.env.PORT || 5000;
+
+  app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+  });
+}
+
+function connect() {
+  mongoose.connection
+    .on("error", console.log)
+    .on("disconnected", connect)
+    .once("open", listen);
+  return mongoose.connect(process.env.DB, {
+    keepAlive: 1,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+}

@@ -27,9 +27,7 @@ const Registration = () => {
   return (
     <Paper elevation={3} style={paperStyle}>
 
-
         {/* Rectangle where all login components are placed */}
-        {/*<Paper elevation={3} style={paperStyle}>*/}
 
           {/* Icon and title */}
           <Grid align='center'>
@@ -49,7 +47,6 @@ const Registration = () => {
                   placeholder="Enter first name"
                   variant="standard"
                   style={textFieldStyle}
-                  style={{marginTop: 0}}
                   size="small"
                 />
               </Grid>
@@ -62,7 +59,6 @@ const Registration = () => {
                   placeholder="Enter last name"
                   variant="standard"
                   style={textFieldStyle}
-                  style={{marginTop: 0}}
                   size="small"
                 />
               </Grid>

@@ -64,7 +64,7 @@ export default class Login extends Component {
 
             {/*  /!* Icon and title *!/*/}
             <Grid align='center'>
-              <Avatar style={{ backgroundColor: '#1bbd7e' }}>
+              <Avatar style={{ backgroundColor: '#0031FF' }}>
                 <LockOutlinedIcon />
               </Avatar>
               <h2>Sign in</h2>
@@ -117,7 +117,7 @@ export default class Login extends Component {
               <Link
                 href='#'
                 underline='hover'
-                color='#0067b8'
+                color='primary'
                 fontSize='0.9rem'
                 marginY='20px'
               >
@@ -127,7 +127,7 @@ export default class Login extends Component {
 
             {/*  /!* No Account? Create one! *!/*/}
             <Typography fontSize="0.9rem">No account?
-              <Link href="#" underline="hover" color="#0067b8" fontSize="0.9rem"> Create one!</Link>
+              <Link href="#" underline="hover" color="primary" fontSize="0.9rem"> Create one!</Link>
             </Typography>
 
           </Paper>

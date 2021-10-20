@@ -1,5 +1,7 @@
-import React from 'react';
-import Grid from '@mui/material/Grid'
+// ** create-user.component.js ** //
+import React,{Component} from 'react';
+import axios from 'axios';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper'
 import Avatar from '@mui/material/Avatar'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
@@ -11,127 +13,164 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import PasswordFields from './PasswordField';
 
-const Registration = () => {
+export default class Registration extends Component {
+  
 
-  const paperStyle = {
-    padding: 40,
-    width: 280,
-    minHeight: 500,
-    margin: '20px auto'
-  }
 
-  const textFieldStyle = {
-    margin: '16px 16px 0 0'
-  }
+    constructor(props) {
+        super(props)
 
-  return (
-    <Paper elevation={3} style={paperStyle}>
+        this.onChangeUseremail = this.onChangeUseremail.bind(this);
+        this.onChangepasswordhash = this.onChangepasswordhash.bind(this);
+        this.onChangefirstName = this.onChangefirstName.bind(this);
 
-        {/* Rectangle where all login components are placed */}
+        this.onSubmit = this.onSubmit.bind(this);
 
-          {/* Icon and title */}
-          <Grid align='center'>
-            <Avatar style={{backgroundColor: '#1bbd7e'}}>
-              <AssignmentOutlinedIcon />
-            </Avatar>
-            <h2>Create account</h2>
+        this.state = {
+            email: 'Lmao@gmail.com',
+            password: '123456',
+            firstName: 'Lmao',
+            lastName: 'Mo'
+            
+        }
+    }
+
+    onChangeUseremail(e) {
+        this.setState({ email: e.target.value })
+    }
+
+    onChangepasswordhash(e) {
+        this.setState({ password: e.target.value })
+    }
+
+    onChangefirstName(e) {
+      this.setState({ firstName: e.target.value })
+    }
+
+    onChangelastName(e) {
+      this.setState({ lastName: e.target.value })
+    }
+
+    
+
+    onSubmit(e) {
+        e.preventDefault()
+
+        const userObject = {
+            email: this.state.email,
+            password: this.state.password,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName
+        };
+
+        axios.post('http://localhost:5000/api/user/register', userObject)
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        //this.setState({ email: '', passwordHash: '', firstName:'' })
+    }
+
+
+    render() {
+        return (
+          <Grid>
+            <form onSubmit={this.onSubmit}>
+              <Paper elevation={3} style={{ padding: 40, height: '50vh', width: 280, margin: '20px auto' }}>
+
+                <Grid align='center'>
+                  <Avatar style={{backgroundColor: '#1bbd7e'}}>
+                    <AssignmentOutlinedIcon />
+                  </Avatar>
+                    <h2>Create account</h2>
+                </Grid>
+                    
+                <Grid container spacing={2}>
+                  <Grid item xs>
+                    <TextField
+                      required
+                      fullWidth
+                      type= "text"
+                      label="First name"
+                      value={this.state.firstName}
+                      placeholder="Enter first name"
+                      onChange={this.onChangefirstName}
+                      variant="standard"
+                      style={{marginTop: 0}}
+                      size="small"
+                    />
+                  </Grid>
+                
+                  
+                    <Grid item xs>
+                      <TextField
+                        fullWidth
+                        type= "text"
+                        label="Last name"
+                        value={this.state.lastName}
+                        placeholder="Enter first name"
+                        onChange={this.onChangelastName}
+                        variant="standard"
+                        style={{marginTop: 0}}
+                        size="small"
+                      />
+                    </Grid>    
+                </Grid>
+
+                <Grid item s>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    label="Email"
+                    placeholder="Enter email address"
+                    value={this.state.email}
+                    onChange={this.onChangeUseremail}
+                    variant="standard"
+                    style={{marginTop: 0}}
+                    size="small"/>
+                </Grid>
+
+                <Grid item s>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    label="password"
+                    placeholder="Enter Password"
+                    value={this.state.password}
+                    onChange={this.onChangepasswordhash}
+                    variant="standard"
+                    style={{marginTop: 0}}
+                    size="small"/>
+                </Grid>
+
+                <Button type="submit" color="info" variant="contained" fullWidth style={{margin: '8px 0'}}>Sign Up</Button>
+
+                  
+                            
+                            
+                        
+                        
+                        {/* <div className="form-group">
+                            <label>Add User password</label>
+                            <input type="text" value={this.state.password} onChange={this.onChangepasswordhash} className="form-control" />
+                        </div>
+                        <div className="form-group">
+                            <label>Add User firstName</label>
+                            <input type="text" value={this.state.firstName} onChange={this.onChangefirstName} className="form-control" />
+                        </div> */}
+                        
+                        {/* <div className="form-group">
+                            <input type="submit" value="Create User" className="btn btn-success btn-block" />
+                        </div> */}
+              </Paper>
+                
+            </form>
           </Grid>
-
-          <Grid container spacing={2}>
-              {/*First name Text Field */}
-              <Grid item xs>
-                <TextField
-                  required
-                  fullWidth
-                  label="First name"
-                  placeholder="Enter first name"
-                  variant="standard"
-                  style={textFieldStyle}
-                  size="small"
-                />
-              </Grid>
-
-              {/* Last name Text Field */}
-              <Grid item xs>
-                <TextField
-                  fullWidth
-                  label="Last name"
-                  placeholder="Enter last name"
-                  variant="standard"
-                  style={textFieldStyle}
-                  size="small"
-                />
-              </Grid>
-          </Grid>
-
-
-          {/* Username Text Field */}
-          <TextField
-            required
-            fullWidth
-            label="Username"
-            placeholder="Enter username"
-            variant="standard"
-            style={textFieldStyle}
-            size="small"
-          />
-
-          {/* Email Text field */}
-          <TextField
-            fullWidth
-            required
-            label="Email"
-            placeholder="Enter Email"
-            variant="standard"
-            type="email"
-            style={textFieldStyle}
-            size="small"
-          />
-
-          {/* Password and Confirm password were moved to PasswordFields
-          to have more room for the implementation of the show password icon*/}
-          <PasswordFields />
-
-          {/* Accept Terms and Condition checkbox */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                size="small"
-                required
-              />
-            }
-            label="Terms and Conditions"
-            style={{marginTop: '16px'}}
-          />
-
-          {/* Sign in button */}
-          <Button
-            type='submit'
-            color='primary'
-            variant='contained'
-            fullWidth
-            style={{margin: '8px 0' }}
-            onClick={() => alert("Account creation coming soon")}
-          >
-            Create account
-          </Button>
-
-          {/* Already have an account? Login here*/}
-          <Typography fontSize="0.9rem">Already have an account?
-            <Link
-              href="#"
-              underline="hover"
-              color="#0067b8"
-              fontSize="0.9rem"
-            > Login here
-            </Link>
-          </Typography>
-
-
-
-    </Paper>
-  )
+            
+            
+        )
+    }
 }
-
-export default Registration;

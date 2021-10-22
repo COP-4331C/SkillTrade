@@ -5,25 +5,22 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
 import {Stack} from "@mui/material";
-import { Link } from 'react-router-dom';
 
-export default function AppNavBar() {
+export default function LandingPage() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="primary">
+      <h1>LandingPage</h1>
+      {/* <AppBar position="static" color="primary">
         <Toolbar>
           <Box sx={{flexGrow: 1, textAlign: "left"}}>
             <img src={logo1WhiteTransparent} alt="Logo" />
           </Box>
           <Stack spacing={4} direction="row">
-            <Link to="/Login">
-              <Button color="inherit">Sign in</Button>
-            </Link>
-            
+            <Button color="inherit">Sign in</Button>
             <Button variant="contained" size="small" color="secondary" >Sign up for free</Button>
           </Stack>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
     </Box>
   );
 }

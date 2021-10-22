@@ -7,11 +7,23 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+//import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
+
 
 export default class Login extends Component {
+
+  constuctor() {
+    this.routeChange = this.routeChange.bind(this);
+  }
+
+  routeChange() {
+    let path = `LandingPage`;
+    this.props.history.push(path);
+  }
 
   constructor(props) {
     //Source: https://www.positronx.io/react-axios-tutorial-make-http-get-post-requests/

@@ -1,32 +1,20 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { StyleSheet, Text, View } from "react-native";
-import LoginScreen from "./screens/LoginScreen";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import MainTabScreen from './screens/MainTabScreen';
+import {DrawerContent} from './screens/DrawerContent';
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#3498db",
-    accent: "#f1c40f",
-  },
-};
+const Drawer = createDrawerNavigator();
 
-export default function App() {
-  return (
-    <PaperProvider theme={theme}>
-      <LoginScreen />
-    </PaperProvider>
-  );
-}
+const App = () => {
+  return(
+    <NavigationContainer> 
+      <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Screen name="Home" component={MainTabScreen} />
+        {/* <Drawer.Screen name="Details" component={DetailsStackScreen} /> */}
+      </Drawer.Navigator>
+    </NavigationContainer>
+  )
+} 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App

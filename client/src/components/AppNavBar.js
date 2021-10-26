@@ -15,7 +15,7 @@ export default function AppNavBar() {
             <img src={logo1WhiteTransparent} alt="Logo" />
           </Box>
           <Stack spacing={4} direction="row">
-            <Button color="inherit">Sign in</Button>
+            <Button variant="outlined" color="inherit">Sign in</Button>
             <Button variant="contained" size="small" color="secondary" >Sign up for free</Button>
           </Stack>
         </Toolbar>

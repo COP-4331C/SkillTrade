@@ -204,7 +204,7 @@ export default function Login() {
             fullWidth
             style={{ margin: '8px 0' }}
           >
-            Sing in
+            Sign in
           </Button>
 
           {/*********************  Forgot my password *********************/}

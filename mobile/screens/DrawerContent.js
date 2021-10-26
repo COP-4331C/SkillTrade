@@ -19,6 +19,13 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export function DrawerContent(props) {
+
+    const [isDarkTheme, setIsDarkTheme] = React.useState(false) // useState() ??
+
+    const toggleTheme = () =>{
+        setIsDarkTheme(!isDarkTheme)
+    }
+
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
@@ -27,7 +34,7 @@ export function DrawerContent(props) {
                         <View style={{flexDirection:'row', marginTop:15}}>
                             <Avatar.Image
                                 source={{
-                                    uri:'https://www.bqb12.com/biaoqing/107748'
+                                    uri:'https://img9.doubanio.com/icon/ul3580236-4.jpg'
                                 }}
                                 size={50}
                             />
@@ -59,7 +66,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label = "Home"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('Home')}}
                         />
                         <DrawerItem
                             icon = {({color, size}) => (
@@ -70,7 +77,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label = "Profile"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('Profile')}}
                         />
                         <DrawerItem
                             icon = {({color, size}) => (
@@ -81,18 +88,18 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label = "Bookmarks"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('BookmarkScreen')}}
                         />
-                        <DrawerItem
-                            icon = {({color, size}) => (
-                                <Icon
-                                name="settings-outline"
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="account-cog-outline"
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label = "Settings"
-                            onPress={() => {}}
+                            label="Settings" // the Setting Icon is not working properly in web brower  ##FIXME
+                            onPress={() => {props.navigation.navigate('SettingScreen')}}
                         />
                         <DrawerItem
                             icon = {({color, size}) => (
@@ -103,9 +110,18 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label = "Support"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('SupportScreen')}}
                         />
-                        
+                    </Drawer.Section>
+                    <Drawer.Section title="Preferences">
+                        <TouchableRipple onPress={() => {toggleTheme()}}>
+                            <View style={styles.preference}>
+                                <Text>Dark Theme</Text>
+                                <View pointerEvents="none">
+                                    <Switch value={isDarkTheme}/>
+                                </View>
+                            </View>
+                        </TouchableRipple>
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>

@@ -2,30 +2,55 @@ import React from 'react';
 import { 
     View, 
     Text, 
+    button,
     TouchableOpacity, 
     Dimensions,
     StyleSheet,
     Image 
 } from 'react-native';
 
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. FIXME
+// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import * as Animatable from 'react-native-animatable';
 
-const SplashScreen = () => {
+const SplashScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Image
+                <Animatable.Image
+                    animation="bounceIn" 
+                    duraton="1500" // when change to 'duration' the logo will disapear ?
                 source={require('../assets/logo.png')}
                 style={styles.logo}
                 resizeMode="stretch"
                 />
             </View>
-            <View style={styles.footer}>
+            <Animatable.View 
+                style={styles.footer}
+                animation="fadeInUpBig"
+                >
                 <Text style={styles.title}>Stay connected with everyone !</Text>
                 <Text style={styles.text}>Sign in with account</Text>
-                
-            </View>
+                <View style={styles.button}>
+                <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
+                    {/* <linearGradient
+                        colors={['#08d4c4','#01ab9d']}
+                        style={styles.signIn}
+                    > */}
+                        {/* <Text style={styles.textSign}>Get Started</Text> */}
+                        {/* <MaterialIcons
+                        name="navigete-next"
+                        color="#fff"
+                        size={20}
+                        /> */}
+                    {/* </linearGradient> */}
+                    <button>
+                        <Text>Get Started</Text>
+                    </button>
+                    
+                </TouchableOpacity>
+                </View>
+            </Animatable.View>
         </View>
     )
 }

@@ -97,7 +97,7 @@ export default function Login() {
     // If it passes validation, continue
     if (validateInputLength()) {
 
-        const URL = 'http://localhost:5000/api/auth/login';
+        const URL = './api/auth/login';
         const loginPayload = {
           email: email,
           password: values.password

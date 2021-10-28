@@ -13,3 +13,20 @@ exports.create = async (req, res) => {
       return res.status(400).json({ error: err });
     });
 };
+
+exports.editProfile = async (req, res) => {
+
+  const { email } = req.body;
+  var userIdentifier = { email: email };
+  var newProfileValues = req.body;
+
+  var test = await User.updateOne( userIdentifier, newProfileValues );
+
+  if (test.matchedCount == 0)
+    return await res.status(200).json({ message: "User not found!" });
+  else if (test.modifiedCount == 0)
+    return await res.status(200).json({ message: "Nothing was modified!" });
+  else
+    return await res.status(200).json({ message: "Successfully edited user!" });
+
+};

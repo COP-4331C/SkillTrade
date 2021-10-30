@@ -2,17 +2,22 @@ import './App.css';
 import Login from './components/Login';
 import Registration from './components/registration/Registration';
 import Footer from './components/Footer';
-import AppNavBar from './components/AppNavBar';
+import LandingPage from "./Pages/LandingPage";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
   return (
 
-    <div className="App">
-       {/*<Registration />*/}
-      <AppNavBar />
-      <Login />
-      <Footer />
-    </div>
+    <Router>
+        <div className="App">
+          <Switch>
+            <Route path="/" exact component={LandingPage} />
+            <Route path="/Login" component={Login} />
+            <Route path="/Registration" component={Registration} />
+          </Switch>
+          <Footer />
+        </div>
+    </Router>
   );
 }
 

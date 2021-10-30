@@ -18,16 +18,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
+import { Link as RouterLink } from 'react-router-dom';
+import AppNavBar from "./AppNavBar";
 
 // TODO: Remember me checkbox. If checked, the username should be auto populated
 //       the nex time the user visits the page.
 
 // TODO BUG: Text overflows the Paper container on a mobile device in landscape mode
-//           Also, the Paper gets enlarged (too long) in tablets in portrait mode.
 //           (avoid using a percentage for the height to avoid above issue).
 
-// TODO BUG: The wrong credentials message and the minimum password length message
+// TODO Improvement: The wrong credentials message and the minimum password length message
 //           pushes components out of the way (Pushes them up or down). Try to avoid it.
+
+// TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices.
 
 export default function Login() {
 
@@ -131,6 +134,7 @@ export default function Login() {
 
   return (
     <Grid>
+      <AppNavBar />
       <form onSubmit={handleSubmitButton}>
         <Paper elevation={3} style={{padding: 40, height: '50vh', width: 280, margin: '20px auto'}}>
 
@@ -222,7 +226,7 @@ export default function Login() {
 
           {/********************* No Account? Create one! *********************/}
           <Typography fontSize="0.9rem">No account?
-            <Link href="#" underline="hover" color="primary" fontSize="0.9rem"> Create one!</Link>
+            <RouterLink to="/Registration" underline="hover" color="primary" fontSize="0.9rem"> Create one!</RouterLink>
           </Typography>
 
         </Paper>

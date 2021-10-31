@@ -4,12 +4,13 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
-import {InputBase, Stack} from "@mui/material";
+import {InputBase} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import Avatar from "@mui/material/Avatar";
 import testUserAvatar from '../testUserAvatar.jpg';
 import {styled, alpha} from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import AccountMenu from "./AccountMenu";
 
 
 const Search = styled("div")(({ theme }) => ({
@@ -78,10 +79,7 @@ export default function HomeNavBar() {
 
             {/*Avatar (Do not remove the box below)*/}
             <Box sx={{flexGrow: 1}}/>
-            <Avatar
-              alt="Remy Sharp"
-              src={testUserAvatar}
-            />
+            <AccountMenu/>
 
           </Toolbar>
         </AppBar>

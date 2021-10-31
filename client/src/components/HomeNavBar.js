@@ -2,15 +2,11 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
 import {InputBase} from "@mui/material";
-import { Link as RouterLink } from 'react-router-dom';
-import Avatar from "@mui/material/Avatar";
-import testUserAvatar from '../testUserAvatar.jpg';
 import {styled, alpha} from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountMenu from "./AccountMenu";
+import MainLogo from "./MainLogo";
 
 
 const Search = styled("div")(({ theme }) => ({
@@ -41,13 +37,13 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit", "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 10, 1, 0),
+    padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(5)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch"
+      width: "30ch"
     }
   }
 }));
@@ -55,30 +51,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function HomeNavBar() {
   return (
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="primary">
-          <Toolbar>
+        <AppBar position="static" color="primary" >
+          <Toolbar sx={{justifyContent:"space-between"}}>
 
-            {/* Logo */}
-            <RouterLink to="/" >
-              <img src={logo1WhiteTransparent} alt="Logo"/>
-            </RouterLink>
+            {/* Show Main Logo */}
+            <MainLogo/>
 
             {/*Search Box*/}
-            <Search sx={{marginLeft:"16px"}}>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase placeholder="Search for a skill to learn…" inputProps={{ "aria-label": "search" }}/>
+              </Search>
 
-            {/* Temporary button: */}
-            <Button variant="outlined" color="warning" component={RouterLink} to="/">Back to Landing Page</Button>
-
-            {/*Avatar (Do not remove the box below)*/}
-            <Box sx={{flexGrow: 1}}/>
+            {/*Avatar */}
             <AccountMenu/>
 
           </Toolbar>

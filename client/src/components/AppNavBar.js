@@ -3,9 +3,9 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
 import {Stack} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
+import MainLogo from "./MainLogo";
 
 export default function AppNavBar() {
   return (
@@ -13,9 +13,7 @@ export default function AppNavBar() {
       <AppBar position="static" color="primary">
         <Toolbar>
           <Box sx={{flexGrow: 1, textAlign: "left"}}>
-            <RouterLink to="/" >
-              <img src={logo1WhiteTransparent} alt="Logo"/>
-            </RouterLink>
+            <MainLogo/>
           </Box>
           <Stack spacing={4} direction="row">
             <Button variant="outlined" color="error" component={RouterLink} to="/Home">Skip Login (Temporary button)</Button>

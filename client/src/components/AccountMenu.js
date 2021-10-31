@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
-import testUserAvatar from "../testUserAvatar.jpg";
+import testUserAvatar from "../images/avatars/testUserAvatar.jpg";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
@@ -58,6 +58,8 @@ export default function Login(props) {
   // Variable to open and close the wrong credentials error message
   const [openMessage, setOpenMessage] = useState(false);
 
+  // Variable to store the remember me checkbox
+    const [rememberMe, setRememberMe] = useState(false);
 
   // **************************************** //
   //           Helper Functions
@@ -103,6 +105,11 @@ export default function Login(props) {
     // If it passes validation, continue
     if (validateInputLength()) {
 
+        // Store the state of the checkbox in the browser's local storage
+        // Only store the email if the checked box is checked.
+        localStorage.setItem('rememberMe', rememberMe.toString());
+        localStorage.setItem('email', rememberMe ? email : '');
+
         const URL = './api/auth/login';
         const loginPayload = {
           email: email,
@@ -143,6 +150,33 @@ export default function Login(props) {
     }
   }
 
+  // Storage the state (true or false) of the checkbox in the rememberMe variable.
+  const handleCheckBoxChange = (event) => {
+    setRememberMe(event.target.checked);
+  }
+
+  // Loads the email from the local storage if the remember me box was previously checked
+  useEffect(() => {
+
+    const storage = localStorage.getItem("rememberMe");
+
+    if(storage != null) {
+
+      // Reads the local storage
+      let localStorageRememberMe = localStorage.getItem('rememberMe') === 'true';
+
+          // Only set the email if RememberMe is true
+        if (localStorageRememberMe) {
+
+          // Set the email
+          setEmail(localStorage.getItem('email'));
+
+          // Initiates the RememberMe Checkbox with local storage
+          setRememberMe(localStorageRememberMe);
+        }
+    }
+  }, []);
+
   // **************************************** //
   //                  GUI
   // **************************************** //
@@ -150,7 +184,7 @@ export default function Login(props) {
   return (
     <Grid>
       <form onSubmit={handleSubmitButton}>
-        <Paper elevation={3} style={{padding: 40, height: '50vh', width: 280, margin: '20px auto'}}>
+        <Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>
 
           {/****************** X (Button to close)*********************/}
           <IconButton
@@ -199,6 +233,7 @@ export default function Login(props) {
               value={values.password}
               onChange={handleChangePasswordField('password')}
               placeholder="Enter Password"
+              autoComplete="on"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -217,7 +252,7 @@ export default function Login(props) {
           {/********************* Remember me checkbox *********************/}
           <FormControlLabel
             control={
-              <Checkbox color="primary" />}
+              <Checkbox color="primary" checked={rememberMe} onChange={handleCheckBoxChange}/>}
             label="Remember me"
           />
 

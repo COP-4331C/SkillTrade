@@ -17,7 +17,7 @@ export default function AppNavBar() {
             <MainLogo/>
           </Box>
           <Stack spacing={4} direction="row">
-            <Button variant="outlined" color="error" component={RouterLink} to="/Home">Skip Login (Temporary button)</Button>
+            <Button variant="contained" color="error" component={RouterLink} to="/Home">Skip Login (Temporary button)</Button>
             <LoginModal />
             <Button variant="contained" size="small" color="secondary" component={RouterLink} to="/Registration" >Sign up for free</Button>
           </Stack>

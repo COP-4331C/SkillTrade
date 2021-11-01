@@ -1,5 +1,4 @@
 import './App.css';
-import Login from './components/Login';
 import Registration from './components/registration/Registration';
 import Footer from './components/Footer';
 import LandingPage from "./Pages/LandingPage";

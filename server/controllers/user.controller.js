@@ -1,3 +1,4 @@
+//const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
 exports.create = async (req, res) => {
@@ -22,11 +23,26 @@ exports.changePassword = async (req, res) =>
   const {oldPassword, newPassword} = req.body;
   const email = req.email;
   //console.log(email);
-  let user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email });
   if (!user)
-    return res.status(400).json({ error: "Invalid email or password." });
+    return res.status(400).json({ error: "Invalid email" });
 
-  let hash = user.hashPassword(newPassword);
+  let validPassword = user.authenticate(oldPassword);
+  if (!validPassword)
+    return res.status(400).json({ error: "Invalid password." });
 
-  res.status(200).json({message: `email: ${email} | password hash: ${hash}`});
+  //let hash = user.hashPassword(newPassword);
+
+
+  user.password = newPassword;
+  user
+    .save()
+    .then(() => {
+      return res.status(200).json({message: `TEST: email: ${email} | password hash: ${user.passwordHash}`});
+    })
+    .catch((err) => {
+      console.log("An error occured.");
+      console.log(err);
+      return res.status(400).json({ error: err });
+    });
 }

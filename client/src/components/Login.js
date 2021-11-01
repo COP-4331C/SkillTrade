@@ -19,7 +19,7 @@ import Checkbox from '@mui/material/Checkbox';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
-import AppNavBar from "./AppNavBar";
+import CloseIcon from '@mui/icons-material/Close';
 
 // TODO: Remember me checkbox. If checked, the username should be auto populated
 //       the nex time the user visits the page.
@@ -28,11 +28,12 @@ import AppNavBar from "./AppNavBar";
 //           (avoid using a percentage for the height to avoid above issue).
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
-//           pushes components out of the way (Pushes them up or down). Try to avoid it.
+//      pushes components out of the way (Pushes them down). Try to avoid it.
 
-// TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices.
+// TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
+//      on desktops, when the browser's size is reduced horizontally.
 
-export default function Login() {
+export default function Login(props) {
 
   //***************************************** //
   //     Global Variables and constants
@@ -85,13 +86,15 @@ export default function Login() {
     event.preventDefault();
   };
 
-  // Handles the submit button on click event
+  // Handles the submit button in the event of a click
   function handleSubmitButton(event) {
     event.preventDefault();
 
     // Hide the wrong Credentials message
     setOpenMessage(false);
 
+    // Clears the error message underneath the password field,
+    // sets its state to false to remove the red color.
     setPwdError({
       state: false,
       text: ""
@@ -110,17 +113,29 @@ export default function Login() {
         axios.post(URL, loginPayload)
           .then(function (response) { // .then is like the try in try and catch.
             alert("Login successful! Your access Token is: " + response.data.accessToken);
+
+            // Clear the email and password text fields
+            setValues({password: '', showPassword: false});
+            setEmail("");
+
+            // Pass the click event to parent, who then closes the Login modal.
+            props.onClick();
           })
-          .catch(function (error) {
+          .catch(function () {
             // Show the wrong credentials message
             setOpenMessage(true);
           });
 
     // Length validation failed
     } else {
+      // Note about email validation:
       // Email and password length of 0 is handled by html
       // Email format validation is partially handled by html
       // (it only requires at least a char before and after the @ sign)
+
+
+      // Injects the error message underneath the password field,
+      // and sets its state to true to change the color to red.
       setPwdError({
         state: true,
         text: "Minimum password is 8 characters"
@@ -134,9 +149,18 @@ export default function Login() {
 
   return (
     <Grid>
-      <AppNavBar />
       <form onSubmit={handleSubmitButton}>
         <Paper elevation={3} style={{padding: 40, height: '50vh', width: 280, margin: '20px auto'}}>
+
+          {/****************** X (Button to close)*********************/}
+          <IconButton
+              aria-label="close"
+              onClick={() => props.onClick()}
+              sx={{ position: 'absolute', right: 20, top: 20 }}
+          >
+            <CloseIcon />
+          </IconButton>
+
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
@@ -149,10 +173,7 @@ export default function Login() {
           {/********************* Wrong credentials message ******************** */}
           {/* (a hidden alert). Visible only with wrong credentials */}
           <Collapse in={openMessage}>
-            <Alert
-              severity="error"
-              sx={{ mb: 2 }}
-            >
+            <Alert severity="error" sx={{ mb: 2 }}>
               <strong>Incorrect email or password.</strong>
             </Alert>
           </Collapse>
@@ -212,7 +233,7 @@ export default function Login() {
           </Button>
 
           {/*********************  Forgot my password *********************/}
-          <Typography>
+          <Typography align="center">
             <Link
               href='#'
               underline='hover'
@@ -225,8 +246,8 @@ export default function Login() {
           </Typography>
 
           {/********************* No Account? Create one! *********************/}
-          <Typography fontSize="0.9rem">No account?
-            <RouterLink to="/Registration" underline="hover" color="primary" fontSize="0.9rem"> Create one!</RouterLink>
+          <Typography fontSize="0.9rem" align="center">No account?{' '}
+            <Link underline="hover" component={RouterLink} to="/Registration">Create one!</Link>
           </Typography>
 
         </Paper>

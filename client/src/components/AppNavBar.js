@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import {Stack} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import MainLogo from "./MainLogo";
+import LoginModal from "./LoginModal";
 
 export default function AppNavBar() {
   return (
@@ -17,7 +18,7 @@ export default function AppNavBar() {
           </Box>
           <Stack spacing={4} direction="row">
             <Button variant="outlined" color="error" component={RouterLink} to="/Home">Skip Login (Temporary button)</Button>
-            <Button variant="outlined" color="inherit" component={RouterLink} to="/Login">Sign in</Button>
+            <LoginModal />
             <Button variant="contained" size="small" color="secondary" component={RouterLink} to="/Registration" >Sign up for free</Button>
           </Stack>
         </Toolbar>

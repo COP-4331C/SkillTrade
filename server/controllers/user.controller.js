@@ -16,8 +16,6 @@ exports.create = async (req, res) => {
     });
 };
 
-// when testing with insomnia, i manually enter the access token. does this
-// code have the access token already from the routes page?
 exports.changePassword = async (req, res) =>
 {
   const {oldPassword, newPassword} = req.body;
@@ -47,6 +45,4 @@ exports.changePassword = async (req, res) =>
 
 exports.logout = async (req, res) => {
   //insert logout code
-
-  // wouldn't i have to just set the authentication token to null?
 }

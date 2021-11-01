@@ -7,7 +7,7 @@ const authenticateToken = require("../middleware/auth.js");
 // Register
 router.post("/register", users.create);
 
-// Logout
+// Logout*
 router.post("/logout", users.logout);
 
 // Change Password

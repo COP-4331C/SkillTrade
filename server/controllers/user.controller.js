@@ -1,4 +1,4 @@
-//const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
 exports.create = async (req, res) => {
@@ -16,10 +16,10 @@ exports.create = async (req, res) => {
     });
 };
 
+// when testing with insomnia, i manually enter the access token. does this
+// code have the access token already from the routes page?
 exports.changePassword = async (req, res) =>
 {
-
-  
   const {oldPassword, newPassword} = req.body;
   const email = req.email;
   //console.log(email);
@@ -31,10 +31,8 @@ exports.changePassword = async (req, res) =>
   if (!validPassword)
     return res.status(400).json({ error: "Invalid password." });
 
-  //let hash = user.hashPassword(newPassword);
-
-
   user.password = newPassword;
+  
   user
     .save()
     .then(() => {
@@ -45,4 +43,10 @@ exports.changePassword = async (req, res) =>
       console.log(err);
       return res.status(400).json({ error: err });
     });
+}
+
+exports.logout = async (req, res) => {
+  //insert logout code
+
+  // wouldn't i have to just set the authentication token to null?
 }

@@ -3,10 +3,10 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
 import {Stack} from "@mui/material";
-import { Link } from 'react-router-dom';
-// import { Button } from 'semantic-ui-react';
+import { Link as RouterLink } from 'react-router-dom';
+import MainLogo from "./MainLogo";
+import LoginModal from "./LoginModal";
 
 export default function AppNavBar() {
   return (
@@ -14,16 +14,12 @@ export default function AppNavBar() {
       <AppBar position="static" color="primary">
         <Toolbar>
           <Box sx={{flexGrow: 1, textAlign: "left"}}>
-            <img src={logo1WhiteTransparent} alt="Logo" />
+            <MainLogo/>
           </Box>
           <Stack spacing={4} direction="row">
-            <Link to="/Login"style={{ textDecoration: 'none' }}>
-              <Button type="button" color="inherit">Sign in</Button>
-            </Link>
-            <Link to="/Register"style={{ textDecoration: 'none' }}>
-              <Button variant="contained" size="small" color="secondary" >Sign up for free</Button>
-            </Link>
-            
+            <Button variant="contained" color="error" component={RouterLink} to="/Home">Skip Login (Temporary button)</Button>
+            <LoginModal />
+            <Button variant="contained" size="small" color="secondary" component={RouterLink} to="/Registration" >Sign up for free</Button>
           </Stack>
         </Toolbar>
       </AppBar>

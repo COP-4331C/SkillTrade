@@ -12,10 +12,17 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import PasswordFields from './PasswordField';
+import AppNavBar from "../AppNavBar";
 
 export default class Registration extends Component {
   
-
+// TODO: Bring back the confirm password field
+// TODO: Bring back the show password icon (Need to convert Registration class to function)
+// TODO: Bring back the links under the Sign up button, and make them routable
+// TODO: Can't add a last name
+// TODO: Check registration functionality
+// TODO: Remove commented out code
+// TODO: Remove unused imports
 
     constructor(props) {
         super(props)
@@ -27,10 +34,10 @@ export default class Registration extends Component {
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            email: 'Lmao@gmail.com',
-            password: '123456',
-            firstName: 'Lmao',
-            lastName: 'Mo'
+            email: '',
+            password: '',
+            firstName: '',
+            lastName: ''
             
         }
     }
@@ -63,7 +70,7 @@ export default class Registration extends Component {
             lastName: this.state.lastName
         };
 
-        axios.post('http://localhost:5000/api/user/register', userObject)
+        axios.post('./api/user/register', userObject)
             .then(function (response) {
                 console.log(response);
             })
@@ -78,11 +85,12 @@ export default class Registration extends Component {
     render() {
         return (
           <Grid>
+            <AppNavBar />
             <form onSubmit={this.onSubmit}>
               <Paper elevation={3} style={{ padding: 40, height: '50vh', width: 280, margin: '20px auto' }}>
 
                 <Grid align='center'>
-                  <Avatar style={{backgroundColor: '#1bbd7e'}}>
+                  <Avatar style={{backgroundColor: '#0031FF'}}>
                     <AssignmentOutlinedIcon />
                   </Avatar>
                     <h2>Create account</h2>
@@ -146,7 +154,7 @@ export default class Registration extends Component {
                     size="small"/>
                 </Grid>
 
-                <Button type="submit" color="info" variant="contained" fullWidth style={{margin: '8px 0'}}>Sign Up</Button>
+                <Button type="submit" color="primary" variant="contained" fullWidth style={{margin: '8px 0'}}>Sign Up</Button>
 
                   
                             

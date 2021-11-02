@@ -1,28 +1,24 @@
 import './App.css';
-import React, { Component } from 'react';
-import Login from './components/Login';
 import Registration from './components/registration/Registration';
 import Footer from './components/Footer';
-import AppNavBar from './components/AppNavBar';
-import LandingPage from './components/LandingPage';
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom';
+import LandingPage from "./Pages/LandingPage";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import HomePage from "./Pages/HomePage";
 
-class App extends Component {
-  render(){
-    return(
-      <Router>
-        <Route path="/" component={AppNavBar}/>
-        <Route path="/Login" component={AppNavBar,Login}/>
-        <Route path="/Register" component={AppNavBar,Registration}/>
-      </Router>
-      // {/* <Registration /> */}
-      // <AppNavBar />
-      // <LandingPage/>
-      // <Login />
-      // <Footer />
-    
+function App() {
+  return (
+
+    <Router>
+        <div className="App">
+          <Switch>
+            <Route path="/" exact component={LandingPage} />
+            <Route path="/Registration" component={Registration} />
+            <Route path="/Home" component={HomePage} />
+          </Switch>
+          <Footer />
+        </div>
+    </Router>
   );
-}}
-
+}
 
 export default App;

@@ -20,6 +20,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import {storeToken} from "./TokenStorage";
 
 // TODO: Remember me checkbox. If checked, the username should be auto populated
 //       the nex time the user visits the page.
@@ -105,33 +106,36 @@ export default function Login(props) {
     // If it passes validation, continue
     if (validateInputLength()) {
 
+      try {
         // Store the state of the checkbox in the browser's local storage
         // Only store the email if the checked box is checked.
-        localStorage.setItem('rememberMe', rememberMe.toString());
-        localStorage.setItem('email', rememberMe ? email : '');
+        // localStorage.setItem('rememberMe', rememberMe.toString());
+        localStorage.setItem('rememberMe', JSON.stringify(rememberMe.toString()));
+        localStorage.setItem('email', rememberMe ? JSON.stringify(email) : '');
+      } catch (e){
+        console.log(e.message);
+      }
 
-        const URL = './api/auth/login';
-        const loginPayload = {
-          email: email,
-          password: values.password
-        };
+      // Assembles the data to be used by Axios
+      const URL = './api/auth/login';
+      const loginPayload = {
+        email: email,
+        password: values.password
+      };
 
-        // Sends the login credentials
-        axios.post(URL, loginPayload)
-          .then(function (response) { // .then is like the try in try and catch.
-            alert("Login successful! Your access Token is: " + response.data.accessToken);
+      // Sends the login credentials to the backend server
+      axios.post(URL, loginPayload)
+        .then(function (response) {
 
-            // Clear the email and password text fields
-            setValues({password: '', showPassword: false});
-            setEmail("");
+          storeToken(response.data.accessToken);
 
-            // Pass the click event to parent, who then closes the Login modal.
-            props.onClick();
-          })
-          .catch(function () {
-            // Show the wrong credentials message
-            setOpenMessage(true);
-          });
+          // Send user to the home page
+          window.location.href = '/Home';
+        })
+        .catch(function () {
+          // Show the wrong credentials message
+          setOpenMessage(true);
+        });
 
     // Length validation failed
     } else {
@@ -139,7 +143,6 @@ export default function Login(props) {
       // Email and password length of 0 is handled by html
       // Email format validation is partially handled by html
       // (it only requires at least a char before and after the @ sign)
-
 
       // Injects the error message underneath the password field,
       // and sets its state to true to change the color to red.
@@ -157,24 +160,29 @@ export default function Login(props) {
 
   // Loads the email from the local storage if the remember me box was previously checked
   useEffect(() => {
+    try {
+      const storage = localStorage.getItem("rememberMe");
 
-    const storage = localStorage.getItem("rememberMe");
+      if (storage != null) {
 
-    if(storage != null) {
+        // Reads the local storage
+        let localStorageRememberMe = JSON.parse(localStorage.getItem('rememberMe')) === 'true';
 
-      // Reads the local storage
-      let localStorageRememberMe = localStorage.getItem('rememberMe') === 'true';
-
-          // Only set the email if RememberMe is true
+        // Only set the email if RememberMe is true
         if (localStorageRememberMe) {
 
           // Set the email
-          setEmail(localStorage.getItem('email'));
+          setEmail(JSON.parse(localStorage.getItem('email')));
 
           // Initiates the RememberMe Checkbox with local storage
           setRememberMe(localStorageRememberMe);
         }
+      }
+
+    } catch (e) {
+      console.log(e.message);
     }
+
   }, []);
 
   // **************************************** //

@@ -3,6 +3,8 @@ import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import * as React from "react";
 
+// TODO: Check if the user is login, if not, then redirect user to login or landing page.
+
 const HomePage = () => {
   return (
     <>

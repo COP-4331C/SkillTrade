@@ -16,9 +16,8 @@ exports.create = async (req, res) => {
 
 exports.editProfile = async (req, res) => {
 
-  const { email } = req.body;
-  var userIdentifier = { email: email };
-  var newProfileValues = req.body;
+  var userIdentifier = { email: req.email };
+  var newProfileValues = req.body; // instead of passing entire body, only pass in changeable parameters
 
   var test = await User.updateOne( userIdentifier, newProfileValues );
 

@@ -22,12 +22,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
 
-// TODO: Remember me checkbox. If checked, the username should be auto populated
-//       the nex time the user visits the page.
-
-// TODO BUG: Text overflows the Paper container on a mobile device in landscape mode
-//           (avoid using a percentage for the height to avoid above issue).
-
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
 
@@ -40,8 +34,9 @@ export default function Login(props) {
   //     Global Variables and constants
   //***************************************** //
   const MIN_PASSWORD_LENGTH = 8
+  const MAX_LENGTH = 50
 
-  // Variable for password validation feedback to the user
+  // Variable for password validation feedback to users (true = red color)
   const [pwdError, setPwdError] = useState( {
     state: false,
     text: ""
@@ -49,6 +44,13 @@ export default function Login(props) {
 
   // Email variable
   const [email, setEmail] = useState("");
+
+  // Variable for email validation feedback to users (true = red color)
+  const [emailError, setEmailError] = useState({
+        state: false,
+        text: ""
+      }
+  );
 
   // Password variable and its state to show or not
   const [values, setValues] = useState({
@@ -60,7 +62,10 @@ export default function Login(props) {
   const [openMessage, setOpenMessage] = useState(false);
 
   // Variable to store the remember me checkbox
-    const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Variable to set the Invalid email or password message
+  const [serverErrorMessage, setServerErrorMessage] = useState('Error');
 
   // **************************************** //
   //           Helper Functions
@@ -81,9 +86,54 @@ export default function Login(props) {
 
   // Email and password length validation
   function validateInputLength() {
-    return ((email.length > 0) && (values.password.length >= MIN_PASSWORD_LENGTH))
-  }
+    const password = values.password.length;
+    let isValid = true;
 
+    if (email.length > MAX_LENGTH) {
+      setEmailError( {
+        state: true,
+        text: "Email must be less than 50 characters"
+      })
+      isValid = false;
+    }
+
+    if (password < MIN_PASSWORD_LENGTH) {
+      isValid = false;
+
+      setPwdError({
+        state: true,
+        text: "Minimum password is 8 characters"
+      });
+
+    } else if (password > MAX_LENGTH) {
+      isValid = false;
+
+      setPwdError({
+        state: true,
+        text: "Password must be less than 50 characters "
+      });
+    }
+
+    return isValid;
+    // Note about email validation:
+    // Email and password length of 0 is handled by html
+    // Email format validation is partially handled by html
+    // (it only requires at least a char before and after the @ sign)
+
+    // Injects the error message underneath the password field,
+    // and sets its state to true to change the color to red.
+    // setPwdError({
+    //   state: true,
+    //   text: "Minimum password is 8 characters"
+    // });
+
+    //
+    // return (
+    //     (email.length <= MAX_LENGTH) &&
+    //     (password >= MIN_PASSWORD_LENGTH)
+    //     && (password <= MAX_LENGTH)
+    // )
+  }
 
   const handleMouseDown = (event) => {
     event.preventDefault();
@@ -96,12 +146,10 @@ export default function Login(props) {
     // Hide the wrong Credentials message
     setOpenMessage(false);
 
-    // Clears the error message underneath the password field,
-    // sets its state to false to remove the red color.
-    setPwdError({
-      state: false,
-      text: ""
-    });
+    // Clears the error message underneath the password field and
+    // the email field (if any error were displayed).
+    setPwdError({ state: false, text: "" });
+    setEmailError({ state: false, text: "" });
 
     // If it passes validation, continue
     if (validateInputLength()) {
@@ -126,30 +174,19 @@ export default function Login(props) {
       // Sends the login credentials to the backend server
       axios.post(URL, loginPayload)
         .then(function (response) {
-
           storeToken(response.data.accessToken);
 
           // Send user to the home page
           window.location.href = '/Home';
         })
-        .catch(function () {
+        .catch(function (error) {
           // Show the wrong credentials message
+          setServerErrorMessage(error.response.data.error);
           setOpenMessage(true);
+
+          console.log("Error data:", error.response.data);
+          console.log("Error status:", error.response.status);
         });
-
-    // Length validation failed
-    } else {
-      // Note about email validation:
-      // Email and password length of 0 is handled by html
-      // Email format validation is partially handled by html
-      // (it only requires at least a char before and after the @ sign)
-
-      // Injects the error message underneath the password field,
-      // and sets its state to true to change the color to red.
-      setPwdError({
-        state: true,
-        text: "Minimum password is 8 characters"
-      });
     }
   }
 
@@ -216,7 +253,7 @@ export default function Login(props) {
           {/* (a hidden alert). Visible only with wrong credentials */}
           <Collapse in={openMessage}>
             <Alert severity="error" sx={{ mb: 2 }}>
-              <strong>Incorrect email or password.</strong>
+              <strong>{serverErrorMessage}</strong>
             </Alert>
           </Collapse>
 
@@ -230,6 +267,8 @@ export default function Login(props) {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             type="email"
+            helperText={emailError.text}
+            error={emailError.state}
           />
 
           {/********************* Password field *********************/}

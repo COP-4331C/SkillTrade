@@ -19,6 +19,18 @@ exports.create = async (req, res) => {
 exports.changePassword = async (req, res) =>
 {
   const {oldPassword, newPassword} = req.body;
+
+  const space_regex = new RegExp('.* .*');
+  const validity_regex = new RegExp('(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])');
+
+  if(space_regex.test(newPassword) ||  newPassword.length < 8 || !validity_regex.test(newPassword))
+  {
+    return res.status(400).json({ error: "Invalid new password" });
+  }
+  
+  
+  
+
   const email = req.email;
   //console.log(email);
   const user = await User.findOne({ email: email });
@@ -27,7 +39,7 @@ exports.changePassword = async (req, res) =>
 
   let validPassword = user.authenticate(oldPassword);
   if (!validPassword)
-    return res.status(400).json({ error: "Invalid password." });
+    return res.status(400).json({ error: "Incorrect original password." });
 
   user.password = newPassword;
   

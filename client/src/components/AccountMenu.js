@@ -13,6 +13,7 @@ import testUserAvatar from "../images/avatars/testUserAvatar.jpg";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
+import {logoutUser} from "./Logout";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -86,7 +87,7 @@ export default function AccountMenu() {
                     </ListItemIcon>
                     My Skills
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/">
+                <MenuItem onClick={() => logoutUser()}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
                     </ListItemIcon>

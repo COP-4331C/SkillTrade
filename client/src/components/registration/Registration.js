@@ -143,8 +143,11 @@ function handleSubmitButton(event) {
 
         axios.post(URL, registerPayload)
             .then(function (response) { 
-                alert("Registration successful! Your Registration is: " + response.data);
-                console.log(response);})
+                alert("Registration successful!" );
+                console.log(response);
+                window.location.href='/Login';
+              })
+                
 
             .catch(function (error) {
                 setOpenMessage(true);});

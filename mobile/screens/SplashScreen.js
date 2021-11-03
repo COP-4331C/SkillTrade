@@ -2,7 +2,7 @@ import React from 'react';
 import { 
     View, 
     Text, 
-    button,
+    Button,
     TouchableOpacity, 
     Dimensions,
     StyleSheet,
@@ -32,21 +32,30 @@ const SplashScreen = ({navigation}) => {
                 <Text style={styles.title}>Stay connected with everyone !</Text>
                 <Text style={styles.text}>Sign in with account</Text>
                 <View style={styles.button}>
-                <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
+                <TouchableOpacity 
+                    onPress={()=>navigation.navigate('SignInScreen')}
+                    style={[styles.signIn, {
+                                borderColor: '#007AFF',
+                                borderWidth: 3,
+                                // marginTop: 15
+                            }]}
+                    >
+
                     {/* <linearGradient
                         colors={['#08d4c4','#01ab9d']}
                         style={styles.signIn}
-                    > */}
-                        {/* <Text style={styles.textSign}>Get Started</Text> */}
-                        {/* <MaterialIcons
+                    > 
+                        <Text style={styles.textSign}>Get Started</Text>
+                        <MaterialIcons
                         name="navigete-next"
                         color="#fff"
                         size={20}
-                        /> */}
-                    {/* </linearGradient> */}
-                    <button>
-                        <Text>Get Started</Text>
-                    </button>
+                        />
+                     </linearGradient> */}
+
+                    <Text style={[styles.textSign, {
+                        color: '#007AFF'
+                    }]}>Get Started</Text>
                     
                 </TouchableOpacity>
                 </View>

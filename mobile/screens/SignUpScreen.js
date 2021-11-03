@@ -184,9 +184,18 @@ const SignInScreen = ({navigation}) => {
                         }]}>Sign In</Text>
                     </linearGradient> */}
 
-                    <button> 
-                        <Text>Sign Up</Text>
-                    </button>
+                    <TouchableOpacity
+                        // onPress={() => navigation.goBack()} //  need to be modified
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                        }]}
+                    >
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
+                        }]}>Sign Up</Text>
+                    </TouchableOpacity>
+
 
                     <TouchableOpacity
                         onPress={() => navigation.goBack()}

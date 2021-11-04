@@ -205,10 +205,13 @@ function handleSubmitButton(event) {
 /////////////////Interface/////////////////
 
   return (
-    <Grid>
+    <Grid >
       <form onSubmit={handleSubmitButton}>
       <AppNavBar/>
-        <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
+        <Paper elevation={3} style={{padding: 40, 
+          height: '56vh', 
+          width: 280, 
+          margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>

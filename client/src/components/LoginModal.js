@@ -19,7 +19,14 @@ export default function LoginModal() {
 
     return (
         <div>
-            <Button variant="outlined" color="inherit" onClick={handleOpen}>Sign in</Button>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleOpen}
+              sx={{whiteSpace: 'nowrap'}}
+            >
+                Sign in
+            </Button>
             <Modal open={open} onClose={handleClose}>
                 <Box sx={loginModalStyle}>
                     <Login onClick={() => {handleClose()}}/>

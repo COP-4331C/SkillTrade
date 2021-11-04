@@ -19,6 +19,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
+import {Theme} from "../Theme";
 
 
 export default function Registration() {
@@ -185,7 +186,7 @@ function handleSubmitButton(event) {
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-            <Avatar style={{backgroundColor: '#0031FF'}}>
+            <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
               <LockOutlinedIcon/>
             </Avatar>
             <h2>Register</h2>
@@ -279,7 +280,7 @@ function handleSubmitButton(event) {
             <FormHelperText id="component-error-text">{pwdError.text}</FormHelperText>
           </FormControl>
 
-          <FormControl sx={{  width: "100%"  }} variant="standard" required required error={confirmError.state}>
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
             <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
               <Input
                 id="standard-adornment-confirm"

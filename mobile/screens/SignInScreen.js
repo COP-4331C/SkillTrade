@@ -64,22 +64,22 @@ const SignInScreen = ({navigation}) => {
         signIn(username, password);
     }
 
-    function connectToLoginApi(){
-        axios.post('https://cop4331c.herokuapp.com/api/auth/login', {
-                email: data.username,
-                password: data.password
-            })
-            .then(function(response) {
-                // do something when successful (store the token returned in the response)
-                const accessToken = response.data.accessToken 
-                loginHandle(data.username, data.password)
-                console.warn(response.data.accessToken) // for test
-            })
-            .catch(function(error) {
-                // do something when there is an error (probably just console log it for now)
-                console.log(error)
-            });
-    }
+    // function connectToLoginApi(){
+    //     axios.post('https://cop4331c.herokuapp.com/api/auth/login', {
+    //             email: data.username,
+    //             password: data.password
+    //         })
+    //         .then(function(response) {
+    //             // do something when successful (store the token returned in the response)
+    //             const accessToken = response.data.accessToken 
+    //             loginHandle(data.username, data.password)
+    //             console.warn(response.data.accessToken) // for test
+    //         })
+    //         .catch(function(error) {
+    //             // do something when there is an error (probably just console log it for now)
+    //             console.log(error)
+    //         });
+    // }
     
     return (
         <View style={styles.container}>
@@ -153,7 +153,7 @@ const SignInScreen = ({navigation}) => {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                        onPress={() => {connectToLoginApi()}} //fixme. how to check it??
+                        onPress={() => {loginHandle(data.username, data.password)}} //fixme. how to check it??
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,

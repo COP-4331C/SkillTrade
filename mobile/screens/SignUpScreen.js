@@ -70,21 +70,21 @@ const SignInScreen = ({navigation}) => {
         })
     }
 
-    function connectToSignUpApi(){
-        axios.post('https://cop4331c.herokuapp.com/api/user/register', {
-                email: 'test@example.com',
-                password: 'fooBarBaz'
-            })
-            .then(function(response) {
-                // do something when successful (go back to the Login screen)
-                navigation.goBack()
-                console.warn(response.data) // for test ??
-            })
-            .catch(function(error) {
-                // do something when there is an error (probably just console log it for now)
-                console.log(error)
-            });
-    }
+    // function connectToSignUpApi(){
+    //     axios.post('https://cop4331c.herokuapp.com/api/user/register', {
+    //             email: 'test@example.com',
+    //             password: 'fooBarBaz'
+    //         })
+    //         .then(function(response) {
+    //             // do something when successful (go back to the Login screen)
+    //             navigation.goBack()
+    //             console.warn(response.data) // for test ??
+    //         })
+    //         .catch(function(error) {
+    //             // do something when there is an error (probably just console log it for now)
+    //             console.log(error)
+    //         });
+    // }
 
     return (
         <View style={styles.container}>
@@ -192,7 +192,7 @@ const SignInScreen = ({navigation}) => {
                 <View style={styles.button}>
 
                     <TouchableOpacity
-                        onPress={() => connectToSignUpApi()} 
+                        onPress={() => navigation.goBack() } // fixme
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,

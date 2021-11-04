@@ -11,6 +11,8 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Drawer = createDrawerNavigator(); 
 
@@ -61,19 +63,29 @@ const App = () => {
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(() => ({
-    signIn: (userName, password) => {
+    signIn: async(userName, password) => {
       // setUserToken('fgkj');
       // setIsLoading(false);
       let userToken;
       userToken = null;
-      if(userName == 'user' && password == 'pass'){ //fixme
-        userToken = 'dfgdfg';
+      if(userName == 'user' && password == 'pass'){ //fixme: should connect to API
+        try {
+          userToken = 'dfgdfg';
+          await AsyncStorage.setItem('userToken', userToken)
+        } catch (e) {
+          console.log(e);
+        }
       }
       dispatch({type: 'LOGIN', id: userName, token: userToken})
     },
-    signOut: () => {
+    signOut: async() => {
       // setUserToken('null');
       // setIsLoading(false);
+      try {
+        await AsyncStorage.removeItem('userToken')
+      } catch (e) {
+        console.log(e);
+      }
       dispatch({type: 'LOGOUT'})
     },
     signUp: () => {
@@ -82,12 +94,18 @@ const App = () => {
     },
   }),[]);
 
-  React.useEffect(() => {
-    setTimeout(() => {
+  useEffect(() => { 
+    setTimeout(async() => {
      // setIsLoading(false); 
      let userToken;
+     userToken = null;
+     try {
+      userToken = await AsyncStorage.getItem('userToken')
+    } catch (e) {
+      console.log(e);
+    }
      // console.log('user token: ', userToken);
-     dispatch({type: 'REGISTER', token: 'dfklj'})
+     dispatch({type: 'REGISTER', token: userToken})
     }, 1000);
   }, []);
 
@@ -101,7 +119,7 @@ const App = () => {
   return (
     <AuthContext.Provider value={authContext}>
     <NavigationContainer>
-    {!loginState.userToken ? (
+    { loginState.userToken !== null ? ( // ## !loginState.userToken ? not working properly here
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
         <Drawer.Screen name="SupportScreen" component={SupportScreen} />

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const UserProfileSchema = require("./userProfile.model").schema;
 
 const UserSchema = mongoose.Schema({
   email: {
@@ -50,6 +51,10 @@ const UserSchema = mongoose.Schema({
     default: Date.now,
     required: true,
   },
+  userProfile: { // Nested object in user model
+    type: UserProfileSchema,
+    required: true,
+  }
 });
 
 UserSchema.virtual("password")

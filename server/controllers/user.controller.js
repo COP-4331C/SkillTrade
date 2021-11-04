@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const UserProfile = require("../models/userProfile.model");
 
 exports.create = async (req, res) => {
   const user = new User(req.body);
@@ -16,10 +17,10 @@ exports.create = async (req, res) => {
 
 exports.editProfile = async (req, res) => {
 
-  var userIdentifier = { email: req.email };
+  var userProfileIdentifier = { email: req.email };
   var newProfileValues = req.body; // instead of passing entire body, only pass in changeable parameters
 
-  var test = await User.updateOne( userIdentifier, newProfileValues );
+  var test = await UserProfile.updateOne( userProfileIdentifier, newProfileValues );
 
   if (test.matchedCount == 0)
     return await res.status(200).json({ message: "User not found!" });

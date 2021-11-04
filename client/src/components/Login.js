@@ -21,6 +21,7 @@ import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
+import {Theme} from "./Theme";
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
@@ -119,20 +120,6 @@ export default function Login(props) {
     // Email and password length of 0 is handled by html
     // Email format validation is partially handled by html
     // (it only requires at least a char before and after the @ sign)
-
-    // Injects the error message underneath the password field,
-    // and sets its state to true to change the color to red.
-    // setPwdError({
-    //   state: true,
-    //   text: "Minimum password is 8 characters"
-    // });
-
-    //
-    // return (
-    //     (email.length <= MAX_LENGTH) &&
-    //     (password >= MIN_PASSWORD_LENGTH)
-    //     && (password <= MAX_LENGTH)
-    // )
   }
 
   const handleMouseDown = (event) => {
@@ -177,7 +164,7 @@ export default function Login(props) {
           storeToken(response.data.accessToken);
 
           // Send user to the home page
-          window.location.href = '/Home';
+          window.location.href = '/home';
         })
         .catch(function (error) {
           // Show the wrong credentials message
@@ -240,10 +227,9 @@ export default function Login(props) {
             <CloseIcon />
           </IconButton>
 
-
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-            <Avatar style={{backgroundColor: '#0031FF'}}>
+            <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
               <LockOutlinedIcon/>
             </Avatar>
             <h2>Sign in</h2>
@@ -329,7 +315,7 @@ export default function Login(props) {
 
           {/********************* No Account? Create one! *********************/}
           <Typography fontSize="0.9rem" align="center">No account?{' '}
-            <Link underline="hover" component={RouterLink} to="/Registration">Create one!</Link>
+            <Link underline="hover" component={RouterLink} to="/registration">Create one!</Link>
           </Typography>
 
         </Paper>

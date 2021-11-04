@@ -9,10 +9,11 @@ const HomePage = () => {
   return (
     <>
       <HomeNavBar />
-      <h1>Home Page coming soon</h1>
+      <h1>Home Page</h1>
+        <h3>Coming soon</h3>
 
         {/* Temporary button: goes to the Landing Page */}
-        <Button variant="contained" color="error" size="large" component={RouterLink} to="/">Back to Landing Page (temp button)</Button>
+        <Button variant="contained" color="secondary" size="large" component={RouterLink} to="/">Back to Landing Page (temp button)</Button>
 
     </>
   );

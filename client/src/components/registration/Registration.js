@@ -19,6 +19,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
+import AppNavBar from '../AppNavBar';
 
 
 export default function Registration() {
@@ -108,6 +109,11 @@ function validFirstName(){
         state: false,
         text: ""
         });
+    
+    const [complexity, setComplexity] = useState( {
+      state: false,
+      text: ""
+        });
 
 //submit handeler
 function handleSubmitButton(event) {
@@ -129,8 +135,19 @@ function handleSubmitButton(event) {
       state: false,
       text: ""
     });
+
+    setComplexity({
+      state: false,
+      text: ""
+    });
+
+    //const { values.password } = this.state;
+    const re = new RegExp("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$");
+    const isOk = re.test(values.password);
+
+    console.log(isOk);
     
-    if (validateInputLength()&&valid() ) {
+    if (validateInputLength()&&valid()&&isOk ) {
 
         const URL = './api/user/register';
 
@@ -168,11 +185,20 @@ function handleSubmitButton(event) {
           });
     }
 
+    else if(!isOk){
+      setComplexity({
+        state: true,
+        text: "Password too weak. Please use atlest one symbol, lowercase & uppercase letter and one number"
+      });
+    }
+
     else if (validFirstName()!==1){
       setConfirmName({
           state: true,
           text: "Please Enter valid First Name"
         });
+
+    
   }
   }
 
@@ -181,7 +207,8 @@ function handleSubmitButton(event) {
   return (
     <Grid>
       <form onSubmit={handleSubmitButton}>
-        <Paper elevation={3} style={{padding: 40, height: '50vh', width: 280, margin: '20px auto'}}>
+      <AppNavBar/>
+        <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
@@ -255,7 +282,7 @@ function handleSubmitButton(event) {
           />
 
           {/********************* Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={pwdError.state}>
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={pwdError.state, complexity.state}>
             <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
             <Input
               id="standard-adornment-password"
@@ -277,6 +304,7 @@ function handleSubmitButton(event) {
               }
             />
             <FormHelperText id="component-error-text">{pwdError.text}</FormHelperText>
+            <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
           <FormControl sx={{  width: "100%"  }} variant="standard" required required error={confirmError.state}>
@@ -329,7 +357,7 @@ function handleSubmitButton(event) {
           </Typography>
 
           {/********************* already have an account  *********************/}
-          <Typography fontSize="0.9rem" align="center">Already have an account?{' '}
+          <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
             <Link underline="hover" component={RouterLink} to="/Login">Login</Link>
           </Typography>
 

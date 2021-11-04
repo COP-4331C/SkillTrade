@@ -71,8 +71,8 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem>
-                    <Avatar alt="Remy Sharp" src={testUserAvatar} /> Profile
+                <MenuItem component={RouterLink} to="/profile">
+                    <Avatar alt="Remy Sharp" src={testUserAvatar}/> Profile
                 </MenuItem>
                 <MenuItem>
                     <ListItemIcon>

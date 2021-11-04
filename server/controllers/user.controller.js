@@ -1,5 +1,4 @@
 const User = require("../models/user.model");
-const UserProfile = require("../models/userProfile.model");
 
 exports.create = async (req, res) => {
   const user = new User(req.body);
@@ -18,14 +17,28 @@ exports.create = async (req, res) => {
 exports.editProfile = async (req, res) => {
 
   var userProfileIdentifier = { email: req.email };
-  var newProfileValues = req.body; // instead of passing entire body, only pass in changeable parameters
+  var newProfileValues = req.body;
 
-  var test = await UserProfile.updateOne( userProfileIdentifier, newProfileValues );
+  // Cannot be edited directly through editProfile API
+  var protected_fields = ['_id', 'email', 'passwordHash', 'emailVerified', 'role', 'skillCredits'];
 
-  if (test.matchedCount == 0)
-    return await res.status(200).json({ message: "User not found!" });
-  else if (test.modifiedCount == 0)
-    return await res.status(200).json({ message: "Nothing was modified!" });
+  'userProfile' in newProfileValues && delete newProfileValues['userProfile']['_id'];
+  
+  for (const p of protected_fields)
+    delete newProfileValues[p];
+
+  var edit = await User.updateOne( userProfileIdentifier, newProfileValues );
+
+  /* DEBUG
+  console.log(userProfileIdentifier);
+  console.log(newProfileValues);
+  console.log(edit);*/
+
+  // Checks if user was found and at least 1 field modified before returning "Success"
+  if (edit.matchedCount == 0)
+    return await res.status(400).json({ message: "User not found!" });
+  else if (edit.modifiedCount == 0)
+    return await res.status(400).json({ message: "Nothing was modified!" });
   else
     return await res.status(200).json({ message: "Successfully edited user!" });
 

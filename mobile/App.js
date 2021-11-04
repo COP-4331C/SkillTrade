@@ -12,10 +12,26 @@ import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
 
 const Drawer = createDrawerNavigator(); 
 
+function connectToLoginApi(userName, password, userToken){
+  axios.post('https://cop4331c.herokuapp.com/api/auth/login', {
+          email: userName, // 'test@example.com'
+          password: password // 'fooBarBaz'
+      }) 
+      .then(function(response) { 
+          userToken = response.data.accessToken
+          console.warn(userToken) // for test
+          return userToken // why the value is never returned ?? FIXME 
+          // some online example is using setstate() to output value
+      })
+      .catch(function(error) {
+          // do something when there is an error (probably just console log it for now)
+          console.log(error)
+      });
+}
 
 const App = () => {
   // Part of verification
@@ -67,11 +83,12 @@ const App = () => {
       // setUserToken('fgkj');
       // setIsLoading(false);
       let userToken;
-      userToken = null;
-      if(userName == 'user' && password == 'pass'){ //fixme: should connect to API
+      userToken = null
+      userToken = connectToLoginApi(userName, password, userToken)  // call API to verify user input 
+      console.warn(userToken) // why it's alwasys return undefined ?? 
+      if( userToken !== undefined && userToken !== null){ // not sure how to prevent undefined variable
         try {
-          userToken = 'dfgdfg';
-          await AsyncStorage.setItem('userToken', userToken)
+          await AsyncStorage.setItem('userToken', userToken) // store the token in AsyncStorage
         } catch (e) {
           console.log(e);
         }
@@ -94,7 +111,7 @@ const App = () => {
     },
   }),[]);
 
-  useEffect(() => { 
+  useEffect(() => { // what is function for ?
     setTimeout(async() => {
      // setIsLoading(false); 
      let userToken;

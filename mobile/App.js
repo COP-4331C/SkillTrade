@@ -66,7 +66,7 @@ const App = () => {
       // setIsLoading(false);
       let userToken;
       userToken = null;
-      if(userName == 'user' && password == 'pass'){
+      if(userName == 'user' && password == 'pass'){ //fixme
         userToken = 'dfgdfg';
       }
       dispatch({type: 'LOGIN', id: userName, token: userToken})
@@ -101,7 +101,7 @@ const App = () => {
   return (
     <AuthContext.Provider value={authContext}>
     <NavigationContainer>
-    {loginState.userToken !== null ? (
+    {!loginState.userToken ? (
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
         <Drawer.Screen name="SupportScreen" component={SupportScreen} />

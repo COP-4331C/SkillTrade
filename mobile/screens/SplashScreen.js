@@ -9,7 +9,6 @@ import {
     Image 
 } from 'react-native';
 
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 
@@ -37,26 +36,12 @@ const SplashScreen = ({navigation}) => {
                     style={[styles.signIn, {
                                 borderColor: '#007AFF',
                                 borderWidth: 3,
-                                // marginTop: 15
+                                // marginTop: 10
                             }]}
                     >
-
-                    {/* <linearGradient
-                        colors={['#08d4c4','#01ab9d']}
-                        style={styles.signIn}
-                    > 
-                        <Text style={styles.textSign}>Get Started</Text>
-                        <MaterialIcons
-                        name="navigete-next"
-                        color="#fff"
-                        size={20}
-                        />
-                     </linearGradient> */}
-
                     <Text style={[styles.textSign, {
                         color: '#007AFF'
                     }]}>Get Started</Text>
-                    
                 </TouchableOpacity>
                 </View>
             </Animatable.View>

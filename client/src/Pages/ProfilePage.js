@@ -22,7 +22,8 @@ import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
 import EditProfile from '../components/EditProfile';
 import { Box, grid } from '@mui/system';
-import whoa from '/Users/ridwan/Desktop/Large-Project/client/src/whoa.jpeg';
+import whoa from '../whoa.jpeg';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 
 export default function ProfilePage() {
 
@@ -121,17 +122,14 @@ export default function ProfilePage() {
             
           </Grid>
 
+          {/******************** Contact me Button *********************/}
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button
                 type='submit'
                 color='primary'
                 variant='contained'
-                fullWidth
-                style={{ 
-                marginTop:50, 
-                borderBottomLeftRadius: 40,
-                borderBottomRightRadius:40,
-                borderColor: "black",}}
+                style={{ marginTop:50 }}
+                startIcon={<ForumOutlinedIcon />}
               >
                 Contact Me!
             </Button>

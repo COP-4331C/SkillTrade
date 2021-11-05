@@ -11,9 +11,10 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Drawer = createDrawerNavigator(); 
-
 
 const App = () => {
   // Part of verification
@@ -61,33 +62,71 @@ const App = () => {
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(() => ({
-    signIn: (userName, password) => {
+    signIn: async(userName, password) => {
       // setUserToken('fgkj');
       // setIsLoading(false);
       let userToken;
-      userToken = null;
-      if(userName == 'user' && password == 'pass'){
-        userToken = 'dfgdfg';
+      userToken = null
+      await axios.post('https://cop4331c.herokuapp.com/api/auth/login', { // need to be await
+              email: userName, // 'test@example.com'
+              password: password // 'fooBarBaz'
+          }) 
+          .then(function(response) { 
+              userToken = response.data.accessToken
+              // console.warn(userToken) // for test
+          })
+          .catch(function(error) {
+              console.log(error)
+          });
+      if( userToken !== null ){ // not sure how to prevent undefined variable
+        try {
+          await AsyncStorage.setItem('userToken', userToken) // store the token in AsyncStorage
+        } catch (e) {
+          console.log(e);
+        }
       }
       dispatch({type: 'LOGIN', id: userName, token: userToken})
     },
-    signOut: () => {
+    signOut: async() => {
       // setUserToken('null');
       // setIsLoading(false);
+      try {
+        await AsyncStorage.removeItem('userToken')
+      } catch (e) {
+        console.log(e);
+      }
       dispatch({type: 'LOGOUT'})
     },
-    signUp: () => {
+    signUp: () => { // need to conect to register API 
       // setUserToken('fgkj');
       // setIsLoading(false);
+      // console.warn('rigister')
+      // axios.post('https://cop4331c.herokuapp.com/api/user/register', {
+      //         email: userName,
+      //         password: password
+      //     })
+      //     .then(function(response) {
+      //         navigation.goBack()
+      //         console.warn('rigister success')
+      //     })
+      //     .catch(function(error) {
+      //         console.log(error)
+      //     }); 
     },
   }),[]);
 
-  React.useEffect(() => {
-    setTimeout(() => {
+  useEffect(() => { // what is function for ?
+    setTimeout(async() => {
      // setIsLoading(false); 
      let userToken;
+     userToken = null;
+     try {
+      userToken = await AsyncStorage.getItem('userToken')
+    } catch (e) {
+      console.log(e);
+    }
      // console.log('user token: ', userToken);
-     dispatch({type: 'REGISTER', token: 'dfklj'})
+     dispatch({type: 'REGISTER', token: userToken})
     }, 1000);
   }, []);
 
@@ -101,7 +140,7 @@ const App = () => {
   return (
     <AuthContext.Provider value={authContext}>
     <NavigationContainer>
-    {loginState.userToken !== null ? (
+    { loginState.userToken !== null ? ( // ## !loginState.userToken ? not working properly here
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
         <Drawer.Screen name="SupportScreen" component={SupportScreen} />

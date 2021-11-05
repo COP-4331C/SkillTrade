@@ -10,11 +10,10 @@ import {
     StyleSheet, 
     StatusBar
 } from 'react-native';
-
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
+import axios from 'axios';
 
 const SignInScreen = ({navigation}) => {
 
@@ -70,6 +69,22 @@ const SignInScreen = ({navigation}) => {
             confirm_secureTextEntry: !data.confirm_secureTextEntry
         })
     }
+
+    // function connectToSignUpApi(){
+    //     axios.post('https://cop4331c.herokuapp.com/api/user/register', {
+    //             email: 'test@example.com',
+    //             password: 'fooBarBaz'
+    //         })
+    //         .then(function(response) {
+    //             // do something when successful (go back to the Login screen)
+    //             navigation.goBack()
+    //             console.warn(response.data) // for test ??
+    //         })
+    //         .catch(function(error) {
+    //             // do something when there is an error (probably just console log it for now)
+    //             console.log(error)
+    //         });
+    // }
 
     return (
         <View style={styles.container}>
@@ -175,18 +190,19 @@ const SignInScreen = ({navigation}) => {
                 </View>
 
                 <View style={styles.button}>
-                    {/* <linearGradient
-                        colors={['#08d4c4','#01ab9d']}
-                        style={styles.signIn}
-                    >
-                        <Text style={[styles.textSign,{
-                            color:'#fff'
-                        }]}>Sign In</Text>
-                    </linearGradient> */}
 
-                    <button> 
-                        <Text>Sign Up</Text>
-                    </button>
+                    <TouchableOpacity
+                        onPress={() => navigation.goBack() } // fixme
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                        }]}
+                    >
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
+                        }]}>Sign Up</Text>
+                    </TouchableOpacity>
+
 
                     <TouchableOpacity
                         onPress={() => navigation.goBack()}

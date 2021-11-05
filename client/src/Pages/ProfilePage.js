@@ -255,9 +255,36 @@ export default function ProfilePage() {
                     borderRadius:20,
                     borderWidth: 2,
                     marginTop: 20,
-                    marginLeft: 20 }}>
+                    marginLeft: 20 }}
+                    onMouseOver={handleOnMouseOver}
+                    onMouseLeave={handleOnMouseLeave}>
 
                       <Box sx={{ flexGrow: 1 }}>
+
+                      <Grid container spacing={1}>
+                          <Grid container item spacing={3} justifyContent="center">
+                            <Grid item xs={5}>
+                              <item>
+                                
+                              </item>
+                            </Grid>
+                            <Grid item xs={5}>
+                              <item>
+                                
+                              </item>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <item>
+                                <Box sx={{textAlign: "right"}}>
+                                  <IconButton color="primary" aria-label="edit" onClick={handleEnterEditMode} sx={{display: displayEditButton}}>
+                                    <EditOutlinedIcon/>
+                                  </IconButton>
+                                </Box>
+                              </item>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
                         <Grid container spacing={1}>
                           <Grid container item spacing={3} justifyContent="center">
                             <Grid item xs={4}>

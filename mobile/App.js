@@ -17,9 +17,6 @@ import axios from 'axios';
 const Drawer = createDrawerNavigator(); 
 
 const App = () => {
-  // Part of verification
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null); 
 
   const initialLoginState = {
     isLoading: true,
@@ -27,11 +24,11 @@ const App = () => {
     userToken: null,
   };
 
-  const loginReducer = (prevState, action) => {
+  const loginReducer = (prevState, action) => { // React.useReducer() ??
     switch(action.type) {
       case 'RETRIEVE_TOKEN':
         return {
-          ...prevState,
+          ...prevState, // reserve prevState's value ?
           userToken: action.token,
           isLoading: false,
         };
@@ -56,18 +53,17 @@ const App = () => {
           userToken: action.token,
           isLoading: false,
         };
-      
     }
   };
 
-  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
-  const authContext = React.useMemo(() => ({
+  // create a loginState variable and assign value, ?
+  // in the meanwhile, create a dispatch method use for changing the value of loginState. ?
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState); 
+  const authContext = React.useMemo(() => ({ // React.useMemo() ??
     signIn: async(userName, password) => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
       let userToken;
       userToken = null
-      await axios.post('https://cop4331c.herokuapp.com/api/auth/login', { // need to be await
+      await axios.post('https://cop4331c.herokuapp.com/api/auth/login', { //connect API, need to be await
               email: userName, // 'test@example.com'
               password: password // 'fooBarBaz'
           }) 
@@ -78,9 +74,9 @@ const App = () => {
           .catch(function(error) {
               console.log(error)
           });
-      if( userToken !== null ){ // not sure how to prevent undefined variable
+      if( userToken !== null ){
         try {
-          await AsyncStorage.setItem('userToken', userToken) // store the token in AsyncStorage
+          await AsyncStorage.setItem('userToken', userToken) //store the token in AsyncStorage
         } catch (e) {
           console.log(e);
         }
@@ -88,8 +84,6 @@ const App = () => {
       dispatch({type: 'LOGIN', id: userName, token: userToken})
     },
     signOut: async() => {
-      // setUserToken('null');
-      // setIsLoading(false);
       try {
         await AsyncStorage.removeItem('userToken')
       } catch (e) {
@@ -97,27 +91,13 @@ const App = () => {
       }
       dispatch({type: 'LOGOUT'})
     },
-    signUp: () => { // need to conect to register API 
-      // setUserToken('fgkj');
-      // setIsLoading(false);
-      // console.warn('rigister')
-      // axios.post('https://cop4331c.herokuapp.com/api/user/register', {
-      //         email: userName,
-      //         password: password
-      //     })
-      //     .then(function(response) {
-      //         navigation.goBack()
-      //         console.warn('rigister success')
-      //     })
-      //     .catch(function(error) {
-      //         console.log(error)
-      //     }); 
-    },
-  }),[]);
+    signUp: () => { 
 
-  useEffect(() => { // what is function for ?
-    setTimeout(async() => {
-     // setIsLoading(false); 
+    },
+  }),[]); //pass a empty array [] so that this doesn't run every time when render screen
+
+  useEffect(() => { // check whether the user is logined or not
+    setTimeout(async() => { // setTimeout(), inside function will execute after certain milliseconds
      let userToken;
      userToken = null;
      try {
@@ -127,7 +107,7 @@ const App = () => {
     }
      // console.log('user token: ', userToken);
      dispatch({type: 'REGISTER', token: userToken})
-    }, 1000);
+    }, 1000); // execute after 1000 milliseconds, that is 1 second.
   }, []);
 
   if( loginState.isLoading ){
@@ -140,7 +120,7 @@ const App = () => {
   return (
     <AuthContext.Provider value={authContext}>
     <NavigationContainer>
-    { loginState.userToken !== null ? ( // ## !loginState.userToken ? not working properly here
+    { loginState.userToken !== null ? ( 
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
         <Drawer.Screen name="SupportScreen" component={SupportScreen} />

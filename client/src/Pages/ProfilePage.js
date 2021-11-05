@@ -23,15 +23,59 @@ import AppNavBar from '../components/AppNavBar';
 import EditProfile from '../components/EditProfile';
 import { Box, grid } from '@mui/system';
 import whoa from '../whoa.jpeg';
+import twitter from '../twitter.png';
+import facebook from '../facebook.png';
+import ig from '../ig.png';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 export default function ProfilePage() {
 
+  // function FormRow() {
+  //   return (
+  //     <React.Fragment>
+  //       <Grid item xs={4}>
+  //         <item>
+  //         <img  style={{
+  //                           width: 70,
+  //                           height: 70,
+  //                           borderRadius: 50,
+  //                           border: "2px solid",
+  //                           borderColor: 'black' }}
+  //                           src={whoa}/>
+  //         </item>
+  //       </Grid>
+  //       <Grid item xs={4}>
+  //         <item>
+  //         <img  style={{
+  //                           width: 70,
+  //                           height: 70,
+  //                           borderRadius: 50,
+  //                           border: "2px solid",
+  //                           borderColor: 'black' }}
+  //                           src={whoa}/>
+  //         </item>
+  //       </Grid>
+  //       <Grid item xs={4}>
+  //         <item>
+  //         <img  style={{
+  //                           width: 70,
+  //                           height: 70,
+  //                           borderRadius: 50,
+  //                           border: "2px solid",
+  //                           borderColor: 'black' }}
+  //                           src={whoa}/>
+  //         </item>
+  //       </Grid>
+  //     </React.Fragment>
+  //   );
+  // }
+  
+
   return (
-    <Grid >
+    <Grid>
       <AppNavBar/>
-      {/* //align left// */}
+     
       <Box
         sx={{
           p: 2,
@@ -164,57 +208,155 @@ export default function ProfilePage() {
 
 {/* /////////////////////////////////////////////////////////////////////////// */}
 
-      <Box
-          sx={{
-            p: 2,
-            bgcolor: 'background.default',
-            display: 'grid',
-            gridTemplateColumns: { md: '1fr 1fr' },
-            gap: 2,}}>
+     
         
         {/* //2nd component paper// */}
-        <Paper variant="outlined" elevation={3} style={{
-            position: 'left', 
-            borderColor: "black",
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            padding: 10, 
-            height: '10vh', 
-            width: 500,
-            backgroundColor: 'lightBlue',
-            borderRadius:20,
-            borderWidth: 2,
-            marginTop: 20,
-            marginLeft: 20 }}>
-        </Paper>
+                  {/* //align// */}
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: 'background.default',
+              display: 'grid',
+              gridTemplateColumns: { md: '1fr 1fr' },
+              gap: 2,}}>
 
-        <Grid container spacing={4} justifyContent="center" paddingTop={2}>
+                  {/* //main grid container// */}
+                <Grid container spacing={4} justifyContent="left" paddingTop={2} marginLeft={2} >
 
-              <Grid item xs={3}>
-                <FormControl>
-                <item>
+                  {/* //Main Paper// */}
+                  <Paper variant="outlined" elevation={3} style={{
+                    position: 'left', 
+                    borderColor: "black",
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    padding: 10, 
+                    height: '15vh', 
+                    width: 500,
+                    backgroundColor: 'lightBlue',
+                    borderRadius:20,
+                    borderWidth: 2,
+                    marginTop: 20,
+                    marginLeft: 20 }}>
+
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Grid container spacing={1}>
+                          <Grid container item spacing={3} justifyContent="center">
+                            <Grid item xs={4}>
+                              <item>
+                                <img  style={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: 50
+                                   }}
+                                  src={facebook}/>
+                              </item>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <item>
+                                <img  style={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: 50
+                                  }}
+                                  src={ig}/>
+                              </item>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <item>
+                                <img  style={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: 50
+                                   }}
+                                  src={twitter}/>
+                              </item>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <Grid container spacing={1}>
+                          <Grid container item spacing={3} justifyContent="center">
+                            <Grid item xs={4} marginTop={2}>
+                              <item>
+                                <TextField
+                                  id="outlined-read-only-input"
+                                  label="Facebook ID"
+                                  defaultValue="Doe"
+                                  InputProps={{
+                                  readOnly: true,
+                                  }}
+                                />
+                              </item>
+                            </Grid>
+                            <Grid item xs={4} marginTop={2}>
+                              <item>
+                                <TextField
+                                  id="outlined-read-only-input"
+                                  label="Instagram ID"
+                                  defaultValue="Doe"
+                                  InputProps={{
+                                  readOnly: true,
+                                  }}
+                                />
+                              </item>
+                            </Grid>
+                            <Grid item xs={4} marginTop={2}>
+                              <item>
+                                <TextField
+                                  id="outlined-read-only-input"
+                                  label="Twitter ID"
+                                  defaultValue="Doe"
+                                  InputProps={{
+                                  readOnly: true,
+                                  }}
+                                />
+                              </item>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Box>
+
+                    </Paper>
+
+                </Grid>    
+
+          </Box>
+
+      {/* /////////////////////////////////////////////////////////////////////////// */}
+
+     
+        
+        {/* //2nd component paper Done// */}
+
+        <Box sx={{
+              p: 2,
+              bgcolor: 'background.default',
+              display: 'grid',
+              gridTemplateColumns: { md: '1fr 1fr' },
+              gap: 2,}}>
+
+          <Grid container spacing={4} justifyContent="left" paddingTop={2} marginLeft={2} >
+            {/* //Main Paper// */}
+            <Paper variant="outlined" elevation={3} style={{
+              position: 'left', 
+              borderColor: "black",
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              padding: 10, 
+              height: '15vh', 
+              width: 500,
+              backgroundColor: 'lightBlue',
+              borderRadius:20,
+              borderWidth: 2,
+              marginTop: 20,
+              marginLeft: 20 }}>
+
                 
-                    </item>
-                </FormControl>
-              </Grid>
+              </Paper>
+          </Grid>
 
-              <Grid item xs={3}>
-                <FormControl>
-                <item>
-                  
-                    </item>
-                </FormControl>
-              </Grid>
+            
 
-              <Grid item xs={3}>
-                <FormControl>
-                <item>
-                  
-                    </item>
-                </FormControl>
-              </Grid>
-              
-            </Grid>
         </Box>
 
     </Grid>

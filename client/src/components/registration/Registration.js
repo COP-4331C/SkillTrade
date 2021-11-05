@@ -11,7 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import VisibilityOff from "@mui/icons-material/VisibilityOff"; 
 import Visibility from "@mui/icons-material/Visibility";
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -20,6 +20,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../AppNavBar';
+
+
 
 
 export default function Registration() {
@@ -95,10 +97,10 @@ function validFirstName(){
 
   //error messages
   //password valiadation variable
-    const [pwdError, setPwdError] = useState( {
-        state: false,
-        text: ""
-        });
+    // const [pwdError, setPwdError] = useState( {
+    //     state: false,
+    //     text: ""
+    //     });
 
     const [confirmError, setconfirmError] = useState( {
         state: false,
@@ -114,6 +116,13 @@ function validFirstName(){
       state: false,
       text: ""
         });
+    
+        const styles = {
+          helper: {
+               color: 'red',
+               fontSize: '.8em',
+          }
+      }
 
 //submit handeler
 function handleSubmitButton(event) {
@@ -121,10 +130,10 @@ function handleSubmitButton(event) {
 
     setOpenMessage(false);
 
-    setPwdError({
-        state: false,
-        text: ""
-    });
+    // setPwdError({
+    //     state: false,
+    //     text: ""
+    // });
 
     setconfirmError({
         state: false,
@@ -147,7 +156,7 @@ function handleSubmitButton(event) {
 
     console.log(isOk);
     
-    if (validateInputLength()&&valid()&&isOk ) {
+    if (valid()&&isOk ) {
 
         const URL = './api/user/register';
 
@@ -171,12 +180,12 @@ function handleSubmitButton(event) {
 
     //If any of the validation function fails
     } 
-    else if(validateInputLength()!==1) {
-      setPwdError({
-        state: true,
-        text: "Minimum password is 8 characters"
-      });
-    }
+    // else if(validateInputLength()!==1) {
+    //   setPwdError({
+    //     state: true,
+    //     text: "Minimum password is 8 characters"
+    //   });
+    // }
 
     else if (valid()!==1){
         setconfirmError({
@@ -188,7 +197,7 @@ function handleSubmitButton(event) {
     else if(!isOk){
       setComplexity({
         state: true,
-        text: "Password too weak. Please use atlest one symbol, lowercase & uppercase letter and one number"
+        text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
       });
     }
 
@@ -205,13 +214,10 @@ function handleSubmitButton(event) {
 /////////////////Interface/////////////////
 
   return (
-    <Grid >
+    <Grid>
       <form onSubmit={handleSubmitButton}>
       <AppNavBar/>
-        <Paper elevation={3} style={{padding: 40, 
-          height: '56vh', 
-          width: 280, 
-          margin: '20px auto'}}>
+        <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
@@ -285,7 +291,8 @@ function handleSubmitButton(event) {
           />
 
           {/********************* Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={pwdError.state, complexity.state}>
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} > 
+          {/* required error={ complexity.state} */}
             <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
             <Input
               id="standard-adornment-password"
@@ -306,11 +313,11 @@ function handleSubmitButton(event) {
                 </InputAdornment>
               }
             />
-            <FormHelperText id="component-error-text">{pwdError.text}</FormHelperText>
+            {/* <MuiFormHelperText id="component-error-text" styles="styles.helper" >{pwdError.text}</MuiFormHelperText> */}
             <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
-          <FormControl sx={{  width: "100%"  }} variant="standard" required required error={confirmError.state}>
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
             <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
               <Input
                 id="standard-adornment-confirm"

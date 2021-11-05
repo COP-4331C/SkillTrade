@@ -20,8 +20,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, Fade, FormHelperText, Rating, Stack} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
-import EditProfile from '../components/EditProfile';
-import {Box, grid} from '@mui/system';
+import {Box} from '@mui/system';
 import whoa from '../whoa.jpeg';
 import { styled } from '@mui/material/styles';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
@@ -30,8 +29,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import twitter from '../twitter.png';
 import facebook from '../facebook.png';
 import ig from '../ig.png';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import {Theme} from "../components/Theme";
@@ -42,27 +39,39 @@ export default function ProfilePage() {
   const [fade, setFade] = useState(false);
   const [displayButton, setDisplayButton] = useState("none");
   const [displayContactMe, setDisplayContactMe] = useState("inline-flex");
-  const [displayEditButton, setDisplayEditButton] = useState("none")
+  const [displayEditButton, setDisplayEditButton] = useState("none");
+  const [displayEditButtonPermanently, setDisplayEditButtonPermanently] = useState(false);
+  const [inEditMode, setInEditMode] = useState(false);
+  const [bgColor, setBgColor] = useState('lightBlue');
 
-  // Handles the onClick event of the edit button.
-  function handleEnterEditMode() {
-    setReadOnlyState(false);        // Disable fields read only (Make them editable)
-    setDisplayButton("inline-flex") // Shows the save and cancel button
-    setDisplayContactMe("none");    // Hides the contact me button
-    setFade(true);                  // Tells the buttons to fade in
+  function enterEditMode() {
+
+    if(inEditMode) {
+      exitEditMode();                             // Handles the toggle of the
+    } else {
+      setReadOnlyState(false);              // Disable fields read only (Make them editable)
+      setDisplayButton("inline-flex")       // Shows the save and cancel button
+      setDisplayContactMe("none");          // Hides the contact me button
+      setFade(true);                        // Tells the buttons to fade in
+      setDisplayEditButtonPermanently(true) // Stops the OnMouseLeave event to hide the edit button
+      setInEditMode(true);                  // To toggle the edit mode on/off on every edit button click
+      setBgColor(Theme.palette.common.white);     // Sets the background to white
+    }
   }
 
-  // Handles the onClick event of the Save button
-  function handleSave() {
-    handleCancel();
-  }
-
-  // Handles the onClick event of the Cancel button
-  function handleCancel() {
+  function exitEditMode() {
     setReadOnlyState(true);             // Enable fields read only (Make them non-editable)
     setDisplayButton("none");           // Hides the Cancel and Save buttons
     setDisplayContactMe("inline-flex"); // Displays the Contact Me button
     setFade(false);                     // Tells the button to fade out
+    setDisplayEditButtonPermanently(false)
+    setInEditMode(false);
+    setBgColor('lightBlue');
+  }
+
+  // Handles the onClick event of the Save button
+  function handleSave() {
+    exitEditMode();
   }
 
   function handleOnMouseOver() {
@@ -70,7 +79,15 @@ export default function ProfilePage() {
   }
 
   function handleOnMouseLeave() {
-    setDisplayEditButton("none");
+    if(!displayEditButtonPermanently) {
+      // "none" hides the edit button
+      setDisplayEditButton("none");
+    }
+  }
+
+  function handleContactMe() {
+    alert("There are 10 types of people in the world...\n" +
+      "Those who understand binary, and those who don't!")
   }
 
   // Allows a custom rating starts
@@ -105,7 +122,8 @@ export default function ProfilePage() {
             padding: 10,
             height: '25vh',
             width: 500,
-            backgroundColor: 'lightBlue',
+            // backgroundColor: 'lightBlue',
+            backgroundColor: bgColor,
             borderRadius: 20,
             borderWidth: 2,
             marginTop: 50,
@@ -122,22 +140,24 @@ export default function ProfilePage() {
             {/********************* Profile Image *********************************/}
             <Grid item xs>
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <img style={{
-                  marginTop: -50,
-                  width: 70,
-                  height: 70,
-                  borderRadius: 200 / 2,
-                  border: "2px solid",
-                  borderColor: 'black'
-                }}
-                     src={whoa} alt="User"/>
+                <img
+                  style={{
+                    marginTop: -50,
+                    width: 70,
+                    height: 70,
+                    borderRadius: 200 / 2,
+                    border: "2px solid",
+                    borderColor: 'black'
+                  }}
+                  src={whoa} alt="User"
+                />
               </Box>
             </Grid>
 
             {/********************* Edit Button *********************************/}
             <Grid item xs>
               <Box sx={{textAlign: "right"}}>
-                <IconButton color="primary" aria-label="edit" onClick={handleEnterEditMode} sx={{display: displayEditButton}}>
+                <IconButton color="primary" aria-label="edit" onClick={enterEditMode} sx={{display: displayEditButton}}>
                   <EditOutlinedIcon/>
                 </IconButton>
               </Box>
@@ -153,7 +173,6 @@ export default function ProfilePage() {
                 label="First Name"
                 defaultValue="John"
                 InputProps={{readOnly: readOnlyState}}
-                // sx={{padding:0}}
               />
             </Grid>
 
@@ -176,7 +195,7 @@ export default function ProfilePage() {
                 variant="contained"
                 color="primary"
                 style={{ marginTop: 30, padding:"6px 64px"}}
-                onClick={handleCancel}
+                onClick={exitEditMode}
                 sx={{display: displayButton}}
               > Cancel
               </Button>
@@ -191,6 +210,7 @@ export default function ProfilePage() {
                 style={{marginTop: 30}}
                 startIcon={<ForumOutlinedIcon/>}
                 sx={{display: displayContactMe, whiteSpace: 'nowrap'}}
+                onClick={handleContactMe}
               >
                 Contact Me!
               </Button>
@@ -224,7 +244,6 @@ export default function ProfilePage() {
 
         </Paper>
       </Box>
-
 {/* /////////////////////////////////////////////////////////////////////////// */}
 
      
@@ -262,11 +281,11 @@ export default function ProfilePage() {
                           <Grid container item spacing={3} justifyContent="center">
                             <Grid item xs={4}>
                               <item>
-                                <img  style={{
+                                <img style={{
                                   width: 50,
                                   height: 50,
                                   borderRadius: 50
-                                   }}
+                                }}
                                   src={facebook}/>
                               </item>
                             </Grid>

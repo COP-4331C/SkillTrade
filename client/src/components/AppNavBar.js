@@ -3,8 +3,11 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import logo1WhiteTransparent from '../logo1WhiteTransparent.png'
 import {Stack} from "@mui/material";
+import { Link as RouterLink } from 'react-router-dom';
+import MainLogo from "./MainLogo";
+import LoginModal from "./LoginModal";
+import ProfilePage from '../Pages/ProfilePage';
 
 export default function AppNavBar() {
   return (
@@ -12,11 +15,32 @@ export default function AppNavBar() {
       <AppBar position="static" color="primary">
         <Toolbar>
           <Box sx={{flexGrow: 1, textAlign: "left"}}>
-            <img src={logo1WhiteTransparent} alt="Logo" />
+            <MainLogo/>
           </Box>
           <Stack spacing={4} direction="row">
-            <Button variant="outlined" color="inherit">Sign in</Button>
-            <Button variant="contained" size="small" color="secondary" >Sign up for free</Button>
+            <LoginModal />
+            <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              component={RouterLink}
+              to="/Registration"
+              sx={{whiteSpace: 'nowrap'}}
+            >
+              Sign up for free</Button>
+
+            {/* //This is just for test, TEMPORARY// */}
+              <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              component={RouterLink}
+              to="/Profile"
+              sx={{whiteSpace: 'nowrap'}}
+            >
+              Edit Profile</Button>
+
+            {/* //This is just for test, TEMPORARY// */}
           </Stack>
         </Toolbar>
       </AppBar>

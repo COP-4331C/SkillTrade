@@ -13,12 +13,14 @@
 import { createTheme } from '@mui/material/styles';
 
 export const Theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0031FF',
-    },
-    secondary: {
-      main: '#FFCE00',
-    },
-  },
+  // palette: {
+  //   primary: {
+  //     // main: '#0031FF',
+  //     main: '#3f51b5',
+  //   },
+  //   secondary: {
+  //     // main: '#FFCE00',
+  //     main: '#f44336',
+  //   },
+  // },
 });

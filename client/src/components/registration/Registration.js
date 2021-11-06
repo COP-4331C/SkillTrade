@@ -1,176 +1,378 @@
-// ** create-user.component.js ** //
-import React,{Component} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Avatar from '@mui/material/Avatar'
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import VisibilityOff from "@mui/icons-material/VisibilityOff"; 
+import Visibility from "@mui/icons-material/Visibility";
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import PasswordFields from './PasswordField';
-
-export default class Registration extends Component {
-  
+import { Link as RouterLink } from 'react-router-dom';
+import InputLabel from "@mui/material/InputLabel";
+import {Alert, Collapse, FormHelperText} from "@mui/material";
+import AppNavBar from '../AppNavBar';
 
 
-    constructor(props) {
-        super(props)
 
-        this.onChangeUseremail = this.onChangeUseremail.bind(this);
-        this.onChangepasswordhash = this.onChangepasswordhash.bind(this);
-        this.onChangefirstName = this.onChangefirstName.bind(this);
 
-        this.onSubmit = this.onSubmit.bind(this);
+export default function Registration() {
 
-        this.state = {
-            email: 'Lmao@gmail.com',
-            password: '123456',
-            firstName: 'Lmao',
-            lastName: 'Mo'
-            
-        }
-    }
 
-    onChangeUseremail(e) {
-        this.setState({ email: e.target.value })
-    }
+const [email, setEmail] = useState("");
 
-    onChangepasswordhash(e) {
-        this.setState({ password: e.target.value })
-    }
+const [firstName, setfirstName] = useState("");
 
-    onChangefirstName(e) {
-      this.setState({ firstName: e.target.value })
-    }
+const [lastName, setlastName] = useState("");
 
-    onChangelastName(e) {
-      this.setState({ lastName: e.target.value })
-    }
 
+const [values, setValues] = React.useState({
+    password:'',
+    showPassword: false,
+    confirm: '',
+    showConfirm: false
+});
+
+
+//error message
+const [openMessage, setOpenMessage] = useState(false);
+
+//show password for the password field
+const handleClickShowPassword = () => {
+    setValues({
+        ...values,
+        showPassword: !values.showPassword,
+    });
+};
+
+//show password for the confirm password field
+const handleClickShowConfirm = () => {
+    setValues({
+        ...values,
+        showConfirm: !values.showConfirm,
+    });
+};
+
+  //got no clue what these are for - but MUI has them!
+const handleMouseDown = (event) => {
+    event.preventDefault();};
+
+const handleMouseDownConfirm = (event) => {
+    event.preventDefault();};
+
+
+  // Stores the password in the password variable
+const handleChangePasswordField = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });};
+
+  // Verification for eveything
+const verification_length = 8
+
+function validateInputLength() {
+    if(values.password.length >= verification_length)
+        return 1}
+
+function valid(){
+    if(values.password !== values.confirm)
+        return false;
+    else if(values.password === values.confirm)
+        return 1;}
+
+function validEmail(){
+    if(email.length >1)
+        return 1;}
+
+function validFirstName(){
+    if(firstName.length>=1 && firstName.length<50)
+        return 1;}
+
+
+  //error messages
+  //password valiadation variable
+    // const [pwdError, setPwdError] = useState( {
+    //     state: false,
+    //     text: ""
+    //     });
+
+    const [confirmError, setconfirmError] = useState( {
+        state: false,
+        text: ""
+        });
+
+    const [confirmName, setConfirmName] = useState( {
+        state: false,
+        text: ""
+        });
     
+    const [complexity, setComplexity] = useState( {
+      state: false,
+      text: ""
+        });
+    
+        const styles = {
+          helper: {
+               color: 'red',
+               fontSize: '.8em',
+          }
+      }
 
-    onSubmit(e) {
-        e.preventDefault()
+//submit handeler
+function handleSubmitButton(event) {
+    event.preventDefault();
 
-        const userObject = {
-            email: this.state.email,
-            password: this.state.password,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName
+    setOpenMessage(false);
+
+    // setPwdError({
+    //     state: false,
+    //     text: ""
+    // });
+
+    setconfirmError({
+        state: false,
+        text: ""
+    });
+
+    setConfirmName({
+      state: false,
+      text: ""
+    });
+
+    setComplexity({
+      state: false,
+      text: ""
+    });
+
+    //const { values.password } = this.state;
+    const re = new RegExp("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$");
+    const isOk = re.test(values.password);
+
+    console.log(isOk);
+    
+    if (valid()&&isOk ) {
+
+        const URL = './api/user/register';
+
+        const registerPayload = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: values.password
         };
 
-        axios.post('http://localhost:5000/api/user/register', userObject)
-            .then(function (response) {
+        axios.post(URL, registerPayload)
+            .then(function (response) { 
+                alert("Registration successful!" );
                 console.log(response);
-            })
+                window.location.href='/Login';
+              })
+                
+
             .catch(function (error) {
-                console.log(error);
-            });
+                setOpenMessage(true);});
 
-        //this.setState({ email: '', passwordHash: '', firstName:'' })
+    //If any of the validation function fails
+    } 
+    // else if(validateInputLength()!==1) {
+    //   setPwdError({
+    //     state: true,
+    //     text: "Minimum password is 8 characters"
+    //   });
+    // }
+
+    else if (valid()!==1){
+        setconfirmError({
+            state: true,
+            text: "Passwords do not match, please check again!"
+          });
     }
 
+    else if(!isOk){
+      setComplexity({
+        state: true,
+        text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
+      });
+    }
 
-    render() {
-        return (
-          <Grid>
-            <form onSubmit={this.onSubmit}>
-              <Paper elevation={3} style={{ padding: 40, height: '50vh', width: 280, margin: '20px auto' }}>
+    else if (validFirstName()!==1){
+      setConfirmName({
+          state: true,
+          text: "Please Enter valid First Name"
+        });
 
-                <Grid align='center'>
-                  <Avatar style={{backgroundColor: '#1bbd7e'}}>
-                    <AssignmentOutlinedIcon />
-                  </Avatar>
-                    <h2>Create account</h2>
-                </Grid>
-                    
-                <Grid container spacing={2}>
-                  <Grid item xs>
-                    <TextField
-                      required
-                      fullWidth
-                      type= "text"
-                      label="First name"
-                      value={this.state.firstName}
-                      placeholder="Enter first name"
-                      onChange={this.onChangefirstName}
-                      variant="standard"
-                      style={{marginTop: 0}}
-                      size="small"
-                    />
-                  </Grid>
-                
-                  
-                    <Grid item xs>
-                      <TextField
-                        fullWidth
-                        type= "text"
-                        label="Last name"
-                        value={this.state.lastName}
-                        placeholder="Enter first name"
-                        onChange={this.onChangelastName}
-                        variant="standard"
-                        style={{marginTop: 0}}
-                        size="small"
-                      />
-                    </Grid>    
-                </Grid>
+    
+  }
+  }
 
-                <Grid item s>
-                  <TextField
-                    fullWidth
-                    type="text"
-                    label="Email"
-                    placeholder="Enter email address"
-                    value={this.state.email}
-                    onChange={this.onChangeUseremail}
-                    variant="standard"
-                    style={{marginTop: 0}}
-                    size="small"/>
-                </Grid>
+/////////////////Interface/////////////////
 
-                <Grid item s>
-                  <TextField
-                    fullWidth
-                    type="text"
-                    label="password"
-                    placeholder="Enter Password"
-                    value={this.state.password}
-                    onChange={this.onChangepasswordhash}
-                    variant="standard"
-                    style={{marginTop: 0}}
-                    size="small"/>
-                </Grid>
+  return (
+    <Grid>
+      <form onSubmit={handleSubmitButton}>
+      <AppNavBar/>
+        <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
 
-                <Button type="submit" color="info" variant="contained" fullWidth style={{margin: '8px 0'}}>Sign Up</Button>
-
-                  
-                            
-                            
-                        
-                        
-                        {/* <div className="form-group">
-                            <label>Add User password</label>
-                            <input type="text" value={this.state.password} onChange={this.onChangepasswordhash} className="form-control" />
-                        </div>
-                        <div className="form-group">
-                            <label>Add User firstName</label>
-                            <input type="text" value={this.state.firstName} onChange={this.onChangefirstName} className="form-control" />
-                        </div> */}
-                        
-                        {/* <div className="form-group">
-                            <input type="submit" value="Create User" className="btn btn-success btn-block" />
-                        </div> */}
-              </Paper>
-                
-            </form>
+          {/********************* Icon and title *********************/}
+          <Grid align='center'>
+            <Avatar style={{backgroundColor: '#0031FF'}}>
+              <LockOutlinedIcon/>
+            </Avatar>
+            <h2>Register</h2>
           </Grid>
+
+          {/********************* Wrong credentials message ******************** */}
+          {/* (a hidden alert). Visible only with wrong credentials */}
+          <Collapse in={openMessage}>
+            <Alert
+              severity="error"
+              sx={{ mb: 2 }}
+            >
+              <strong>Please check information provided!</strong>
+            </Alert>
+          </Collapse>
+
+        {/********************* FN Text Field *********************/}
+        <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <FormControl required error={confirmName.state}>
+              <item>
+                <TextField
+                  required
+                  fullWidth
+                  label="First Name"
+                  placeholder="Enter First Name"
+                  variant="standard"
+                  onChange={(e) => setfirstName(e.target.value)}
+                  value={firstName}
+                  type="text"
+                />
+              </item>
+              <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
+          </FormControl>
+        </Grid>
+          
+        
+          {/********************* LN Text Field *********************/}
+          <Grid item xs ={6}>
+          <item>
+          <TextField
             
-            
-        )
-    }
+            fullWidth
+            label="Last Name"
+            placeholder="Enter Last Name"
+            variant="standard"
+            onChange={(e) => setlastName(e.target.value)}
+            value={lastName}
+            type="text"
+          />
+          </item>
+          
+        </Grid>
+        </Grid>
+        
+        
+          {/********************* email Text Field *********************/}
+          <TextField
+            required
+            fullWidth
+            label="Email"
+            placeholder="Enter email"
+            variant="standard"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            type="email"
+          />
+
+          {/********************* Password field *********************/}
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} > 
+          {/* required error={ complexity.state} */}
+            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+            <Input
+              id="standard-adornment-password"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChangePasswordField('password')}
+              placeholder="Enter Password"
+
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDown}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {/* <MuiFormHelperText id="component-error-text" styles="styles.helper" >{pwdError.text}</MuiFormHelperText> */}
+            <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
+          </FormControl>
+
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
+            <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
+              <Input
+                id="standard-adornment-confirm"
+                type={values.showConfirm ? 'text' : 'password'}
+                value={values.confirm}
+                onChange={handleChangePasswordField('confirm')}
+
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowConfirm}
+                      onMouseDown={handleMouseDownConfirm}
+                    >
+                      {values.showConfirm ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
+          </FormControl>
+
+          {/********************* Sign in button *********************/}
+          {/* <Link underline="hover"component={RouterLink} to="/Login"> */}
+            <Button
+              type='submit'
+              color='primary'
+              variant='contained'
+              fullWidth
+              style={{ margin: '20px 0' }}
+            >
+              Register
+            </Button>
+          {/* </Link> */}
+
+          {/*********************  Forgot my password *********************/}
+          <Typography>
+            <Link
+              href='#'
+              underline='hover'
+              color='primary'
+              fontSize='0.9rem'
+              marginY='20px'
+            >
+              Forgot my password
+            </Link>
+          </Typography>
+
+          {/********************* already have an account  *********************/}
+          <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
+            <Link underline="hover" component={RouterLink} to="/Login">Login</Link>
+          </Typography>
+
+        </Paper>
+      </form>
+    </Grid>
+  );
 }

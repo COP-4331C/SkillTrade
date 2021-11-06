@@ -2,14 +2,13 @@ import React from 'react';
 import { 
     View, 
     Text, 
-    button,
+    Button,
     TouchableOpacity, 
     Dimensions,
     StyleSheet,
     Image 
 } from 'react-native';
 
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 
@@ -32,22 +31,17 @@ const SplashScreen = ({navigation}) => {
                 <Text style={styles.title}>Stay connected with everyone !</Text>
                 <Text style={styles.text}>Sign in with account</Text>
                 <View style={styles.button}>
-                <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
-                    {/* <linearGradient
-                        colors={['#08d4c4','#01ab9d']}
-                        style={styles.signIn}
-                    > */}
-                        {/* <Text style={styles.textSign}>Get Started</Text> */}
-                        {/* <MaterialIcons
-                        name="navigete-next"
-                        color="#fff"
-                        size={20}
-                        /> */}
-                    {/* </linearGradient> */}
-                    <button>
-                        <Text>Get Started</Text>
-                    </button>
-                    
+                <TouchableOpacity 
+                    onPress={()=>navigation.navigate('SignInScreen')}
+                    style={[styles.signIn, {
+                                borderColor: '#007AFF',
+                                borderWidth: 3,
+                                // marginTop: 10
+                            }]}
+                    >
+                    <Text style={[styles.textSign, {
+                        color: '#007AFF'
+                    }]}>Get Started</Text>
                 </TouchableOpacity>
                 </View>
             </Animatable.View>

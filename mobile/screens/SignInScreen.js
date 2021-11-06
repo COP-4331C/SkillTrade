@@ -10,11 +10,11 @@ import {
     StyleSheet, 
     StatusBar
 } from 'react-native';
-
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
+import { AuthContext } from '../components/context';
+import axios from 'axios';
 
 const SignInScreen = ({navigation}) => {
 
@@ -25,27 +25,32 @@ const SignInScreen = ({navigation}) => {
         secureTextEntry: true
     });
 
+    const { signIn } = React.useContext(AuthContext);
+
     const textInputChange = (val) => {
         if(val.length !== 0){
             setData({
                 ...data,
-                email:val,
-                check_textInputChange:true
+                username: val,
+              check_textInputChange: true,
+              isValidUser: true
             })
         } else {
             setData({
                 ...data,
-                email:val,
-                check_textInputChange:false
-            })
+                username: val,
+              check_textInputChange: false,
+              isValidUser: false
+            });
         }
     }
 
     const handlePasswordChange = (val) => {
         setData({
             ...data,
-            password: val
-        })
+            password: val,
+            isValidPassword: true
+        });
     }
 
     const updateSecureTextEntry = () => {
@@ -55,6 +60,27 @@ const SignInScreen = ({navigation}) => {
         })
     }
 
+    const loginHandle = (username, password) => {
+        signIn(username, password);
+    }
+
+    // function connectToLoginApi(){
+    //     axios.post('https://cop4331c.herokuapp.com/api/auth/login', {
+    //             email: data.username,
+    //             password: data.password
+    //         })
+    //         .then(function(response) {
+    //             // do something when successful (store the token returned in the response)
+    //             const accessToken = response.data.accessToken 
+    //             loginHandle(data.username, data.password)
+    //             console.warn(response.data.accessToken) // for test
+    //         })
+    //         .catch(function(error) {
+    //             // do something when there is an error (probably just console log it for now)
+    //             console.log(error)
+    //         });
+    // }
+    
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content"/>
@@ -126,18 +152,18 @@ const SignInScreen = ({navigation}) => {
                 </View>
 
                 <View style={styles.button}>
-                    {/* <linearGradient
-                        colors={['#08d4c4','#01ab9d']}
-                        style={styles.signIn}
+                    <TouchableOpacity
+                        onPress={() => {loginHandle(data.username, data.password)}} //fixme. how to check it??
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                            marginTop: 15
+                        }]}
                     >
-                        <Text style={[styles.textSign,{
-                            color:'#fff'
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
                         }]}>Sign In</Text>
-                    </linearGradient> */}
-
-                    <button> 
-                        <Text>Sign In</Text>
-                    </button>
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignUpScreen')}

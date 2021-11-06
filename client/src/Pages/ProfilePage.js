@@ -33,6 +33,7 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import {Theme} from "../components/Theme";
 
+
 export default function ProfilePage() {
 
   const [readOnlyState, setReadOnlyState] = useState(true);
@@ -40,7 +41,6 @@ export default function ProfilePage() {
   const [displayButton, setDisplayButton] = useState("none");
   const [displayContactMe, setDisplayContactMe] = useState("inline-flex");
   const [displayEditButton, setDisplayEditButton] = useState("none");
-  const [displayEditButtonPermanently, setDisplayEditButtonPermanently] = useState(false);
   const [inEditMode, setInEditMode] = useState(false);
   const [bgColor, setBgColor] = useState('lightBlue');
 
@@ -97,20 +97,19 @@ export default function ProfilePage() {
 
   {/**************************** About Me Variables *********************************/}
   const [displayEditButtonAboutMe, setDisplayAboutMe_EditButton] = useState("none");
-  // const [displayEditButtonPermanentlyAboutMe, setDisplayEditButtonPermanentlyAboutMe] = useState(false);
   const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
-  const [aboutMeBold, setAboutMeBold] = useState("Proactive, Ambitious and Creative Executive Chef ")
-  const [aboutMeText, setAboutMeText] = useState("with a notable career trajectory and achievements list. Experience " +
+  const [aboutMeText, setAboutMeText] = useState("Proactive, Ambitious and Creative Executive Chef " +
+    "with a notable career trajectory and achievements list. Experience " +
     "in catering for up to 450 covers at some of the most prestigious " +
     "establishments in the world. Passionate about working with fresh produce, " +
     "creating innovative dishes and improving restaurant ratings.")
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
-  const [aboutMeBoldTemp, setAboutMeBoldTemp] = useState("");
   const [bgColorAboutMe, setBgColorAboutMe] = useState('lightblue');
   const [aboutMeEditMode, setAboutMeEditMode] = useState(false);
   const [displayAboutMeTextFields, setDisplayAboutMeTextFields] = useState("none");
   const [displayAboutMeButtons, setDisplayAboutMeButtons] = useState("none");
   const [fadeAboutMeItems, setFadeAboutMeItems] = useState(false);
+  const [displaySignature, setDisplaySignature] = useState("block")
 
   {/********************* Functions for About Me Section *********************************/}
   function handleOnMouseOverAboutMe() {
@@ -130,12 +129,12 @@ export default function ProfilePage() {
     setAboutMeEditMode(true);
     setDisplayAboutMeText("none");
     setAboutMeTextTemp(aboutMeText);
-    setAboutMeBoldTemp(aboutMeBold);
     setBgColorAboutMe('white')
     setDisplayAboutMeTextFields("block");
     setDisplayAboutMeButtons("inline-flex");
     setFadeAboutMeItems(true);
     setDisplayAboutMe_EditButton("none");
+    setDisplaySignature("none");
   }
 
   function exitAboutMeEditMode () {
@@ -145,26 +144,21 @@ export default function ProfilePage() {
     setDisplayAboutMeTextFields("none");
     setDisplayAboutMeButtons("none")
     setFadeAboutMeItems(false);
+    setDisplaySignature("block");
   }
 
   function handleAboutMeCancel() {
-    setAboutMeBold(aboutMeBold);
     setAboutMeText(aboutMeText);
     exitAboutMeEditMode()
   }
 
   function handleAboutMeSave() {
-    setAboutMeBold(aboutMeBoldTemp);
     setAboutMeText(aboutMeTextTemp);
     exitAboutMeEditMode()
   }
 
   function handleOnChangeAboutMeText(e) {
     setAboutMeTextTemp(e.target.value);
-  }
-
-  function handleOnChangeAboutMeBold(e) {
-    setAboutMeBoldTemp(e.target.value);
   }
 
 
@@ -455,13 +449,15 @@ export default function ProfilePage() {
                   </Typography>
                 </Grid>
 
-                {/********************* Edit Button *********************************/}
+                {/********************* Edit Icon *********************************/}
                 <Grid item xs>
                   <Box sx={{textAlign: "right"}}>
                     <IconButton color="primary" aria-label="edit" onClick={enterAboutMeEditMode}
                                 sx={{display: displayEditButtonAboutMe}}>
                       <EditOutlinedIcon/>
                     </IconButton>
+                    {/********************* Save Icon *********************************/}
+
                   </Box>
                 </Grid>
 
@@ -477,26 +473,19 @@ export default function ProfilePage() {
                 marginX: "10px",
                 display: displayAboutMeText
               }}>
-                <strong>{aboutMeBold}</strong>
+                {/*<strong>{aboutMeBold}</strong>*/}
                 {aboutMeText}
               </Box>
                 <TextField
-                  label="About Me Bold line"
-                  value={aboutMeBoldTemp}
-                  fullWidth
-                  onChange={handleOnChangeAboutMeBold}
-                  variant={"outlined"}
-                  sx={{marginY:"10px", display:displayAboutMeTextFields}}
-                />
-                <TextField
-                  label="About Me Text"
+                  // label="About Me"
                   multiline
-                  rows={aboutMeText.length / 50}
+                  rows={aboutMeText.length / 53}
                   value={aboutMeTextTemp}
                   fullWidth
                   onChange={handleOnChangeAboutMeText}
-                  variant={"outlined"}
-                  sx={{marginY:"10px", display:displayAboutMeTextFields}}
+                  variant="outlined"
+                  sx={{display:displayAboutMeTextFields }}
+                  size="small"
                 />
 
               {/*************************** Signature ************************************/}
@@ -510,7 +499,8 @@ export default function ProfilePage() {
                     fontFamily: ["Comic Sans MS","Comic Sans", "cursive"].join(","),
                     fontSize: "18px",
                     marginLeft: "10px",
-                    textTransform: "capitalize"
+                    textTransform: "capitalize",
+                    display: displaySignature
                   }}
                 >
                   John Doe
@@ -521,8 +511,7 @@ export default function ProfilePage() {
               <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-evenly',
-                // alignItems: 'safe center',
-                // flexWrap: "wrap-reverse"
+
               }}>
 
                 {/******************** Cancel Button *********************/}
@@ -530,7 +519,7 @@ export default function ProfilePage() {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{marginTop: 5, margin: 10, padding: "6px 64px"}}
+                  style={{marginTop: 5, marginBottom: 5, padding: "6px 64px"}}
                   onClick={handleAboutMeCancel}
                   sx={{display: displayAboutMeButtons}}
                 > Cancel
@@ -543,7 +532,7 @@ export default function ProfilePage() {
                   color="secondary"
                   startIcon={<SaveIcon/>}
                   variant="contained"
-                  style={{marginTop: 5, margin: 10, padding: "6px 64px"}}
+                  style={{marginTop: 5, marginBottom: 5, padding: "6px 64px"}}
                   onClick={handleAboutMeSave}
                   sx={{display: displayAboutMeButtons}}
                 >

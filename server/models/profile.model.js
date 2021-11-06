@@ -23,11 +23,7 @@ const ProfileSchema = mongoose.Schema({
     type: String,
     unique: false,
     default: "https://picsum.photos/200/200"
-  }/*,
-  servicesOffering: {
-    type: Service
-  }*/
-
+  }
 });
 
 const Profile = mongoose.model("Profile", ProfileSchema);

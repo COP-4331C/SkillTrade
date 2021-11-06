@@ -1,7 +1,12 @@
 const User = require("../models/user.model");
 
 exports.create = async (req, res) => {
+
+  const { firstName, lastName } = req.body;
+  req.body["profile"] = { firstName: firstName, lastName: lastName};
+
   const user = new User(req.body);
+
   user
     .save()
     .then(() => {

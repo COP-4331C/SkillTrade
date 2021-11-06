@@ -13,4 +13,7 @@ router.post("/logout", users.logout);
 // Change Password
 router.post("/changePassword", authenticateToken, users.changePassword);
 
+// Verify Email*
+router.post("/verifyEmail", users.verifyEmail);
+
 module.exports = router;

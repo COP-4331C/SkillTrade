@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const nodemailer = require("nodemailer");
 
 exports.create = async (req, res) => {
   const user = new User(req.body);
@@ -74,6 +75,57 @@ exports.uploadPicture = async(req, res) => {
   // store it in sepearte data folder, and have it be a path to the image?
   // if so, how to do that?
 
+
+}
+
+exports.verifyEmail = async(req, res) => {
+
+  const {email} = req.body;
+
+  //let transporter = nodemailer.createTransport(transport[,defaults]);
+
+  // var transport = nodemailer.createTransport({
+  //   host: "smtp.mailtrap.io",
+  //   port: 2525,
+  //   auth: {
+  //     user: "b602b7a4557dcc",
+  //     pass: "4eb888412f4b4e"
+  //   }
+  // });
+
+  var transport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rafael.a0vg@gmail.com',
+      pass: 'yourpassword'
+    }
+  });
+
+  var message = {
+    from: "sender@server.com",
+    to: email,
+    subject: "Message title",
+    text: "Plaintext version of the message - tester!",
+    html: "<p>HTML version of the message</p>"
+  };
+
+  transport.sendMail(message, function(error, info){
+    if (error) {
+      return res.status(400).json({ error: "something went wrong" });
+    } else {
+      return res.status(200).json({ message : "something WORKED!" });
+    }
+  });
+
+  // const transporter = nodemailer.createTransport({
+  //   host: "smtp.example.com",
+  //   port: 587,
+  //   secure: false, // upgrade later with STARTTLS
+  //   auth: {
+  //     user: "username",
+  //     pass: "password",
+  //   },
+  // });
 
 }
 

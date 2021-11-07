@@ -55,8 +55,9 @@ export default function HomeNavBar() {
           <Toolbar sx={{justifyContent:"space-between"}}>
 
             {/* Show Main Logo */}
-            <MainLogo/>
-
+            <Box sx={{marginRight: "5vh"}}>
+              <MainLogo/>
+            </Box>
             {/*Search Box*/}
               <Search>
                 <SearchIconWrapper>
@@ -65,7 +66,7 @@ export default function HomeNavBar() {
                 <StyledInputBase placeholder="Search for a skill to learn…" inputProps={{ "aria-label": "search" }}/>
               </Search>
 
-            {/*Avatar */}
+            {/*Avatar with Account Menu */}
             <AccountMenu/>
 
           </Toolbar>

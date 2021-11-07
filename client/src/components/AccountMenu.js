@@ -13,6 +13,7 @@ import testUserAvatar from "../images/avatars/testUserAvatar.jpg";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
+import {logoutUser} from "./Logout";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -28,7 +29,7 @@ export default function AccountMenu() {
     return (
         <React.Fragment>
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                <Typography sx={{ minWidth: 100 }}>My Skills</Typography>
+                <Typography color="secondary" sx={{ minWidth: 100 }}>My Skills</Typography>
                  {/*<Typography sx={{ minWidth: 100 }}>Credit Hours</Typography>*/}
                 <Tooltip title="Account settings">
                     <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
@@ -70,8 +71,8 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem>
-                    <Avatar alt="Remy Sharp" src={testUserAvatar} /> Profile
+                <MenuItem component={RouterLink} to="/profile">
+                    <Avatar alt="Remy Sharp" src={testUserAvatar}/> Profile
                 </MenuItem>
                 <MenuItem>
                     <ListItemIcon>
@@ -86,7 +87,7 @@ export default function AccountMenu() {
                     </ListItemIcon>
                     My Skills
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/">
+                <MenuItem onClick={() => logoutUser()}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
                     </ListItemIcon>

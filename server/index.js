@@ -18,6 +18,8 @@ if (process.env.NODE_ENV === "production") {
 }
 app.use("/api/auth", require("./routes/auth.routes.js"));
 app.use("/api/user", require("./routes/user.routes.js"));
+app.use("/api/conversations", require("./routes/conversation.routes.js"));
+app.use("/api/messages", require("./routes/message.routes.js"));
 connect();
 
 function listen() {

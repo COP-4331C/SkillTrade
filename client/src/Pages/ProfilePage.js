@@ -1,402 +1,477 @@
-import React, {useRef, useState} from 'react';
-import axios from 'axios';
+import React, {useState} from 'react';
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import Avatar from '@mui/material/Avatar'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import Input from "@mui/material/Input";
-import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import {Link as RouterLink} from 'react-router-dom';
-import InputLabel from "@mui/material/InputLabel";
-import {Alert, Collapse, Fade, FormHelperText, Rating, Stack} from "@mui/material";
-import AppNavBar from '../components/AppNavBar';
-import {Box} from '@mui/system';
-import whoa from '../whoa.jpeg';
-import { styled } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import {Divider, Fade, Rating, Stack, ThemeProvider} from "@mui/material";
+import {styled} from '@mui/material/styles';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SaveIcon from "@mui/icons-material/Save";
-import twitter from '../twitter.png';
-import facebook from '../facebook.png';
-import ig from '../ig.png';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import {Theme} from "../components/Theme";
+import {grey} from "@material-ui/core/colors";
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import EditIcon from '@mui/icons-material/Edit';
+import {createTheme, makeStyles} from "@material-ui/core";
+import AppNavBar from '../components/AppNavBar';
+import TextField from '@mui/material/TextField';
+import profileImage from '../images/users/chef.png';
 
 export default function ProfilePage() {
 
-  const [readOnlyState, setReadOnlyState] = useState(true);
   const [fade, setFade] = useState(false);
+  const [displayNames, setDisplayNames] = useState("inline-flex");
   const [displayButton, setDisplayButton] = useState("none");
   const [displayContactMe, setDisplayContactMe] = useState("inline-flex");
   const [displayEditButton, setDisplayEditButton] = useState("none");
-  const [displayEditButtonPermanently, setDisplayEditButtonPermanently] = useState(false);
-  const [inEditMode, setInEditMode] = useState(false);
-  const [bgColor, setBgColor] = useState('lightBlue');
+  const [inEditMode, setEditMode] = useState(false);
+  const [displayEditFields, setDisplayEditFields] = useState("none");
+  const [firstName, setFirstName] = useState("Benjamin");
+  const [lastName, setLastName] = useState("Harrion");
+  const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
+  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
+    "with a notable career trajectory and achievements list. Experience " +
+    "in catering for up to 450 covers at some of the most prestigious " +
+    "establishments in the world. Passionate about working with fresh produce, " +
+    "creating innovative dishes and improving restaurant ratings.\"");
+  const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
+  const [firstNameTemp, setFirstNameTemp] = useState("");
+  const [lastNameTemp, setLastNameTemp] = useState("");
+  const [instagram, setInstagram] = useState("benharrionchef");
+  const [twitter, setTwitter] = useState("@benchef");
+  const [linkedIn, setLinkedIn] = useState("harrion.benjamin");
+  const [instagramTemp, setInstagramTemp] = useState("");
+  const [twitterTemp, setTwitterTemp] = useState("");
+  const [linkedInTemp, setLinkedInTemp] = useState("");
+  const [displaySocial, setDisplaySocial] = useState("none");
 
   function enterEditMode() {
-
-    if(inEditMode) {
-      exitEditMode();                             // Handles the toggle of the
-    } else {
-      setReadOnlyState(false);              // Disable fields read only (Make them editable)
-      setDisplayButton("inline-flex")       // Shows the save and cancel button
-      setDisplayContactMe("none");          // Hides the contact me button
-      setFade(true);                        // Tells the buttons to fade in
-      setDisplayEditButtonPermanently(true) // Stops the OnMouseLeave event to hide the edit button
-      setInEditMode(true);                  // To toggle the edit mode on/off on every edit button click
-      setBgColor(Theme.palette.common.white);     // Sets the background to white
-    }
+    setEditMode(true);                      // Turns edit mode mode (set variable to true)
+    setDisplayNames("none");                // Hides the First and Last names
+    setDisplayContactMe("none");            // Hides the contact me button
+    setDisplayAboutMeText("none");          // Hides the about me text
+    setDisplayEditButton("none");           // Hides the edit button
+    setDisplayEditFields("inline-flex");    // Displays the edit text fields
+    setDisplayButton("inline-flex");        // Displays the save and cancel button
+    setDisplaySocial("flex");
+    setFirstNameTemp(firstName);                  // Copies first name to editable text fields
+    setLastNameTemp(lastName);                    // Copies last name to editable text fields
+    setAboutMeTextTemp(aboutMeText);              // Copies about me text to editable text field
+    setFade(true);                          // Tells the buttons to fade in
+    setInstagramTemp(instagram);
+    setTwitterTemp(twitter);
+    setLinkedInTemp(linkedIn);
   }
 
   function exitEditMode() {
-    setReadOnlyState(true);             // Enable fields read only (Make them non-editable)
-    setDisplayButton("none");           // Hides the Cancel and Save buttons
-    setDisplayContactMe("inline-flex"); // Displays the Contact Me button
-    setFade(false);                     // Tells the button to fade out
-    setDisplayEditButtonPermanently(false)
-    setInEditMode(false);
-    setBgColor('lightBlue');
+    setEditMode(false);                     // Turn off edit mode
+    setDisplayNames("inline-flex");         // Displays the First and Last names
+    setDisplayContactMe("inline-flex");     // Displays the Contact Me button
+    setDisplayAboutMeText("block")          // Displays the about me text
+    setDisplayEditButton("inline-flex");    // Display Edit button
+    setDisplayEditFields("none")            // Hides edit text fields
+    setDisplayButton("none");               // Hides the Cancel and Save buttons
+    setDisplaySocial("none");
+    setFade(false);                         // Tells the button to fade out
   }
 
   // Handles the onClick event of the Save button
   function handleSave() {
+    setFirstName(firstNameTemp);
+    setLastName(lastNameTemp);
+    setAboutMeText(aboutMeTextTemp);
+    setInstagram(instagramTemp);
+    setTwitter(twitterTemp);
+    setLinkedIn(linkedInTemp);
     exitEditMode();
   }
 
   function handleOnMouseOver() {
-    setDisplayEditButton("inline-block");
+    if (!inEditMode) {
+      setDisplayEditButton("inline-block");
+    }
   }
 
   function handleOnMouseLeave() {
-    if(!displayEditButtonPermanently) {
-      // "none" hides the edit button
+    if (!inEditMode) {
       setDisplayEditButton("none");
     }
   }
 
   function handleContactMe() {
-    alert("There are 10 types of people in the world...\n" +
+    alert("Coming Soon! \n\n" +
+      "BTW: There are 10 types of people in the world...\n" +
       "Those who understand binary, and those who don't!")
+  }
+
+  function handleOnChangeAboutMeText(e) {
+    setAboutMeTextTemp(e.target.value);
+  }
+
+  function handleOnChangeFirstName(e) {
+    setFirstNameTemp(e.target.value);
+  }
+
+  function handleOnChangeLastName(e) {
+    setLastNameTemp(e.target.value);
+  }
+
+  function handleOnChangeInstagram(e) {
+    setInstagramTemp(e.target.value);
+  }
+
+  function handleOnChangeTwitter(e) {
+    setTwitterTemp(e.target.value);
+  }
+
+  function handleOnChangeLinkedIn(e) {
+    setLinkedInTemp(e.target.value);
   }
 
   // Allows a custom rating starts
   const StyledRating = styled(Rating)({
     '& .MuiRating-iconFilled': {
+      color: Theme.palette.secondary.main,
+      backgroundColor: "primary"
+    },
+    '& .MuiFilledInput-root:after': {
+      borderBottom: "secondary"
+    },
+    '& MuiRating-icon': {
       color: Theme.palette.secondary.main
     }
   });
 
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      '& .MuiFormLabel-root': {
+        color: grey[500]
+      },
+      '& .MuiFilledInput-root': {
+        color: "white"
+      },
+    }
+  }));
+  const classes = useStyles();
+
+  // Helps to override the Text Field Styles
+  const textFieldTheme = createTheme({
+    palette: {
+      secondary: {
+        main: Theme.palette.secondary.main,
+      },
+    }
+  });
+
+
   return (
-    <Grid>
+    <Box sx={{flex: 1}}>
       <AppNavBar/>
+
+      {/************************* Main Box ***********************/}
       <Box
         sx={{
-          p: 2,
-          // bgcolor: 'background.default',
-          display: 'grid',
-          gridTemplateColumns: {md: '1fr 1fr'},
-          gap: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'safe center',
+          flexWrap: "wrap",
+          marginTop: "20px"
+        }}>
+        {/************************* Left Box (Image) **********************/}
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'safe center',
+          flexWrap: "nowrap"
         }}>
 
+          {/** **************************** Image ********************** **/}
+          <img
+            src={profileImage}
+            style={{
+              width: 300,
+              height: 450,
+              borderRadius: "4px 0 0 4px"
+            }}
+            alt={"user"}
+          />
 
-        {/* //1ST component paper// */}
-        <Paper
-          variant="outlined"
-          elevation={3}
-          style={{
-            position: 'left',
-            borderColor: "black",
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 10,
-            height: '25vh',
-            width: 500,
-            // backgroundColor: 'lightBlue',
-            backgroundColor: bgColor,
-            borderRadius: 20,
-            borderWidth: 2,
-            marginTop: 50,
-            marginLeft: 20
+        </Box>
+
+        {/*********************** Right Box (Info) *******************/}
+        <Box
+          color={"white"}
+          sx={{
+            paddingLeft: '40px',
+            paddingRight: '40px',
+            backgroundColor: Theme.palette.primary.main,
+            width: 600,
+            height: 450,
+            borderRadius: "0 4px 4px 0",
           }}
           onMouseOver={handleOnMouseOver}
           onMouseLeave={handleOnMouseLeave}
         >
-          <Grid container direction="row" spacing={3} justifyContent="center" alignItems="flex-start" sx={{height:70}}>
-            <Grid item xs>
-              {/* This is a spacer for the left of the user's photo - Do not delete */}
-            </Grid>
+          {/** *********************** Names *************************** **/}
+          <Box sx={{display: displayNames, width: "100%", justifyContent: "left"}}>
+            <Typography
+              variant={"h3"}
+              sx={{
+                textAlign: "left",
+                marginTop: "20px",
+                color: "#ffb609",
+                fontWeight: 600
+              }}
+            >
+              {firstName}
+            </Typography>
 
-            {/********************* Profile Image *********************************/}
-            <Grid item xs>
-              <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <img
-                  style={{
-                    marginTop: -50,
-                    width: 70,
-                    height: 70,
-                    borderRadius: 200 / 2,
-                    border: "2px solid",
-                    borderColor: 'black'
-                  }}
-                  src={whoa} alt="User"
-                />
-              </Box>
-            </Grid>
+            <Typography
+              variant={"h3"}
+              sx={{
+                textAlign: "left",
+                marginLeft: "20px",
+                marginTop: "20px",
+                fontWeight: 600
+              }}
+            >
+              {lastName}
+            </Typography>
 
             {/********************* Edit Button *********************************/}
-            <Grid item xs>
-              <Box sx={{textAlign: "right"}}>
-                <IconButton color="primary" aria-label="edit" onClick={enterEditMode} sx={{display: displayEditButton}}>
-                  <EditOutlinedIcon/>
-                </IconButton>
-              </Box>
-            </Grid>
+            <Box sx={{marginTop: "25px", marginLeft: "5px"}}>
+              <IconButton color="secondary" aria-label="edit" onClick={enterEditMode}
+                          sx={{display: displayEditButton}}>
+                <EditIcon/>
+              </IconButton>
+            </Box>
+          </Box>
 
-          </Grid>
-
-            <Grid container spacing={2} justifyContent="center" paddingTop={2} >
-
-            {/******************** First Name *********************/}
-            <Grid item xs>
+          {/** ****************** Names (Edit Mode) *************************** **/}
+          <Box sx={{display: displayEditFields, width: "100%", justifyContent: "left"}}>
+            <ThemeProvider theme={textFieldTheme}>
               <TextField
-                label="First Name"
-                defaultValue="John"
-                InputProps={{readOnly: readOnlyState}}
-              />
-            </Grid>
-
-            {/******************** Last Name *********************/}
-            <Grid item xs>
-              <TextField
-                id="outlined-read-only-input"
-                label="Last Name"
-                defaultValue="Doe"
-                InputProps={{readOnly: readOnlyState}}
-                // sx={{padding:0}}
-              />
-            </Grid>
-          </Grid>
-
-          {/******************** Cancel Button *********************/}
-          <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'safe center', flexWrap: "wrap-reverse"}}>
-            <Fade in={fade}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginTop: 30, padding:"6px 64px"}}
-                onClick={exitEditMode}
-                sx={{display: displayButton}}
-              > Cancel
-              </Button>
-            </Fade>
-
-            {/******************** Contact Me Button *********************/}
-            <Fade in={!fade}>
-              <Button
-                type='submit'
-                color='primary'
-                variant='contained'
-                style={{marginTop: 30}}
-                startIcon={<ForumOutlinedIcon/>}
-                sx={{display: displayContactMe, whiteSpace: 'nowrap'}}
-                onClick={handleContactMe}
-              >
-                Contact Me!
-              </Button>
-            </Fade>
-
-            {/******************** Save Button *********************/}
-            <Fade in={fade}>
-              <Button
                 color="secondary"
-                startIcon={<SaveIcon/>}
-                variant="contained"
-                style={{marginTop: 30, padding:"6px 64px"}}
-                onClick={handleSave}
-                sx={{display: displayButton}}
+                variant={"filled"}
+                label={"First Name"}
+                value={firstNameTemp}
+                className={classes.root}
+                required
+                sx={{marginRight: "1rem", marginTop: "1rem"}}
+                onChange={handleOnChangeFirstName}
               >
-                Save
-              </Button>
-            </Fade>
+              </TextField>
+              <TextField
+                color="secondary"
+                variant={"filled"}
+                label={"Last Name"}
+                value={lastNameTemp}
+                className={classes.root}
+                sx={{marginTop: "1rem"}}
+                onChange={handleOnChangeLastName}
+              >
+              </TextField>
+            </ThemeProvider>
           </Box>
 
-          {/******************** Rating *********************/}
-          <Box sx={{marginTop: 1}} >
-            <StyledRating
-              defaultValue={4.5}
-              precision={0.5}
-              icon={<StarIcon fontSize="inherit"/>}
-              emptyIcon={<StarBorderOutlinedIcon fontSize="inherit" />}
-              readOnly
+          {/*************************** About Me Text ************************************/}
+          <Box sx={{
+            fontWeight: 300,
+            fontSize: "1.2rem",
+            fontStyle: "italic",
+            lineHeight: 1.5,
+            textAlign: "left",
+            marginTop: "10px",
+            display: displayAboutMeText,
+            maxHeight: "225px",
+            height: "225px",
+          }}>
+            {aboutMeText}
+          </Box>
+
+          <ThemeProvider theme={textFieldTheme}>
+            <TextField
+              label="About Me"
+              color="secondary"
+              className={classes.root}
+              multiline
+              variant="filled"
+              rows={8.4}
+              value={aboutMeTextTemp}
+              fullWidth
+              onChange={handleOnChangeAboutMeText}
+              sx={{display: displayEditFields, marginTop: "10px"}}
             />
-          </Box>
+          </ThemeProvider>
 
-        </Paper>
-      </Box>
-{/* /////////////////////////////////////////////////////////////////////////// */}
+           {/******** Stack is the container for the elements below the about me text **********/}
+          <Stack
+            direction="column"
+            justifyContent="space-evenly"
+            alignItems="stretch"
+            spacing={2}
+          >
+            {/******************** Cancel Button *********************/}
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              alignItems: 'safe center',
+              flexWrap: "wrap-reverse"
+            }}>
+              <Fade in={fade}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{marginTop: 30, padding: "6px 64px"}}
+                  onClick={exitEditMode}
+                  sx={{display: displayButton}}
+                > Cancel
+                </Button>
+              </Fade>
 
-     
-        
-        {/* //2nd component paper// */}
-                  {/* //align// */}
-                  <Box
-            sx={{
-              p: 2,
-              bgcolor: 'background.default',
-              display: 'grid',
-              gridTemplateColumns: { md: '1fr 1fr' },
-              gap: 2,}}>
+              {/*********************************** Rating  ************************************/}
+              <Box sx={{marginTop: 5, justifyContent: "center", display: displayContactMe}}>
+                <StyledRating
+                  defaultValue={4.5}
+                  precision={0.5}
+                  icon={<StarIcon fontSize="inherit"/>}
+                  emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
+                  readOnly
+                />
+              </Box>
 
-                  {/* //main grid container// */}
-                <Grid container spacing={4} justifyContent="left" paddingTop={2} marginLeft={2} >
+              {/******************** Contact Me Button *********************/}
+              <Fade in={!fade}>
+                <Button
+                  // type='submit'
+                  color='secondary'
+                  variant='contained'
+                  style={{marginTop: 30}}
+                  startIcon={<ForumOutlinedIcon/>}
+                  sx={{display: displayContactMe, whiteSpace: 'nowrap'}}
+                  onClick={handleContactMe}
+                >
+                  Contact Me!
+                </Button>
+              </Fade>
 
-                  {/* //Main Paper// */}
-                  <Paper variant="outlined" elevation={3} style={{
-                    position: 'left', 
-                    borderColor: "black",
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    padding: 10, 
-                    height: '15vh', 
-                    width: 500,
-                    backgroundColor: 'lightBlue',
-                    borderRadius:20,
-                    borderWidth: 2,
-                    marginTop: 20,
-                    marginLeft: 20 }}>
 
-                      <Box sx={{ flexGrow: 1 }}>
-                        <Grid container spacing={1}>
-                          <Grid container item spacing={3} justifyContent="center">
-                            <Grid item xs={4}>
-                              <item>
-                                <img style={{
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: 50
-                                }}
-                                  src={facebook}/>
-                              </item>
-                            </Grid>
-                            <Grid item xs={4}>
-                              <item>
-                                <img  style={{
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: 50
-                                  }}
-                                  src={ig}/>
-                              </item>
-                            </Grid>
-                            <Grid item xs={4}>
-                              <item>
-                                <img  style={{
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: 50
-                                   }}
-                                  src={twitter}/>
-                              </item>
-                            </Grid>
-                          </Grid>
-                        </Grid>
+              {/******************** Save Button *********************/}
+              <Fade in={fade}>
+                <Button
+                  color="secondary"
+                  startIcon={<SaveIcon/>}
+                  variant="contained"
+                  style={{marginTop: 30, padding: "6px 64px"}}
+                  onClick={handleSave}
+                  sx={{display: displayButton}}
+                >
+                  Save
+                </Button>
+              </Fade>
+            </Box>
 
-                        <Grid container spacing={1}>
-                          <Grid container item spacing={3} justifyContent="center">
-                            <Grid item xs={4} marginTop={2}>
-                              <item>
-                                <TextField
-                                  id="outlined-read-only-input"
-                                  label="Facebook ID"
-                                  defaultValue="Doe"
-                                  InputProps={{
-                                  readOnly: true,
-                                  }}
-                                />
-                              </item>
-                            </Grid>
-                            <Grid item xs={4} marginTop={2}>
-                              <item>
-                                <TextField
-                                  id="outlined-read-only-input"
-                                  label="Instagram ID"
-                                  defaultValue="Doe"
-                                  InputProps={{
-                                  readOnly: true,
-                                  }}
-                                />
-                              </item>
-                            </Grid>
-                            <Grid item xs={4} marginTop={2}>
-                              <item>
-                                <TextField
-                                  id="outlined-read-only-input"
-                                  label="Twitter ID"
-                                  defaultValue="Doe"
-                                  InputProps={{
-                                  readOnly: true,
-                                  }}
-                                />
-                              </item>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Box>
+            {/***************** Horizontal line ***************/}
+            <Divider style={{background: 'white', border: "1px solid"}}/>
 
-                    </Paper>
+            {/***************** Social Media ****************/}
+            <Box sx={{display: "flex", marginY: "20px"}}>
+              <Grid container spacing={2}>
 
-                </Grid>    
+                {/***************** Instagram  Icon ****************/}
+                <Grid item xs={0.5} sx={{display: "flex"}}>
+                  <IconButton sx={{padding: 0}}>
+                    <InstagramIcon color={"secondary"}/>
+                  </IconButton>
+                </Grid>
 
-          </Box>
+                {/***** Instagram Handle *****/}
+                <Grid item xs>
+                  <Typography color={"white"} align={"left"}
+                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}</Typography>
+                  <ThemeProvider theme={textFieldTheme}>
 
-      {/* /////////////////////////////////////////////////////////////////////////// */}
+                    {/**** Instagram Hidden Edit Text field ****/}
+                    <TextField
+                      color="secondary"
+                      variant={"filled"}
+                      label={"Instagram"}
+                      value={instagramTemp}
+                      className={classes.root}
+                      size={'small'}
+                      sx={{display: displaySocial, marginTop: -1.5}}
+                      onChange={handleOnChangeInstagram}
+                    >
+                    </TextField>
+                  </ThemeProvider>
+                </Grid>
 
-     
-        
-        {/* //2nd component paper Done// */}
+                {/****************** Twitter Icon *******************/}
+                <Grid item xs={0.5} sx={{display: "flex"}}>
+                  <IconButton sx={{padding: 0}}>
+                    <TwitterIcon color={"secondary"}/>
+                  </IconButton>
+                </Grid>
 
-        <Box sx={{
-              p: 2,
-              bgcolor: 'background.default',
-              display: 'grid',
-              gridTemplateColumns: { md: '1fr 1fr' },
-              gap: 2,}}>
+                {/***** Twitter Handle *****/}
+                <Grid item xs>
+                  <Typography color={"white"} align={"left"}
+                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}</Typography>
 
-          <Grid container spacing={4} justifyContent="left" paddingTop={2} marginLeft={2} >
-            {/* //Main Paper// */}
-            <Paper variant="outlined" elevation={3} style={{
-              position: 'left', 
-              borderColor: "black",
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              padding: 10, 
-              height: '15vh', 
-              width: 500,
-              backgroundColor: 'lightBlue',
-              borderRadius:20,
-              borderWidth: 2,
-              marginTop: 20,
-              marginLeft: 20 }}>
+                  {/***** Twitter Hidden Edit Text Field *****/}
+                  <ThemeProvider theme={textFieldTheme}>
+                    <TextField
+                      color="secondary"
+                      variant={"filled"}
+                      label={"Twitter"}
+                      value={twitterTemp}
+                      className={classes.root}
+                      size={'small'}
+                      sx={{display: displaySocial, marginTop: -1.5}}
+                      onChange={handleOnChangeTwitter}
+                    >
+                    </TextField>
+                  </ThemeProvider>
+                </Grid>
 
-                
-              </Paper>
-          </Grid>
+                {/******************* LinkedIn Icon *****************/}
+                <Grid item xs={0.5} sx={{display: "flex"}}>
+                  <IconButton sx={{padding: 0}}>
+                    <LinkedInIcon color={"secondary"}/>
+                  </IconButton>
+                </Grid>
 
-            
+                {/****** LinkedIn Handle *****/}
+                <Grid item xs>
+                  <Typography color={"white"} align={"left"}
+                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}</Typography>
 
+                  {/****** LinkedIn Hidden Edit Text Field *****/}
+                  <ThemeProvider theme={textFieldTheme}>
+                    <TextField
+                      color="secondary"
+                      variant={"filled"}
+                      label={"LinkedIn"}
+                      value={linkedInTemp}
+                      className={classes.root}
+                      size={'small'}
+                      sx={{display: displaySocial, marginTop: -1.5}}
+                      onChange={handleOnChangeLinkedIn}
+                    >
+                    </TextField>
+                  </ThemeProvider>
+                </Grid>
+              </Grid>
+            </Box>
+          </Stack>
         </Box>
-
-    </Grid>
+      </Box>
+    </Box>
   );
 }

@@ -17,7 +17,6 @@ function App() {
             <Route path="/login" component={LandingPage} />
             <Route path="/home" component={HomePage} />
             <Route path="/profile" component={ProfilePage} />
-            {/* <Route path="/testProgile" component= */}
           </Switch>
           <Footer />
         </div>

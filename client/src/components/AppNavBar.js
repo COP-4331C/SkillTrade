@@ -7,7 +7,6 @@ import {Stack} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import MainLogo from "./MainLogo";
 import LoginModal from "./LoginModal";
-import ProfilePage from '../Pages/ProfilePage';
 
 export default function AppNavBar() {
   return (
@@ -27,20 +26,8 @@ export default function AppNavBar() {
               to="/Registration"
               sx={{whiteSpace: 'nowrap'}}
             >
-              Sign up for free</Button>
-
-            {/* //This is just for test, TEMPORARY// */}
-              <Button
-              variant="contained"
-              size="small"
-              color="secondary"
-              component={RouterLink}
-              to="/Profile"
-              sx={{whiteSpace: 'nowrap'}}
-            >
-              Edit Profile</Button>
-
-            {/* //This is just for test, TEMPORARY// */}
+              Sign up for free
+            </Button>
           </Stack>
         </Toolbar>
       </AppBar>

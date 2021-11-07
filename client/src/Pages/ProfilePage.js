@@ -3,11 +3,8 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import TextField from '@mui/material/TextField';
+import Box from "@mui/material/Box";
 import {Divider, Fade, Rating, Stack, ThemeProvider} from "@mui/material";
-import AppNavBar from '../components/AppNavBar';
-// import {Box} from '@mui/system';
-import profileImage from '../images/users/chef.png';
 import {styled} from '@mui/material/styles';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SaveIcon from "@mui/icons-material/Save";
@@ -20,9 +17,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
 import {createTheme, makeStyles} from "@material-ui/core";
-import Box from "@mui/material/Box";
+import AppNavBar from '../components/AppNavBar';
+import TextField from '@mui/material/TextField';
+import profileImage from '../images/users/chef.png';
 
-export default function ProfilePage2() {
+export default function ProfilePage() {
 
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -40,7 +39,6 @@ export default function ProfilePage2() {
     "establishments in the world. Passionate about working with fresh produce, " +
     "creating innovative dishes and improving restaurant ratings.\"");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
-  const [aboutMeEditMode, setAboutMeEditMode] = useState(false);
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
   const [instagram, setInstagram] = useState("benharrionchef");

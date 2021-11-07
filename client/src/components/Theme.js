@@ -20,7 +20,7 @@ export const Theme = createTheme({
       main: '#232323',
       light: '#4F4F4F',
       dark: '#181818',
-      contrastText: '#181818'
+      contrastText: '#ffb609'
     },
     secondary: {
       // main: '#FFCE00',
@@ -28,7 +28,7 @@ export const Theme = createTheme({
       main: '#ffb609',
       light: '#FFC43A',
       dark: '#B27F06',
-      contrastText: 'rgba(0, 0, 0, 0.87)'
+      contrastText: '#181818'
     },
   },
   // typography: {

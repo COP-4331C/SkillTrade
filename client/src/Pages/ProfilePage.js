@@ -103,7 +103,7 @@ export default function ProfilePage() {
   }
 
   function handleContactMe() {
-    alert("Coming Soon!" +
+    alert("Coming Soon! \n\n" +
       "BTW: There are 10 types of people in the world...\n" +
       "Those who understand binary, and those who don't!")
   }

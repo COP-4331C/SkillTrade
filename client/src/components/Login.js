@@ -292,7 +292,7 @@ export default function Login(props) {
           {/********************* Sign in button *********************/}
           <Button
             type='submit'
-            color='primary'
+            color='secondary'
             variant='contained'
             fullWidth
             style={{ margin: '8px 0' }}

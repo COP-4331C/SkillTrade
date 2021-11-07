@@ -90,7 +90,7 @@ const App = () => {
     signOut: async() => {
       try {
         await SecureStore.deleteItemAsync('userToken');
-        await AsyncStorage.removeItem('userToken')
+        // await AsyncStorage.removeItem('userToken')
       } catch (e) {
         console.log(e);
       }

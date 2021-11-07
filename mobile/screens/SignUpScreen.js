@@ -399,7 +399,7 @@ const SignInScreen = ({navigation}) => {
 
                         <TouchableOpacity
                             onPress={ () => {
-                            if (data.isValidUser == true && data.isValidPassword == true && data.isValidFirstName == true && data.isValidConfirmPassword == true){
+                            if (data.isValidUser == true && data.isValidPassword == true && data.isValidFirstName == true && data.isValidConfirmPassword == true && (data.email.length > 0 || data.password.length > 0 || data.firstname.length > 0)){
                                 data.isAllThere = true;
                                 connectToSignUpApi(
                                 data.email, data.firstname, 

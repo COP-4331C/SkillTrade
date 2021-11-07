@@ -5,6 +5,7 @@ import LandingPage from "./Pages/LandingPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import ProfilePage from "./Pages/ProfilePage";
+import ProfilePage2 from "./Pages/ProfilePage2";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/login" component={LandingPage} />
             <Route path="/home" component={HomePage} />
             <Route path="/profile" component={ProfilePage} />
+            <Route path="/profile2" component={ProfilePage2} />
             {/* <Route path="/testProgile" component= */}
           </Switch>
           <Footer />

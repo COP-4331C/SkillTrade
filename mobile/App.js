@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native'; 
+import { View, ActivityIndicator, Alert } from 'react-native'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {DrawerContent} from './screens/DrawerContent';
@@ -73,6 +73,10 @@ const App = () => {
           })
           .catch(function(error) {
               console.log(error)
+              // console.error("not good")
+              Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+                {text: 'Okay'}
+              ]);
           });
       if( userToken !== null ){
         try {

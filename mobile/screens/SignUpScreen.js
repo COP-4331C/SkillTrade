@@ -30,7 +30,7 @@ const SignInScreen = ({navigation}) => {
         confirm_secureTextEntry: true
     });
 
-    const textInputChange = (val) => { // check email input changes
+    const textInputChange = (val) => { // check email input changes  
         if(val.length !== 0){
             setData({
                 ...data,

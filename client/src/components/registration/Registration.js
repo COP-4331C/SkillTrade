@@ -21,6 +21,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../AppNavBar';
 import {Theme} from "../Theme";
+import NavBar from "../NavBar";
 
 
 
@@ -217,7 +218,7 @@ function handleSubmitButton(event) {
   return (
     <Grid>
       <form onSubmit={handleSubmitButton}>
-      <AppNavBar/>
+      <NavBar/>
         <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}

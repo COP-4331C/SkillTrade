@@ -3,11 +3,13 @@ import React from "react";
 import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import {Stack} from "@mui/material";
+import NavBar from "../components/NavBar";
+
 
 const LandingPage = () => {
   return (
     <div>
-      <AppNavBar />
+      <NavBar/>
       <h1>Landing Page</h1>
       <h3>Coming soon</h3>
 
@@ -19,9 +21,9 @@ const LandingPage = () => {
           variant="contained"
           color="secondary"
           component={RouterLink} to="/Home"
-          sx={{ width: "20rem", whiteSpace: 'nowrap'}}
+          sx={{ width: "auto", whiteSpace: 'nowrap'}}
         >
-          Skip Login (Temporary button)
+          Skip Login
         </Button>
         {/** End of Temporary SKIP Login Button **/}
 
@@ -31,7 +33,7 @@ const LandingPage = () => {
           color="secondary"
           component={RouterLink}
           to="/Profile"
-          sx={{ width: "20rem", whiteSpace: 'nowrap'}}
+          sx={{ width: "auto", whiteSpace: 'nowrap'}}
         >
           Profile Page</Button>
         {/** End of Temporary Edit Profile Button **/}

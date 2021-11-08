@@ -53,6 +53,15 @@ export default function ProfilePage() {
   const [editPermission, setEditPermission] = useState(true);
   const [mousePointer, setMousePointer] = useState('');
   const [disableImageUpload, setDisableImageUpload] = useState(true)
+  const [firstNameError, setFirstNameError] = useState({
+    state: false,
+    text: ""
+  });
+  const [lastNameError, setLastNameError] = useState({
+    state: false,
+    text: ""
+  });
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -86,13 +95,76 @@ export default function ProfilePage() {
 
   // Handles the onClick event of the Save button
   function handleSave() {
-    setFirstName(firstNameTemp);
-    setLastName(lastNameTemp);
-    setAboutMeText(aboutMeTextTemp);
-    setInstagram(instagramTemp);
-    setTwitter(twitterTemp);
-    setLinkedIn(linkedInTemp);
+    let okToSaveData = true;
+
+    if(!validateTextMinLength(firstNameTemp, 1)) {
+      okToSaveData = false;
+      setFirstNameError({
+        state: true,
+        text: "Can't be empty"
+      });
+    }
+
+    if(!validateTextMaxLength(firstNameTemp, 50)) {
+      okToSaveData = false;
+      setFirstNameError({
+        state: true,
+        text: "Must be less than 50 characters"
+      });
+    }
+
+    if(!validateTextMaxLength(lastNameTemp, 50)) {
+      okToSaveData = false;
+      setLastNameError({
+        state: true,
+        text: "Must be less than 50 characters"
+      });
+    }
+
+    if(okToSaveData) {
+      setFirstName(firstNameTemp);
+      setLastName(lastNameTemp);
+      setAboutMeText(aboutMeTextTemp);
+      setInstagram(instagramTemp);
+      setTwitter(twitterTemp);
+      setLinkedIn(linkedInTemp);
+      exitEditMode();
+    }
+
+  }
+
+
+
+  function handleCancelButton() {
+    clearTextValidationErrorMessages();
     exitEditMode();
+  }
+
+  function validateTextMinLength(text, min) {
+    if(text.length >= min) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  function clearTextValidationErrorMessages() {
+    setFirstNameError({
+      state: false,
+      text: ""
+    });
+    setLastNameError({
+      state: false,
+      text: ""
+    });
+  }
+
+  function validateTextMaxLength(text, max) {
+    if(text.length <= max) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   function handleOnMouseOver() {
@@ -321,7 +393,7 @@ export default function ProfilePage() {
             </Box>
           </Box>
 
-          {/** ****************** Names (Edit Mode) *************************** **/}
+          {/** ****************** First and Last Names (Edit Mode) *************************** **/}
           <Box sx={{display: displayEditFields, width: "100%", justifyContent: "left"}}>
             <ThemeProvider theme={textFieldTheme}>
               <TextField
@@ -333,6 +405,8 @@ export default function ProfilePage() {
                 required
                 sx={{marginRight: "1rem", marginTop: "1rem"}}
                 onChange={handleOnChangeFirstName}
+                helperText={firstNameError.text}
+                error={firstNameError.state}
               >
               </TextField>
               <TextField
@@ -343,6 +417,8 @@ export default function ProfilePage() {
                 className={classes.root}
                 sx={{marginTop: "1rem"}}
                 onChange={handleOnChangeLastName}
+                helperText={lastNameError.text}
+                error={lastNameError.state}
               >
               </TextField>
             </ThemeProvider>
@@ -397,7 +473,7 @@ export default function ProfilePage() {
                   variant="outlined"
                   color="secondary"
                   style={{marginTop: 30, padding: "6px 64px"}}
-                  onClick={exitEditMode}
+                  onClick={handleCancelButton}
                   sx={{display: displayButton}}
                 > Cancel
                 </Button>

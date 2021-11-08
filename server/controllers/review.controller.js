@@ -1,14 +1,25 @@
 const jwt = require("jsonwebtoken");
-//const User = require("../models/user.model");
+const User = require("../models/user.model");
 const Review = require("../models/review.model");
 
 exports.createReview = async (req, res) => {
 
     const {rating, subjectId} = req.body;
 
-    // const user = await User.findOne({ _id: subjectId });
-    // if (!user)
-    //     return res.status(400).json({ error: "not a valid user to review." });
+    try{
+        const user = await User.findOne({ _id: subjectId });
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({ error: err });
+    }
+    if (!user)
+    {
+        //console.log(err);
+        return res.status(400).json({ error: "not a valid user to review." });
+    }
+    else
+        console.log("found user: %s", user.email);
 
     if(!Number.isInteger(rating) || rating < 1 || rating > 5)
     {

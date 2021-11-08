@@ -7,7 +7,6 @@ import {Stack} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import MainLogo from "./MainLogo";
 import LoginModal from "./LoginModal";
-import ProfilePage from '../Pages/ProfilePage';
 
 export default function AppNavBar() {
   return (

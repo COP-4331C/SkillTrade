@@ -16,11 +16,26 @@ export const Theme = createTheme({
   palette: {
     primary: {
       // main: '#0031FF',
-      main: '#3f51b5',
+      // main: '#3f51b5',
+      main: '#232323',
+      light: '#4F4F4F',
+      dark: '#181818',
+      contrastText: '#ffb609'
     },
     secondary: {
       // main: '#FFCE00',
-      main: '#f44336',
+      // main: '#f44336',
+      main: '#ffb609',
+      light: '#FFC43A',
+      dark: '#B27F06',
+      contrastText: '#181818'
     },
   },
+  // typography: {
+  //   fontFamily: [
+  //     "Comic Sans MS",
+  //     "Comic Sans",
+  //     "cursive",
+  //   ].join(','),
+  // }
 });

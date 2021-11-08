@@ -22,6 +22,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
 import {Theme} from "./Theme";
+import Box from "@mui/material/Box";
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
@@ -214,15 +215,22 @@ export default function Login(props) {
   // **************************************** //
 
   return (
-    <Grid>
-      <form onSubmit={handleSubmitButton}>
-        <Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>
+    <Grid >
+      <form onSubmit={handleSubmitButton} >
+
+        <Box sx={{ display: "flex 1", width: 350, maxWidth: { xs: 270, sm: 350 } }} >
+        {/*<Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>*/}
+        {/*  <Paper elevation={3} style={{padding: 40, width: 230, margin: '20px auto'}}>*/}
+        {/*  <Paper elevation={3} style={{padding: 40, width: "100%", margin: '0 auto'}}>*/}
+            <Paper elevation={3} style={{padding: 30}}>
+
 
           {/****************** X (Button to close)*********************/}
           <IconButton
               aria-label="close"
               onClick={() => props.onClick()}
-              sx={{ position: 'absolute', right: 20, top: 20 }}
+              // sx={{ position: 'absolute', right: 20, top: 20 }}
+              sx={{ position: 'absolute', right: 45, top: 20 }}
           >
             <CloseIcon />
           </IconButton>
@@ -259,6 +267,7 @@ export default function Login(props) {
 
           {/********************* Password field *********************/}
           <FormControl sx={{ margin: "16px 16px 0 0", width: "100%"  }} variant="standard" required error={pwdError.state}>
+          {/*<FormControl sx={{ margin: "16px 16px 0 0", width: "auto"  }} variant="standard" required error={pwdError.state}>*/}
             <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
             <Input
               id="standard-adornment-password"
@@ -292,7 +301,7 @@ export default function Login(props) {
           {/********************* Sign in button *********************/}
           <Button
             type='submit'
-            color='primary'
+            color='secondary'
             variant='contained'
             fullWidth
             style={{ margin: '8px 0' }}
@@ -319,6 +328,7 @@ export default function Login(props) {
           </Typography>
 
         </Paper>
+        </Box>
       </form>
     </Grid>
   );

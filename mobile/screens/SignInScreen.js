@@ -10,13 +10,11 @@ import {
     StyleSheet, 
     StatusBar
 } from 'react-native';
-
-// import LinearGradient from 'react-native-linear-gradient'; // have issue installing it. can not be installed under expo!!
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
-
 import { AuthContext } from '../components/context';
+import axios from 'axios';
 
 const SignInScreen = ({navigation}) => {
 
@@ -136,17 +134,17 @@ const SignInScreen = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
 
+                <View style={{alignItems: 'left', justifyContent:'left'}}>
+                    <Button 
+                        title="Forgot password?"
+                        color= '#009387'
+                        onPress={() => navigation.navigate('ChangePasswordScreen') } // how to jump to ChangePasswordScreen? FIXME
+                    />
+                </View>
+
                 <View style={styles.button}>
-                    {/* <linearGradient
-                        colors={['#08d4c4','#01ab9d']}
-                        style={styles.signIn}
-                    >
-                        <Text style={[styles.textSign,{
-                            color:'#fff'
-                        }]}>Sign In</Text>
-                    </linearGradient> */}
                     <TouchableOpacity
-                        onPress={() => {loginHandle(data.username, data.password)}}
+                        onPress={() => {loginHandle(data.username, data.password)}} //fixme. how to check it??
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,
@@ -155,13 +153,8 @@ const SignInScreen = ({navigation}) => {
                     >
                         <Text style={[styles.textSign, {
                             color: '#009387'
-                        }]}>Login</Text>
+                        }]}>Sign In</Text>
                     </TouchableOpacity>
-
-                    {/*<button> 
-                        <Text>Sign In</Text>
-                        onPress={() => {signIn()}}
-                    </button>*/}
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignUpScreen')}

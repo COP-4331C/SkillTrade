@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const ProfileSchema = require("./profile.model").schema;
 
 const UserSchema = mongoose.Schema({
   email: {
@@ -13,17 +14,6 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
     default: "",
-  },
-  firstName: {
-    type: String,
-    required: true,
-    minLength: [1, "First name must be between 1 and 50 characters."],
-    maxLength: [50, "First name must be between 1 and 50 characters."],
-  },
-  lastName: {
-    type: String,
-    default: "",
-    maxLength: [50, "Last name must be less than 50 characters."],
   },
   emailVerified: {
     type: Boolean,
@@ -50,6 +40,10 @@ const UserSchema = mongoose.Schema({
     default: Date.now,
     required: true,
   },
+  profile: { // Nested object in user model
+    type: ProfileSchema,
+    required: true,
+  }
 });
 
 UserSchema.virtual("password")

@@ -29,7 +29,7 @@ export default function AccountMenu() {
     return (
         <React.Fragment>
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                <Typography sx={{ minWidth: 100 }}>My Skills</Typography>
+                <Typography color="secondary" sx={{ minWidth: 100 }}>My Skills</Typography>
                  {/*<Typography sx={{ minWidth: 100 }}>Credit Hours</Typography>*/}
                 <Tooltip title="Account settings">
                     <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>

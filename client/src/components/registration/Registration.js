@@ -20,6 +20,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../AppNavBar';
+import {Theme} from "../Theme";
+import NavBar from "../NavBar";
 
 
 
@@ -216,13 +218,12 @@ function handleSubmitButton(event) {
   return (
     <Grid>
       <form onSubmit={handleSubmitButton}>
-      <AppNavBar/>
+      <NavBar/>
         <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-            <Avatar style={{backgroundColor: '#0031FF'}}>
-              <LockOutlinedIcon/>
+            <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
             </Avatar>
             <h2>Register</h2>
           </Grid>
@@ -344,7 +345,7 @@ function handleSubmitButton(event) {
           {/* <Link underline="hover"component={RouterLink} to="/Login"> */}
             <Button
               type='submit'
-              color='primary'
+              color='secondary'
               variant='contained'
               fullWidth
               style={{ margin: '20px 0' }}

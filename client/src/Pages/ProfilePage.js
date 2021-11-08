@@ -20,9 +20,14 @@ import {createTheme, makeStyles} from "@material-ui/core";
 import AppNavBar from '../components/AppNavBar';
 import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
+import Link from "@mui/material/Link";
 
 export default function ProfilePage() {
-
+  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
+    "with a notable career trajectory and achievements list. Experience " +
+    "in catering for up to 450 covers at some of the most prestigious " +
+    "establishments in the world. Passionate about working with fresh produce, " +
+    "creating innovative dishes and improving restaurant ratings.\"");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
   const [displayButton, setDisplayButton] = useState("none");
@@ -33,16 +38,11 @@ export default function ProfilePage() {
   const [firstName, setFirstName] = useState("Benjamin");
   const [lastName, setLastName] = useState("Harrion");
   const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
-  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
-    "with a notable career trajectory and achievements list. Experience " +
-    "in catering for up to 450 covers at some of the most prestigious " +
-    "establishments in the world. Passionate about working with fresh produce, " +
-    "creating innovative dishes and improving restaurant ratings.\"");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
   const [instagram, setInstagram] = useState("benharrionchef");
-  const [twitter, setTwitter] = useState("@benchef");
+  const [twitter, setTwitter] = useState("@benjaminHchef");
   const [linkedIn, setLinkedIn] = useState("harrion.benjamin");
   const [instagramTemp, setInstagramTemp] = useState("");
   const [twitterTemp, setTwitterTemp] = useState("");
@@ -65,7 +65,9 @@ export default function ProfilePage() {
     state: false,
     text: ""
   })
-
+  const [instagramLink, setInstagramLink] = useState("");
+  const [twitterLink, setTwitterLink] = useState("");
+  const [linkedInLink, setLinkedInLink] = useState("");
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -100,6 +102,10 @@ export default function ProfilePage() {
   // Handles the onClick event of the Save button
   function handleSave() {
     let okToSaveData = true;
+    let instagramHandle;
+    let twitterHandle;
+    let linkedInHandle;
+
 
     if(!validateTextMinLength(firstNameTemp, 1)) {
       okToSaveData = false;
@@ -133,17 +139,64 @@ export default function ProfilePage() {
       });
     }
 
+    if(instagramTemp.includes("instagram.com")){
+      instagramHandle = getHandle(instagramTemp);
+    } else {
+      instagramHandle = instagramTemp;
+    }
+    setInstagramLink("https://www.instagram.com/" + instagramHandle);
+
+    if(twitterTemp.includes("twitter.com")) {
+      twitterHandle = getHandle(twitterTemp);
+    } else {
+      twitterHandle = twitterTemp;
+    }
+    setTwitterLink("https://twitter.com/" + twitterHandle);
+
+
+    if(linkedInTemp.includes("linkedin.com")){
+      linkedInHandle = getHandle(linkedInTemp);
+    } else {
+      linkedInHandle = linkedInTemp;
+    }
+    setLinkedInLink("https://www.linkedin.com/in/" + linkedInHandle)
+
     if(okToSaveData) {
       setFirstName(firstNameTemp);
       setLastName(lastNameTemp);
       setAboutMeText(aboutMeTextTemp);
-      setInstagram(instagramTemp);
-      setTwitter(twitterTemp);
-      setLinkedIn(linkedInTemp);
+      setInstagram(instagramHandle);
+      setTwitter(twitterHandle);
+      setLinkedIn(linkedInHandle);
       exitEditMode();
     }
-
   }
+
+  // Parses the URL to extract the handle.
+  function getHandle(urlString){
+
+    let url = new URL(urlString);
+    let pathname = url.pathname;
+    let hostname = url.hostname;
+    let handle = "";
+
+    if(hostname.includes("instagram.com")) {
+      handle = pathname.replaceAll('/', '');
+    }
+
+    else if (hostname.includes("twitter.com")){
+      handle = pathname.replaceAll('/', '');
+      handle = '@' + handle;
+    }
+    else if (hostname.includes("linkedin.com")) {
+      handle = pathname.replaceAll('/', '');
+      handle = handle.replaceAll("in", '');
+    }
+
+    return handle
+  }
+
+
 
   function handleCancelButton() {
     clearTextValidationErrorMessages();
@@ -274,7 +327,6 @@ export default function ProfilePage() {
     display: 'none',
   });
 
-
   function handlePhoto(e) {
     if (editPermission) {
       alert("Profile picture processing coming soon");
@@ -298,6 +350,10 @@ export default function ProfilePage() {
         setDisableImageUpload(true);
         setMousePointer("");
       }
+
+      setInstagramLink("https://www.instagram.com/" + instagram);
+      setTwitterLink("https://twitter.com/" + twitter);
+      setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
 
     } catch (e) {
       console.log(e.message);
@@ -546,15 +602,18 @@ export default function ProfilePage() {
 
                 {/***************** Instagram  Icon ****************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <InstagramIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/***** Instagram Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}</Typography>
+                  <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}
+                    </Typography>
+                  </Link>
                   <ThemeProvider theme={textFieldTheme}>
 
                     {/**** Instagram Hidden Edit Text field ****/}
@@ -574,15 +633,18 @@ export default function ProfilePage() {
 
                 {/****************** Twitter Icon *******************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <TwitterIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/***** Twitter Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}</Typography>
+                  <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}
+                    </Typography>
+                  </Link>
 
                   {/***** Twitter Hidden Edit Text Field *****/}
                   <ThemeProvider theme={textFieldTheme}>
@@ -602,15 +664,18 @@ export default function ProfilePage() {
 
                 {/******************* LinkedIn Icon *****************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <LinkedInIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/****** LinkedIn Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}</Typography>
+                  <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}
+                    </Typography>
+                  </Link>
 
                   {/****** LinkedIn Hidden Edit Text Field *****/}
                   <ThemeProvider theme={textFieldTheme}>

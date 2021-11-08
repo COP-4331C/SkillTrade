@@ -5,21 +5,42 @@ const Review = require("../models/review.model");
 exports.createReview = async (req, res) => {
 
     const {rating, subjectId} = req.body;
+    
 
     try{
-        const user = await User.findOne({ _id: subjectId });
+        var subject = await User.findOne({ _id: subjectId });
     }
     catch(err){
         console.log(err);
         return res.status(500).json({ error: err });
     }
-    if (!user)
+    
+    if (!subject)
     {
-        //console.log(err);
         return res.status(400).json({ error: "not a valid user to review." });
     }
     else
-        console.log("found user: %s", user.email);
+        console.log("found subject: %s", subject.email);
+
+    try{
+        var author = await User.findOne({ email: req.email});
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error: err});
+    }
+
+    if(!author)
+    {
+        return res.status(400).json({ error: "this should be a valid user!!!" });
+    }
+    else
+    {
+        console.log("found author: %s", author.email);
+
+    }
+
+
 
     if(!Number.isInteger(rating) || rating < 1 || rating > 5)
     {
@@ -27,6 +48,7 @@ exports.createReview = async (req, res) => {
     }
 
     const review = new Review(req.body);
+    review.authorId = author._id;
     review.save()
         .then(() => {
         return res.status(200).json({ message: "Successfully created review!" });

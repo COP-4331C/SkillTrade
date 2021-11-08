@@ -68,7 +68,8 @@ exports.changePassword = async (req, res) =>
   user
     .save()
     .then(() => {
-      return res.status(200).json({message: `TEST: email: ${email} | password hash: ${user.passwordHash}`});
+      //return res.status(200).json({message: `TEST: email: ${email} | password hash: ${user.passwordHash}`});
+      return res.status(200).json({message: "Password Changed Successfully!"});
     })
     .catch((err) => {
       console.log("An error occured.");

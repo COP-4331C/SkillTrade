@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
@@ -48,6 +48,11 @@ export default function ProfilePage() {
   const [twitterTemp, setTwitterTemp] = useState("");
   const [linkedInTemp, setLinkedInTemp] = useState("");
   const [displaySocial, setDisplaySocial] = useState("none");
+  const [imageOpacity, setImageOpacity] = useState(1);
+  const [photo, setPhoto] = useState(profileImage)
+  const [editPermission, setEditPermission] = useState(true);
+  const [mousePointer, setMousePointer] = useState('');
+  const [disableImageUpload, setDisableImageUpload] = useState(true)
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -91,13 +96,13 @@ export default function ProfilePage() {
   }
 
   function handleOnMouseOver() {
-    if (!inEditMode) {
+    if (!inEditMode && editPermission) {
       setDisplayEditButton("inline-block");
     }
   }
 
   function handleOnMouseLeave() {
-    if (!inEditMode) {
+    if (!inEditMode && editPermission) {
       setDisplayEditButton("none");
     }
   }
@@ -130,6 +135,18 @@ export default function ProfilePage() {
 
   function handleOnChangeLinkedIn(e) {
     setLinkedInTemp(e.target.value);
+  }
+
+  function handleOnMouseOverImage() {
+    if (editPermission) {
+      setImageOpacity(0.5);
+    }
+  }
+
+  function handleOnMouseLeaveImage() {
+    if (editPermission) {
+      setImageOpacity(1);
+    }
   }
 
   // Allows a custom rating starts
@@ -167,6 +184,40 @@ export default function ProfilePage() {
     }
   });
 
+  const Input = styled('input')({
+    display: 'none',
+  });
+
+
+  function handlePhoto(e) {
+    if (editPermission) {
+      alert("Profile picture processing coming soon");
+      // Uploaded image should be in e.target.files or e.target.files[0]
+      // Axios Post will go here
+      // Request to backend with image for cropping and resizing.
+    }
+  }
+
+  useEffect(() => {
+    try {
+      // TODO: Add code to setEditPermission = true if the logged user is
+      //  the owner of the profile page. For now, we'll keep the
+      //  setEditPermission = true below. (Note: we can't set editPermission,
+      //  to then read its state immediately; it does not work.
+
+      if (editPermission) {
+        setDisableImageUpload(false);
+        setMousePointer("pointer");
+      } else {
+        setDisableImageUpload(true);
+        setMousePointer("");
+      }
+
+    } catch (e) {
+      console.log(e.message);
+    }
+
+  }, []);
 
   return (
     <Box sx={{flex: 1}}>
@@ -183,25 +234,43 @@ export default function ProfilePage() {
           marginTop: "20px"
         }}>
         {/************************* Left Box (Image) **********************/}
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'safe center',
-          flexWrap: "nowrap"
-        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'safe center',
+            flexWrap: "nowrap",
+            position: "relative"
+          }}
+        >
+          {/** ******************* Image Upload Input ********************** **/}
+          <label htmlFor="icon-button-file">
+            <Input
+              accept=".png, .jpg, .jpeg"
+              id="icon-button-file"
+              type="file"
+              name="photo"
+              onChange={handlePhoto}
+              disabled={disableImageUpload}
+            />
 
-          {/** **************************** Image ********************** **/}
-          <img
-            src={profileImage}
-            style={{
-              width: 300,
-              height: 450,
-              borderRadius: "4px 0 0 4px"
-            }}
-            alt={"user"}
-          />
-
+            {/** **************************** Image ********************** **/}
+            <img
+              src={photo}
+              style={{
+                width: 300,
+                height: 450,
+                borderRadius: "4px 0 0 4px",
+                display: "block",
+                cursor: mousePointer,
+                opacity: imageOpacity
+              }}
+              alt={"user"}
+              onMouseOver={handleOnMouseOverImage}
+              onMouseLeave={handleOnMouseLeaveImage}
+            />
+          </label>
         </Box>
 
         {/*********************** Right Box (Info) *******************/}
@@ -231,7 +300,6 @@ export default function ProfilePage() {
             >
               {firstName}
             </Typography>
-
             <Typography
               variant={"h3"}
               sx={{
@@ -310,7 +378,7 @@ export default function ProfilePage() {
             />
           </ThemeProvider>
 
-           {/******** Stack is the container for the elements below the about me text **********/}
+          {/******** Stack is the container for the elements below the about me text **********/}
           <Stack
             direction="column"
             justifyContent="space-evenly"
@@ -382,10 +450,10 @@ export default function ProfilePage() {
 
             {/***************** Social Media ****************/}
             <Box sx={{display: "flex", marginY: "20px"}}>
-              <Grid container spacing={2}>
+              <Grid container>
 
                 {/***************** Instagram  Icon ****************/}
-                <Grid item xs={0.5} sx={{display: "flex"}}>
+                <Grid item xs={0.6} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}}>
                     <InstagramIcon color={"secondary"}/>
                   </IconButton>
@@ -413,7 +481,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/****************** Twitter Icon *******************/}
-                <Grid item xs={0.5} sx={{display: "flex"}}>
+                <Grid item xs={0.6} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}}>
                     <TwitterIcon color={"secondary"}/>
                   </IconButton>
@@ -441,7 +509,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/******************* LinkedIn Icon *****************/}
-                <Grid item xs={0.5} sx={{display: "flex"}}>
+                <Grid item xs={0.6} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}}>
                     <LinkedInIcon color={"secondary"}/>
                   </IconButton>

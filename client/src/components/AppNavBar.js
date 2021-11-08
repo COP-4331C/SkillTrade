@@ -40,6 +40,16 @@ export default function AppNavBar() {
             >
               Edit Profile</Button>
 
+              <Button
+              variant="contained"
+              size="small"
+              color="secondary"
+              component={RouterLink}
+              to="/card"
+              sx={{whiteSpace: 'nowrap'}}
+            >
+              CardTest</Button>
+
             {/* //This is just for test, TEMPORARY// */}
           </Stack>
         </Toolbar>

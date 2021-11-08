@@ -23,6 +23,21 @@ const ProfileSchema = mongoose.Schema({
     type: String,
     unique: false,
     default: "https://picsum.photos/200/200"
+  },
+  instagram: {
+    type: String,
+    unique: false,
+    default: "https://www.instagram.com/"
+  },
+  twitter: {
+    type: String,
+    unique: false,
+    default: "https://www.twitter.com/"
+  },
+  linkedIn: {
+    type: String,
+    unique: false,
+    default: "https://www.linkedin.com/"
   }
 });
 

@@ -10,8 +10,8 @@ import SettingScreen from './screens/SettingScreen';
 import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const Drawer = createDrawerNavigator(); 
@@ -73,14 +73,14 @@ const App = () => {
           })
           .catch(function(error) {
               console.log(error)
-              // console.error("not good")
               Alert.alert('Invalid User!', 'Username or password is incorrect.', [
                 {text: 'Okay'}
-              ]);
+            ]);
           });
       if( userToken !== null ){
         try {
-          await AsyncStorage.setItem('userToken', userToken) //store the token in AsyncStorage
+          await SecureStore.setItemAsync('userToken', userToken);
+          // await AsyncStorage.setItem('userToken', userToken) //store the token in AsyncStorage
         } catch (e) {
           console.log(e);
         }
@@ -89,7 +89,8 @@ const App = () => {
     },
     signOut: async() => {
       try {
-        await AsyncStorage.removeItem('userToken')
+        await SecureStore.deleteItemAsync('userToken');
+        // await AsyncStorage.removeItem('userToken')
       } catch (e) {
         console.log(e);
       }
@@ -105,7 +106,8 @@ const App = () => {
      let userToken;
      userToken = null;
      try {
-      userToken = await AsyncStorage.getItem('userToken')
+      userToken = await SecureStore.getItemAsync('userToken');
+      // userToken = await AsyncStorage.getItem('userToken')
     } catch (e) {
       console.log(e);
     }

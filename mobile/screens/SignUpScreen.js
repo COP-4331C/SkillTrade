@@ -9,7 +9,8 @@ import {
     Platform,
     StyleSheet, 
     StatusBar,
-    ScrollView
+    ScrollView,
+    Alert
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -27,10 +28,42 @@ const SignInScreen = ({navigation}) => {
         check_firstnameInputChange: false,
         check_lastnameInputChange: false,
         secureTextEntry: true,
-        confirm_secureTextEntry: true
+        confirm_secureTextEntry: true,
+        isValidUser: true,
+        // firstClickUser: false,
+        isValidPassword: true, 
+        // firstClickPassword: false,
+        isValidFirstName: true,
+        // firstClickFirstName: false,
+        isValidConfirmPassword: true,
+        // firstClickConfirmPassword: false,
+        // isAllThere: true,
+
     });
 
-    const textInputChange = (val) => { // check email input changes  
+    // Email Validation
+    const textInputChange = (val) => {
+        var validRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(val.length >= 1 && val.match(validRegex)){
+            setData({
+                ...data,
+                email:val,
+                check_email_InputChange:true,
+                isValidUser: true,
+                // firstClickFirstName: true,
+            })
+        } else {
+            setData({
+                ...data,
+                username:val,
+                check_email_InputChange:false,
+                isValidUser: false,
+                // firstClickFirstName: true,
+            })
+        }
+    }
+
+    {/*const textInputChange = (val) => { // check email input changes
         if(val.length !== 0){
             setData({
                 ...data,
@@ -44,20 +77,25 @@ const SignInScreen = ({navigation}) => {
                 check_email_InputChange:false
             })
         }
-    }
-
+    }*/}
+    
+    // Confirm FirstName is there
     const firstNameInputChange = (val) => { // check firstNameInputChange 
         if(val.length !== 0){
             setData({
                 ...data,
                 firstname:val,
-                check_firstnameInputChange:true
+                check_firstnameInputChange:true,
+                isValidFirstName:true,
+                // firstClickUser: true
             })
         } else {
             setData({
                 ...data,
                 firstname:val,
-                check_firstnameInputChange:false
+                check_firstnameInputChange:false,
+                isValidFirstName:false,
+                // firstClickUser: true
             })
         }
     }
@@ -77,19 +115,58 @@ const SignInScreen = ({navigation}) => {
             })
         }
     }
+    // Validate Password
+    const handlePasswordChange = (val) => {
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+       if(val.match(strongRegex)){
+           setData({
+               ...data,
+               password: val,
+               isValidPassword: true,
+               // firstClickPassword: true,
+           });
+       } else {
+           setData({
+               ...data,
+               password: val,
+               isValidPassword: false,
+               // firstClickPassword: true,
+           });
+           
+       }
+   }
 
-    const handleConfirmPasswordChange = (val) => {
+    {/*const handleConfirmPasswordChange = (val) => {
         setData({
             ...data,
             password: val
         })
-    }
+    }*/}
 
-    const handlePasswordChange = (val) => {
+    {/*const handlePasswordChange = (val) => {
         setData({
             ...data,
             confirm_password: val
         })
+    }*/}
+
+    // Check both passwords are equal
+    const handleConfirmPasswordChange = (val) => {
+        if (val === data.password){
+            setData({
+                ...data,
+                // password: val,
+                isValidConfirmPassword: true,
+                // firstClickConfirmPassword: true,
+            })
+        } else {
+            setData({
+                ...data,
+                // password: val,
+                isValidConfirmPassword: false,
+                // firstClickConfirmPassword: true,
+            })
+        }
     }
 
     const updateSecureTextEntry = () => {
@@ -107,19 +184,38 @@ const SignInScreen = ({navigation}) => {
     }
 
     function connectToSignUpApi(email, firstname, lastname, password){
+
         axios.post('https://cop4331c.herokuapp.com/api/user/register', {
-                email: email, // "test1234567@example.com",
+                email:  email,
                 firstName: firstname, // "wei",
-                lastName: lastname, // "wu",
-                password: password // "123456"
+                lastName:  lastname, //"wu",
+                password:  password //"123456"
             })
             .then(function(response) {
-                // console.warn('test good') // for test 
+                console.warn('test good') // for test 
+                console.warn("good job")
                 navigation.goBack()
             })
             .catch(function(error) {
                 console.log(error)
+                console.warn("bad  job")
+                console.log(email)
             });
+    }
+
+     const handleValidUser = (val) => {
+        if (val.trim().length > 5) {
+            setData({
+                ...data,
+                isValidUser: true
+            });
+        }
+        else {
+            setData({
+                ...data,
+                isValidUser: false
+            });
+        }
     }
 
     return (
@@ -158,7 +254,12 @@ const SignInScreen = ({navigation}) => {
                         </Animatable.View>
                         : null}
                     </View>
-
+                    { data.isValidUser ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Please enter a valid email address, for example, "test@example.com".</Text>
+                    </Animatable.View>
+                    }
+                    
                     <Text style={[styles.text_footer, {marginTop:25}]}>First Name</Text> 
                     <View style={styles.action}> 
                         <FontAwesome
@@ -184,6 +285,12 @@ const SignInScreen = ({navigation}) => {
                         </Animatable.View>
                         : null}
                     </View>
+
+                    { data.isValidFirstName ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Please enter a firstname.</Text>
+                    </Animatable.View>
+                }
 
                     <Text style={[styles.text_footer, {marginTop:25}]}>Last Name</Text> 
                     <View style={styles.action}>
@@ -244,7 +351,11 @@ const SignInScreen = ({navigation}) => {
                             }
                         </TouchableOpacity>
                     </View>
-
+                    { data.isValidPassword ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Password must contain 8 characters, have a lowercase letter, uppercase letter, a number, and a special character, for example Xxxxxx1#</Text>
+                    </Animatable.View>
+                    }
                     <Text style={[styles.text_footer, {marginTop:25}]}>Confirm Password</Text>
                     <View style={styles.action}>
                         <Feather
@@ -277,13 +388,31 @@ const SignInScreen = ({navigation}) => {
                             }
                         </TouchableOpacity>
                     </View>
+                    
+                    { data.isValidConfirmPassword ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Password must match to above password.</Text>
+                    </Animatable.View>
+                    }
 
                     <View style={styles.button}>
 
                         <TouchableOpacity
-                            onPress={() => connectToSignUpApi(
+                            onPress={ () => {
+                            if (data.isValidUser == true && data.isValidPassword == true && data.isValidFirstName == true && data.isValidConfirmPassword == true && (data.email.length > 0 || data.password.length > 0 || data.firstname.length > 0)){
+                                data.isAllThere = true;
+                                connectToSignUpApi(
                                 data.email, data.firstname, 
-                                data.lastname, data.password) } 
+                                data.lastname, data.password) 
+                            }
+                            else {
+                                Alert.alert('Invalid User!', 'Username, Password, or Firstname is incorrect.', [
+                                    {text: 'Okay'}
+                                ]);
+                            } 
+                            }
+                            }
+                        
                             style={[styles.signIn, {
                                 borderColor: '#009387',
                                 borderWidth: 1,

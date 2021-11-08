@@ -117,7 +117,9 @@ const SignInScreen = ({navigation}) => {
     }
     // Validate Password
     const handlePasswordChange = (val) => {
-        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        // var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        // var strongRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        var strongRegex = /^(?=.{10,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/;
        if(val.match(strongRegex)){
            setData({
                ...data,
@@ -192,14 +194,18 @@ const SignInScreen = ({navigation}) => {
                 password:  password //"123456"
             })
             .then(function(response) {
-                console.warn('test good') // for test 
-                console.warn("good job")
+                // console.warn('test good') // for test 
+                // console.warn("good job")
                 navigation.goBack()
             })
             .catch(function(error) {
-                console.log(error)
-                console.warn("bad  job")
-                console.log(email)
+                // console.log(error)
+                // console.warn("bad  job")
+                // console.log(email)
+                // Alert if email in use
+                Alert.alert('Invalid Email!', 'Email is in use.', [
+                    {text: 'Okay'}
+                ]);
             });
     }
 

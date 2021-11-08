@@ -72,8 +72,8 @@ const App = () => {
               // console.warn(userToken) // for test
           })
           .catch(function(error) {
-              console.log(error)
-              Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+              // console.log(error)
+              Alert.alert('Invalid User!', 'Email or password is incorrect.', [
                 {text: 'Okay'}
             ]);
           });

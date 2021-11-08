@@ -1,4 +1,5 @@
 const uploadFile = require("../middleware/upload");
+const User = require("../models/user.model");
 
 exports.upload = async (req, res) => {
   try {
@@ -8,9 +9,11 @@ exports.upload = async (req, res) => {
       return res.status(400).send({ message: "Please upload a file!" });
     }
 
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
+    let user = await User.findOne({ email: req.email });
+    user.profile.profilePic = "newFileName.jpg";
+  
+    user.save().then(() => { return res.status(200).json({ message: "Successfully added profile photo!" });});
+
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({

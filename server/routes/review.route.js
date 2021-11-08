@@ -4,7 +4,7 @@ const reviews = require("../controllers/review.controller");
 const authenticateToken = require('../middleware/auth');
 
 // Create new review
-router.post("/createReview", authenticateToken, reviews.createReview);
+router.post("/create-review", authenticateToken, reviews.createReview);
 
 // Get Review(s)
 // router.get("/get-reviews", reviews.getReviews);
@@ -15,4 +15,4 @@ router.post("/createReview", authenticateToken, reviews.createReview);
 // Delete Review
 
 
-modules.exports = router;
+module.exports = router;

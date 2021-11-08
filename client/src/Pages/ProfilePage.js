@@ -61,6 +61,10 @@ export default function ProfilePage() {
     state: false,
     text: ""
   });
+  const [aboutMeTextError, setAboutMeTextError] = useState({
+    state: false,
+    text: ""
+  })
 
 
   function enterEditMode() {
@@ -121,6 +125,14 @@ export default function ProfilePage() {
       });
     }
 
+    if(!validateTextMaxLength(aboutMeTextTemp, 650)) {
+      okToSaveData = false
+      setAboutMeTextError({
+        state: true,
+        text: "Must be less than 650 characters (There are " + aboutMeTextTemp.length + ")"
+      });
+    }
+
     if(okToSaveData) {
       setFirstName(firstNameTemp);
       setLastName(lastNameTemp);
@@ -133,8 +145,6 @@ export default function ProfilePage() {
 
   }
 
-
-
   function handleCancelButton() {
     clearTextValidationErrorMessages();
     exitEditMode();
@@ -142,6 +152,14 @@ export default function ProfilePage() {
 
   function validateTextMinLength(text, min) {
     if(text.length >= min) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  function validateTextMaxLength(text, max) {
+    if(text.length <= max) {
       return 1;
     } else {
       return 0;
@@ -157,14 +175,10 @@ export default function ProfilePage() {
       state: false,
       text: ""
     });
-  }
-
-  function validateTextMaxLength(text, max) {
-    if(text.length <= max) {
-      return 1;
-    } else {
-      return 0;
-    }
+    setAboutMeTextError({
+      state: false,
+      text: ""
+    });
   }
 
   function handleOnMouseOver() {
@@ -438,7 +452,7 @@ export default function ProfilePage() {
           }}>
             {aboutMeText}
           </Box>
-
+          {/*************************** About Me Text (Edit Mode) ************************************/}
           <ThemeProvider theme={textFieldTheme}>
             <TextField
               label="About Me"
@@ -451,6 +465,8 @@ export default function ProfilePage() {
               fullWidth
               onChange={handleOnChangeAboutMeText}
               sx={{display: displayEditFields, marginTop: "10px"}}
+              helperText={aboutMeTextError.text}
+              error={aboutMeTextError.state}
             />
           </ThemeProvider>
 

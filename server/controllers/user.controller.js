@@ -41,6 +41,16 @@ exports.editProfile = async (req, res) => {
       });
 };
 
+exports.getProfile = async (req, res) => {
+  User.findOne({ _id: req.params.userId })
+    .then((data) => {
+      res.status(200).json(data.profile);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+};
+
 exports.changePassword = async (req, res) =>
 {
   const {oldPassword, newPassword} = req.body;
@@ -66,8 +76,4 @@ exports.changePassword = async (req, res) =>
       console.log(err);
       return res.status(400).json({ error: err });
     });
-}
-
-exports.logout = async (req, res) => {
-  //insert logout code
 }

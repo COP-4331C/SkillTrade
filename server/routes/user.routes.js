@@ -13,6 +13,6 @@ router.put("/edit-profile", authenticateToken, users.editProfile);
 router.get("/profile/:userId", users.getProfile);
 
 // Change Password
-router.post("/change-password", authenticateToken, users.changePassword);
+router.put("/change-password", authenticateToken, users.changePassword);
 
 module.exports = router;

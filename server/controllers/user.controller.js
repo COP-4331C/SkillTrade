@@ -55,12 +55,14 @@ exports.changePassword = async (req, res) =>
 {
   const {oldPassword, newPassword} = req.body;
   const email = req.email;
-  //console.log(email);
+
   const user = await User.findOne({ email: email });
+
   if (!user)
     return res.status(400).json({ error: "Invalid email" });
 
   let validPassword = user.authenticate(oldPassword);
+
   if (!validPassword)
     return res.status(400).json({ error: "Invalid password." });
 
@@ -69,7 +71,7 @@ exports.changePassword = async (req, res) =>
   user
     .save()
     .then(() => {
-      return res.status(200).json({message: `TEST: email: ${email} | password hash: ${user.passwordHash}`});
+      return res.status(200).json({message: "Successfully changed password!"});
     })
     .catch((err) => {
       console.log("An error occured.");

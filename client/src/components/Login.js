@@ -23,7 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
 import {Theme} from "./Theme";
 import Box from "@mui/material/Box";
-import NavBar from './NavBar';
+import NavBar from '../Recycle Bin/NavBar';
 import AppNavBar from './AppNavBar';
 
 // TODO Improvement: The wrong credentials message and the minimum password length message

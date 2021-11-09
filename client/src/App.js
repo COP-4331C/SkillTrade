@@ -7,7 +7,6 @@ import HomePage from "./Pages/HomePage";
 import Skills from './Pages/Skills';
 import ProfilePage from "./Pages/ProfilePage";
 import Login from './components/Login';
-import NavBar from './components/NavBar';
 
 
 function App() {

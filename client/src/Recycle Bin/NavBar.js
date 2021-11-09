@@ -15,14 +15,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import MainLogo from "./MainLogo";
+import MainLogo from "../components/MainLogo";
 import {Stack} from "@mui/material";
 import LoginModal from "./LoginModal";
 import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import LoginIcon from '@mui/icons-material/Login';
 import LoginModalMobile from "./LoginModalMobile";
-import Login from './Login';
+import Login from '../components/Login';
 
 // const Search = styled('div')(({theme}) => ({
 //   position: 'relative',

@@ -21,7 +21,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../AppNavBar';
 import {Theme} from "../Theme";
-import NavBar from "../NavBar";
+import NavBar from "../../Recycle Bin/NavBar";
 import { Box } from '@mui/material';
 
 

@@ -13,7 +13,7 @@ import testUserAvatar from "../images/avatars/testUserAvatar.jpg";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
-import {logoutUser} from "./Logout";
+import {logoutUser} from "../components/Logout";
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);

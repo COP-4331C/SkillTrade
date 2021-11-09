@@ -25,7 +25,7 @@ exports.editProfile = async (req, res) => {
   let user = await User.findOne({ email: req.email });
   var newValues = req.body;
 
-  var changeable_fields = ['firstName', 'lastName', 'aboutMe', 'instagram', 'twitter', 'linkedIn'];
+  var changeable_fields = ['firstName', 'lastName', 'aboutMe', 'instagram', 'twitter', 'linkedIn', 'city', 'state', 'country'];
 
   for (const p of changeable_fields)
     user.profile[p] = newValues[p];

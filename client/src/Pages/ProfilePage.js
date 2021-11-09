@@ -21,6 +21,7 @@ import AppNavBar from '../components/AppNavBar';
 import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
 import Link from "@mui/material/Link";
+import HomeNavBar from "../components/HomeNavBar";
 
 export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
@@ -363,7 +364,7 @@ export default function ProfilePage() {
 
   return (
     <Box sx={{flex: 1}}>
-      <AppNavBar/>
+      <HomeNavBar/>
 
       {/************************* Main Box ***********************/}
       <Box

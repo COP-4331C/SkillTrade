@@ -22,6 +22,7 @@ import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import LoginIcon from '@mui/icons-material/Login';
 import LoginModalMobile from "./LoginModalMobile";
+import Login from './Login';
 
 // const Search = styled('div')(({theme}) => ({
 //   position: 'relative',
@@ -130,8 +131,8 @@ export default function NavBar() {
     >
       {/******************************* Mobile Menu ********************************/}
 
-      {/*************** Sign in  **************/}
-      <MenuItem onClick={handleMobileMenuClose}>
+      {/* ************** Sign in  ************* */}
+      {/* <MenuItem onClick={handleMobileMenuClose}>
         {/*<IconButton size="large" aria-label="show 4 new mails" color="inherit">*/}
         {/*  <Badge badgeContent={4} color="error">*/}
         {/*    <MailIcon/>*/}
@@ -143,9 +144,19 @@ export default function NavBar() {
         {/*  <LoginIcon/>*/}
         {/*</IconButton>*/}
         {/*<p>Sign in</p>*/}
-        <LoginModalMobile/>
-      </MenuItem>
+        <Login/>
+      {/* </MenuItem> */}
 
+      <MenuItem component={RouterLink} to="/Login">
+        <IconButton
+          size="large"
+          aria-label="create account mobile"
+          color="inherit"
+        >
+          <AccountCircle/>
+        </IconButton>
+        <p>Login</p>
+      </MenuItem>
       {/*************** Register  **************/}
       <MenuItem component={RouterLink} to="/Registration">
 
@@ -248,7 +259,27 @@ export default function NavBar() {
             {/*</IconButton>*/}
             <Stack spacing={4} direction="row">
 
-              <LoginModal/>
+            <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/Login"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                login
+              </Button>
+              {/* <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/Registration"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                Sign up for free
+              </Button> */}
+
               <Button
                 variant="contained"
                 size="small"

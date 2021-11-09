@@ -10,30 +10,29 @@ import how from '../how.jpeg';
 import { styled } from '@material-ui/styles';
 import FormControl from "@mui/material/FormControl";
 import { TextField } from '@mui/material';
+import { Theme } from '../components/Theme';
+import { pipelinePrimaryTopicReference } from '@babel/types';
 
 
 export default function Skills() {
-  const CardContentNoPadding = styled(CardContent)(`
-    padding: 0;
-    &:last-child {
-    padding-bottom: 0;
-  }
-`);
+
   
   return (
     <Grid container justifyContent="center">
       <Card sx={{ maxWidth: 345 }}>
-      <img  style={{ 
+      <div  style={{ 
+                backgroundSize: 300,
+                background: "url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png)",
                 width:300,
-                height:450,
+                height:150,
                 border: "1px solid", 
                 borderColor: 'black' }} 
-                src={how}/>
-      <CardContentNoPadding>
+                />
+      <CardContent style={{padding: 0}}>
         <Typography  variant="body2" >
           I can teach you...
         </Typography>
-        <Typography gutterBottom variant="h5"  style={{ backgroundColor: "primary", color: "black" }} component="div">
+        <Typography gutterBottom variant="h5"  style={{ backgroundColor: '#3f51b5', color: "black" }} component="div">
           How to speak in chinese
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -49,7 +48,7 @@ export default function Skills() {
           </FormControl> */}
           CHinese langage is awesome
         </Typography>
-      </CardContentNoPadding>
+      </CardContent>
       <Grid container spacing={2}>
         <Grid item xs={3} justifyContent="left">
           <img  style={{ 

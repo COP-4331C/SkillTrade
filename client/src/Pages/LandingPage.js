@@ -4,12 +4,13 @@ import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import {Stack} from "@mui/material";
 import NavBar from "../components/NavBar";
+// import AppNavBar from "../components/AppNavBar";
 
 
 const LandingPage = () => {
   return (
     <div>
-      <NavBar/>
+      <AppNavBar/>
       <h1>Landing Page</h1>
       <h3>Coming soon</h3>
 

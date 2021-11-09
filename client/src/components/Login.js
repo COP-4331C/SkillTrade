@@ -23,6 +23,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
 import {Theme} from "./Theme";
 import Box from "@mui/material/Box";
+import NavBar from './NavBar';
+import AppNavBar from './AppNavBar';
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
@@ -30,7 +32,7 @@ import Box from "@mui/material/Box";
 // TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
 //      on desktops, when the browser's size is reduced horizontally.
 
-export default function Login(props) {
+export default function Login() {
 
   //***************************************** //
   //     Global Variables and constants
@@ -216,16 +218,19 @@ export default function Login(props) {
 
   return (
     <Grid >
+      <AppNavBar/>
+              {/* <NavBar/> */}
+
       <form onSubmit={handleSubmitButton} >
 
-        <Box sx={{ display: "flex 1", width: 350, maxWidth: { xs: 270, sm: 350 } }} >
+        {/* <Box sx={{ display: "flex", width: 350, maxWidth: { xs: 270, sm: 350 } }} > */}
         {/*<Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>*/}
         {/*  <Paper elevation={3} style={{padding: 40, width: 230, margin: '20px auto'}}>*/}
         {/*  <Paper elevation={3} style={{padding: 40, width: "100%", margin: '0 auto'}}>*/}
-            <Paper elevation={3} style={{padding: 30}}>
+            <Paper elevation={3} style={{padding: 30,height: 'auto', width: 280, margin: '20px auto'}}>
 
 
-          {/****************** X (Button to close)*********************/}
+          {/* ***************** X (Button to close)********************
           <IconButton
               aria-label="close"
               onClick={() => props.onClick()}
@@ -233,7 +238,7 @@ export default function Login(props) {
               sx={{ position: 'absolute', right: 45, top: 20 }}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
@@ -328,7 +333,7 @@ export default function Login(props) {
           </Typography>
 
         </Paper>
-        </Box>
+        {/* </Box> */}
       </form>
     </Grid>
   );

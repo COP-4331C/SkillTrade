@@ -19,7 +19,7 @@ const DetailsScreen = ({navigation}) => {
         />
         <Button
           title = "Go to the first screen"
-          onPress = {() => navigation.popToTop()} // not working?
+          onPress = {() => navigation.navigate('Home')} // not working?
         />
       </View>
     );

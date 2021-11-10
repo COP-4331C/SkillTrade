@@ -35,6 +35,7 @@ const SignInScreen = ({navigation}) => {
         // firstClickPassword: false,
         isValidFirstName: true,
         // firstClickFirstName: false,
+        isValidLastName: true,
         isValidConfirmPassword: true,
         // firstClickConfirmPassword: false,
         // isAllThere: true,
@@ -44,7 +45,7 @@ const SignInScreen = ({navigation}) => {
     // Email Validation
     const textInputChange = (val) => {
         var validRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(val.length >= 1 && val.match(validRegex)){
+        if(val.length >= 1 && val.length <= 50 && val.match(validRegex)){
             setData({
                 ...data,
                 email:val,
@@ -81,7 +82,7 @@ const SignInScreen = ({navigation}) => {
     
     // Confirm FirstName is there
     const firstNameInputChange = (val) => { // check firstNameInputChange 
-        if(val.length !== 0){
+        if(val.length > 0 && val.length <= 50){
             setData({
                 ...data,
                 firstname:val,
@@ -101,23 +102,27 @@ const SignInScreen = ({navigation}) => {
     }
 
     const lastNameInputChange = (val) => { // check lastNameInputChange 
-        if(val.length !== 0){
+        if(val.length <= 50){
             setData({
                 ...data,
                 lastname:val,
-                check_lastnameInputChange:true
+                check_lastnameInputChange:true,
+                isValidLastName: true,
             })
         } else {
             setData({
                 ...data,
                 lastname:val,
-                check_lastnameInputChange:false
+                check_lastnameInputChange:false,
+                isValidLastName: false,
             })
         }
     }
     // Validate Password
     const handlePasswordChange = (val) => {
-        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        // var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        // var strongRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        var strongRegex = /^(?=.{8,50}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/;
        if(val.match(strongRegex)){
            setData({
                ...data,
@@ -192,14 +197,18 @@ const SignInScreen = ({navigation}) => {
                 password:  password //"123456"
             })
             .then(function(response) {
-                console.warn('test good') // for test 
-                console.warn("good job")
+                // console.warn('test good') // for test 
+                // console.warn("good job")
                 navigation.goBack()
             })
             .catch(function(error) {
-                console.log(error)
-                console.warn("bad  job")
-                console.log(email)
+                // console.log(error)
+                // console.warn("bad  job")
+                // console.log(email)
+                // Alert if email in use
+                Alert.alert('Invalid Email!', 'Email is in currently in use.', [
+                    {text: 'Okay'}
+                ]);
             });
     }
 
@@ -256,7 +265,7 @@ const SignInScreen = ({navigation}) => {
                     </View>
                     { data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>Please enter a valid email address, for example, "test@example.com".</Text>
+                    <Text style={styles.errorMsg}>Please enter a valid email address, for example, "test@example.com". Email length must be less than 50 characters.</Text>
                     </Animatable.View>
                     }
                     
@@ -288,7 +297,7 @@ const SignInScreen = ({navigation}) => {
 
                     { data.isValidFirstName ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>Please enter a firstname.</Text>
+                    <Text style={styles.errorMsg}>Please enter a Firstname, with a length greater than 1 character and a max of 50 characters.</Text>
                     </Animatable.View>
                 }
 
@@ -318,6 +327,12 @@ const SignInScreen = ({navigation}) => {
                         
                         : null}
                     </View>
+
+                    { data.isValidLastName ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Last name can not be greater than 50 characters.</Text>
+                    </Animatable.View>
+                    }
 
                     <Text style={[styles.text_footer, {marginTop:25}]}>Password</Text>
                     <View style={styles.action}>
@@ -353,7 +368,7 @@ const SignInScreen = ({navigation}) => {
                     </View>
                     { data.isValidPassword ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>Password must contain 8 characters, have a lowercase letter, uppercase letter, a number, and a special character, for example Xxxxxx1#</Text>
+                    <Text style={styles.errorMsg}>Password must contain atleast 8 characters and a max of 50 characters, have a lowercase letter, uppercase letter, a number, and a special character, for example Xxxxxx1#</Text>
                     </Animatable.View>
                     }
                     <Text style={[styles.text_footer, {marginTop:25}]}>Confirm Password</Text>
@@ -411,6 +426,10 @@ const SignInScreen = ({navigation}) => {
                                 connectToSignUpApi(
                                 data.email, data.firstname, 
                                 data.lastname, data.password) 
+                                /*Alert.alert('Account Created Succesfully!', [
+                                    {text: 'Okay'}
+                                ]);*/
+                                
                             }
                             else {
                                 Alert.alert('Invalid User!', 'Username, Password, or Firstname is incorrect.', [

@@ -21,12 +21,13 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../AppNavBar';
 import {Theme} from "../Theme";
+import NavBar from "../../Recycle Bin/NavBar";
+import { Box } from '@mui/material';
 
 
 
 
 export default function Registration() {
-
 
 const [email, setEmail] = useState("");
 
@@ -77,19 +78,15 @@ const handleChangePasswordField = (prop) => (event) => {
   // Verification for eveything
 const verification_length = 8
 
-function validateInputLength() {
-    if(values.password.length >= verification_length)
-        return 1}
-
 function valid(){
     if(values.password !== values.confirm)
         return false;
     else if(values.password === values.confirm)
         return 1;}
 
-function validEmail(){
-    if(email.length >1)
-        return 1;}
+// function validEmail(){
+//     if(email.length >1)
+//         return 1;}
 
 function validFirstName(){
     if(firstName.length>=1 && firstName.length<50)
@@ -151,8 +148,8 @@ function handleSubmitButton(event) {
       text: ""
     });
 
-    //const { values.password } = this.state;
-    const re = new RegExp("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,32}$");
+    //  const{value} = this.state;
+    const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     const isOk = re.test(values.password);
 
     console.log(isOk);
@@ -189,6 +186,7 @@ function handleSubmitButton(event) {
     // }
 
     else if (valid()!==1){
+      alert("Registration 1!" );
         setconfirmError({
             state: true,
             text: "Passwords do not match, please check again!"
@@ -196,6 +194,7 @@ function handleSubmitButton(event) {
     }
 
     else if(!isOk){
+      alert("Registration 2!" );
       setComplexity({
         state: true,
         text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
@@ -203,6 +202,7 @@ function handleSubmitButton(event) {
     }
 
     else if (validFirstName()!==1){
+      alert("Registration 3!" );
       setConfirmName({
           state: true,
           text: "Please Enter valid First Name"
@@ -216,162 +216,172 @@ function handleSubmitButton(event) {
 
   return (
     <Grid>
-      <form onSubmit={handleSubmitButton}>
       <AppNavBar/>
-        <Paper elevation={3} style={{padding: 40, height: '56vh', width: 280, margin: '20px auto'}}>
+              {/* <NavBar/> */}
+      <form onSubmit={handleSubmitButton}>
+      {/* <Box sx={{ 
+        display: "flex", 
+        width: 350, 
+        justifyContent: "center",
+        alignItems: "safe center",
+        maxWidth: { xs: 270, sm: 350 } 
+      }} > */}
+        <Paper elevation={3} style={{padding: 40, height: 'auto', width: 280, margin: '20px auto'}}>
 
-          {/********************* Icon and title *********************/}
-          <Grid align='center'>
-            <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
-            </Avatar>
-            <h2>Register</h2>
-          </Grid>
+  {/********************* Icon and title *********************/}
+        <Grid align='center'>
+          <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
+          </Avatar>
+          <h2>Register</h2>
+        </Grid>
 
-          {/********************* Wrong credentials message ******************** */}
-          {/* (a hidden alert). Visible only with wrong credentials */}
-          <Collapse in={openMessage}>
-            <Alert
-              severity="error"
-              sx={{ mb: 2 }}
-            >
-              <strong>Please check information provided!</strong>
-            </Alert>
-          </Collapse>
+        {/********************* Wrong credentials message ******************** */}
+        {/* (a hidden alert). Visible only with wrong credentials */}
+        <Collapse in={openMessage}>
+          <Alert
+            severity="error"
+            sx={{ mb: 2 }}
+          >
+            <strong>Please check information provided!</strong>
+          </Alert>
+        </Collapse>
 
         {/********************* FN Text Field *********************/}
         <Grid container spacing={2}>
         <Grid item xs={6}>
-          <FormControl required error={confirmName.state}>
-              <item>
-                <TextField
-                  required
-                  fullWidth
-                  label="First Name"
-                  placeholder="Enter First Name"
-                  variant="standard"
-                  onChange={(e) => setfirstName(e.target.value)}
-                  value={firstName}
-                  type="text"
-                />
-              </item>
-              <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
-          </FormControl>
+        <FormControl required error={confirmName.state}>
+            <item>
+              <TextField
+                required
+                fullWidth
+                label="First Name"
+                placeholder="Enter First Name"
+                variant="standard"
+                onChange={(e) => setfirstName(e.target.value)}
+                value={firstName}
+                type="text"
+              />
+            </item>
+            <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
+        </FormControl>
         </Grid>
-          
-        
-          {/********************* LN Text Field *********************/}
-          <Grid item xs ={6}>
-          <item>
-          <TextField
-            
-            fullWidth
-            label="Last Name"
-            placeholder="Enter Last Name"
-            variant="standard"
-            onChange={(e) => setlastName(e.target.value)}
-            value={lastName}
-            type="text"
-          />
-          </item>
-          
-        </Grid>
-        </Grid>
-        
-        
-          {/********************* email Text Field *********************/}
-          <TextField
-            required
-            fullWidth
-            label="Email"
-            placeholder="Enter email"
-            variant="standard"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="email"
-          />
 
-          {/********************* Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} > 
-          {/* required error={ complexity.state} */}
-            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+
+        {/********************* LN Text Field *********************/}
+        <Grid item xs ={6}>
+        <item>
+        <TextField
+          
+          fullWidth
+          label="Last Name"
+          placeholder="Enter Last Name"
+          variant="standard"
+          onChange={(e) => setlastName(e.target.value)}
+          value={lastName}
+          type="text"
+        />
+        </item>
+
+        </Grid>
+        </Grid>
+
+
+        {/********************* email Text Field *********************/}
+        <TextField
+          required
+          fullWidth
+          label="Email"
+          placeholder="Enter email"
+          variant="standard"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="email"
+        />
+
+        {/********************* Password field *********************/}
+        <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} > 
+        {/* required error={ complexity.state} */}
+          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+          <Input
+            id="standard-adornment-password"
+            type={values.showPassword ? 'text' : 'password'}
+            value={values.password}
+            onChange={handleChangePasswordField('password')}
+            placeholder="Enter Password"
+
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDown}
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {/* <MuiFormHelperText id="component-error-text" styles="styles.helper" >{pwdError.text}</MuiFormHelperText> */}
+          <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
+        </FormControl>
+
+        <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
+          <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
             <Input
-              id="standard-adornment-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChangePasswordField('password')}
-              placeholder="Enter Password"
+              id="standard-adornment-confirm"
+              type={values.showConfirm ? 'text' : 'password'}
+              value={values.confirm}
+              onChange={handleChangePasswordField('confirm')}
 
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDown}
+                    onClick={handleClickShowConfirm}
+                    onMouseDown={handleMouseDownConfirm}
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {values.showConfirm ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
             />
-            {/* <MuiFormHelperText id="component-error-text" styles="styles.helper" >{pwdError.text}</MuiFormHelperText> */}
-            <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
-          </FormControl>
+            <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
+        </FormControl>
 
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
-            <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
-              <Input
-                id="standard-adornment-confirm"
-                type={values.showConfirm ? 'text' : 'password'}
-                value={values.confirm}
-                onChange={handleChangePasswordField('confirm')}
+        {/********************* Sign in button *********************/}
+        {/* <Link underline="hover"component={RouterLink} to="/Login"> */}
+          <Button
+            type='submit'
+            color='secondary'
+            variant='contained'
+            fullWidth
+            style={{ margin: '20px 0' }}
+          >
+            Register
+          </Button>
+        {/* </Link> */}
 
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowConfirm}
-                      onMouseDown={handleMouseDownConfirm}
-                    >
-                      {values.showConfirm ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
-          </FormControl>
+        {/*********************  Forgot my password *********************/}
+        <Typography>
+          <Link
+            href='#'
+            underline='hover'
+            color='primary'
+            fontSize='0.9rem'
+            marginY='20px'
+          >
+            Forgot my password
+          </Link>
+        </Typography>
 
-          {/********************* Sign in button *********************/}
-          {/* <Link underline="hover"component={RouterLink} to="/Login"> */}
-            <Button
-              type='submit'
-              color='secondary'
-              variant='contained'
-              fullWidth
-              style={{ margin: '20px 0' }}
-            >
-              Register
-            </Button>
-          {/* </Link> */}
-
-          {/*********************  Forgot my password *********************/}
-          <Typography>
-            <Link
-              href='#'
-              underline='hover'
-              color='primary'
-              fontSize='0.9rem'
-              marginY='20px'
-            >
-              Forgot my password
-            </Link>
-          </Typography>
-
-          {/********************* already have an account  *********************/}
-          <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
-            <Link underline="hover" component={RouterLink} to="/Login">Login</Link>
-          </Typography>
+        {/********************* already have an account  *********************/}
+        <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
+          <Link underline="hover" component={RouterLink} to="/Login">Login</Link>
+        </Typography>
 
         </Paper>
+      {/* </Box> */}
+        
       </form>
     </Grid>
   );

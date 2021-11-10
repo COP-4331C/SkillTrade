@@ -1,5 +1,5 @@
 import {Link as RouterLink} from "react-router-dom";
-import logo1WhiteTransparent from "../logo1WhiteTransparent.png";
+import logo1WhiteTransparent from "../images/logo1WhiteTransparent.png";
 
 const MainLogo = () => {
     return (

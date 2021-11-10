@@ -55,6 +55,8 @@ exports.changePassword = async (req, res) =>
   }
 
   const email = req.email;
+
+
   const user = await User.findOne({ email: email });
   if (!user)
     return res.status(400).json({ error: "Invalid email" });
@@ -68,8 +70,9 @@ exports.changePassword = async (req, res) =>
   user
     .save()
     .then(() => {
-      //return res.status(200).json({message: `TEST: email: ${email} | password hash: ${user.passwordHash}`});
-      return res.status(200).json({message: "Password Changed Successfully!"});
+
+      return res.status(200).json({message: "Successfully changed password!"});
+
     })
     .catch((err) => {
       console.log("An error occured.");
@@ -155,6 +158,4 @@ exports.verifyEmail = async(req, res) => {
 
 }
 
-exports.logout = async (req, res) => {
-  //insert logout code
-}
+

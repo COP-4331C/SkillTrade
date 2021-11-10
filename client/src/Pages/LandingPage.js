@@ -3,8 +3,6 @@ import React from "react";
 import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import {Stack} from "@mui/material";
-import NavBar from "../Recycle Bin/NavBar";
-// import AppNavBar from "../components/AppNavBar";
 
 
 const LandingPage = () => {

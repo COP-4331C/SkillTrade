@@ -17,7 +17,6 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
 import {createTheme, makeStyles} from "@material-ui/core";
-import AppNavBar from '../components/AppNavBar';
 import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
 import Link from "@mui/material/Link";

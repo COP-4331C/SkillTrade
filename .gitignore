@@ -105,3 +105,6 @@ dist
 
 # WebStorm files
 .idea
+
+# Ensure yarn only
+package-lock.json

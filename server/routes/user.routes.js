@@ -13,7 +13,7 @@ router.put("/edit-profile", authenticateToken, users.editProfile);
 router.post("/logout", users.logout);
 
 // Change Password
-router.put("/changePassword", authenticateToken, users.changePassword);
+router.put("/change-password", authenticateToken, users.changePassword);
 
 // Verify Email*
 router.post("/verifyEmail", users.verifyEmail);

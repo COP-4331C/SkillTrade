@@ -15,6 +15,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import { AuthContext } from '../components/context';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignInScreen = ({navigation}) => {
 
@@ -144,16 +145,17 @@ const SignInScreen = ({navigation}) => {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                        onPress={() => {loginHandle(data.username, data.password)}} //fixme. how to check it??
-                        style={[styles.signIn, {
-                            borderColor: '#009387',
-                            borderWidth: 1,
-                            marginTop: 15
-                        }]}
+                        style={styles.signIn}
+                        onPress={() => {loginHandle( data.username, data.password )}}
+                    >
+                    <LinearGradient
+                        colors={['#08d4c4', '#01ab9d']}
+                        style={styles.signIn}
                     >
                         <Text style={[styles.textSign, {
-                            color: '#009387'
+                            color:'#fff'
                         }]}>Sign In</Text>
+                    </LinearGradient>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -198,7 +200,8 @@ const styles = StyleSheet.create({
     text_header: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 30,
+        paddingTop: 20
     },
     text_footer: {
         color: '#05375a',

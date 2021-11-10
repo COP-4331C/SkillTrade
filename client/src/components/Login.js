@@ -22,6 +22,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import {storeToken} from "./TokenStorage";
 import {Theme} from "./Theme";
+import Box from "@mui/material/Box";
+import NavBar from '../Recycle Bin/NavBar';
+import AppNavBar from './AppNavBar';
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
@@ -29,7 +32,7 @@ import {Theme} from "./Theme";
 // TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
 //      on desktops, when the browser's size is reduced horizontally.
 
-export default function Login(props) {
+export default function Login() {
 
   //***************************************** //
   //     Global Variables and constants
@@ -214,18 +217,28 @@ export default function Login(props) {
   // **************************************** //
 
   return (
-    <Grid>
-      <form onSubmit={handleSubmitButton}>
-        <Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>
+    <Grid >
+      <AppNavBar/>
+              {/* <NavBar/> */}
 
-          {/****************** X (Button to close)*********************/}
+      <form onSubmit={handleSubmitButton} >
+
+        {/* <Box sx={{ display: "flex", width: 350, maxWidth: { xs: 270, sm: 350 } }} > */}
+        {/*<Paper elevation={3} style={{padding: 40, width: 280, margin: '20px auto'}}>*/}
+        {/*  <Paper elevation={3} style={{padding: 40, width: 230, margin: '20px auto'}}>*/}
+        {/*  <Paper elevation={3} style={{padding: 40, width: "100%", margin: '0 auto'}}>*/}
+            <Paper elevation={3} style={{padding: 30,height: 'auto', width: 280, margin: '20px auto'}}>
+
+
+          {/* ***************** X (Button to close)********************
           <IconButton
               aria-label="close"
               onClick={() => props.onClick()}
-              sx={{ position: 'absolute', right: 20, top: 20 }}
+              // sx={{ position: 'absolute', right: 20, top: 20 }}
+              sx={{ position: 'absolute', right: 45, top: 20 }}
           >
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
@@ -259,6 +272,7 @@ export default function Login(props) {
 
           {/********************* Password field *********************/}
           <FormControl sx={{ margin: "16px 16px 0 0", width: "100%"  }} variant="standard" required error={pwdError.state}>
+          {/*<FormControl sx={{ margin: "16px 16px 0 0", width: "auto"  }} variant="standard" required error={pwdError.state}>*/}
             <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
             <Input
               id="standard-adornment-password"
@@ -319,6 +333,7 @@ export default function Login(props) {
           </Typography>
 
         </Paper>
+        {/* </Box> */}
       </form>
     </Grid>
   );

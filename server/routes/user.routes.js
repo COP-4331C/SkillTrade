@@ -9,13 +9,10 @@ router.post("/register", users.create);
 // Edit Profile
 router.put("/edit-profile", authenticateToken, users.editProfile);
 
-// Logout*
-router.post("/logout", users.logout);
+// Get Profile
+router.get("/profile/:userId", users.getProfile);
 
 // Change Password
-router.put("/changePassword", authenticateToken, users.changePassword);
-
-// Verify Email*
-router.post("/verifyEmail", users.verifyEmail);
+router.put("/change-password", authenticateToken, users.changePassword);
 
 module.exports = router;

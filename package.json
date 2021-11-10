@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index",
-    "server": "nodemon server/index",
+    "server": "nodemon server/index -L",
     "client": "cd client && yarn start",
     "build": "cd client && yarn run build",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
@@ -35,6 +35,6 @@
   "devDependencies": {
     "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.14"
   }
 }

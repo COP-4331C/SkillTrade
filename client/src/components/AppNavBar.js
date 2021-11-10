@@ -81,7 +81,7 @@ import {Link as RouterLink} from "react-router-dom";
 import LoginIcon from '@mui/icons-material/Login';
 import LoginModalMobile from "./LoginModalMobile";
 import Login from './Login';
-
+import Testcard from './Testcard';
 
 export default function AppNavBar() {
   
@@ -174,6 +174,28 @@ export default function AppNavBar() {
                 sx={{whiteSpace: 'nowrap'}}
               >
                 login
+              </Button>
+
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/card"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                card
+              </Button>
+
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/card2"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                card2
               </Button>
               
 

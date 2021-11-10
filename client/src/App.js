@@ -8,6 +8,7 @@ import Skills from './Pages/Skills';
 import ProfilePage from "./Pages/ProfilePage";
 import Login from './components/Login';
 import NavBar from './components/NavBar';
+import Testcard from './components/Testcard'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/home" component={HomePage} />
             <Route path="/profile" component={ProfilePage} />
             <Route path="/card" component={Skills}/>
+            <Route path="/card2" component={Testcard}/>
 
             {/* <Route path="/testProgile" component= */}
           </Switch>

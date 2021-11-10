@@ -139,7 +139,7 @@ const SignInScreen = ({navigation}) => {
                     <Button 
                         title="Forgot password?"
                         color= '#009387'
-                        onPress={() => navigation.navigate('ChangePasswordScreen') } // how to jump to ChangePasswordScreen? FIXME
+                        onPress={() => navigation.navigate('ForgetPasswordScreen') } // how to jump to ChangePasswordScreen? FIXME
                     />
                 </View>
 

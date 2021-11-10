@@ -4,11 +4,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import how from '../how.jpeg';
-// import { styled } from '@material-ui/styles';
 import FormControl from "@mui/material/FormControl";
 import { TextField } from '@mui/material';
-// import { Theme } from '../components/Theme';
-import { pipelinePrimaryTopicReference } from '@babel/types';
 import React, {useEffect, useState} from 'react';
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography';
@@ -29,8 +26,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
 import {createTheme, makeStyles} from "@material-ui/core";
 import AppNavBar from '../components/AppNavBar';
-// import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
+import DescriptionIcon from '@mui/icons-material/Description';
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import Link from "@mui/material/Link";
 import { border } from '@mui/system';
 
@@ -65,6 +64,7 @@ const [photo, setPhoto] = useState(profileImage)
 const [editPermission, setEditPermission] = useState(true);
 const [mousePointer, setMousePointer] = useState('');
 const [disableImageUpload, setDisableImageUpload] = useState(true)
+
 const [firstNameError, setFirstNameError] = useState({
   state: false,
   text: ""
@@ -81,9 +81,6 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   state: false,
   text: ""
 })
-const [instagramLink, setInstagramLink] = useState("");
-const [twitterLink, setTwitterLink] = useState("");
-const [linkedInLink, setLinkedInLink] = useState("");
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -108,7 +105,7 @@ function enterEditMode() {
 function exitEditMode() {
   setEditMode(false);                     // Turn off edit mode
   setDisplayNames("inline-flex");         // Displays the First and Last names
-  setDisplayContactMe("inline-flex");     // Displays the Contact Me button
+  // setDisplayContactMe("inline-flex");     // Displays the Contact Me button
   setDisplayAboutMeText("block")          // Displays the about me text
   setDisplayAboutMeText2("block")          // Displays the about me text
   setDisplayEditButton("inline-flex");    // Display Edit button
@@ -121,40 +118,36 @@ function exitEditMode() {
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
-  let instagramHandle;
-  let twitterHandle;
-  let linkedInHandle;
 
+  // if(!validateTextMinLength(firstNameTemp, 1)) {
+  //   okToSaveData = false;
+  //   setFirstNameError({
+  //     state: true,
+  //     text: "Can't be empty"
+  //   });
+  // }
 
-  if(!validateTextMinLength(firstNameTemp, 1)) {
-    okToSaveData = false;
-    setFirstNameError({
-      state: true,
-      text: "Can't be empty"
-    });
-  }
+  // if(!validateTextMaxLength(firstNameTemp, 50)) {
+  //   okToSaveData = false;
+  //   setFirstNameError({
+  //     state: true,
+  //     text: "Must be less than 50 characters"
+  //   });
+  // }
 
-  if(!validateTextMaxLength(firstNameTemp, 50)) {
-    okToSaveData = false;
-    setFirstNameError({
-      state: true,
-      text: "Must be less than 50 characters"
-    });
-  }
-
-  if(!validateTextMaxLength(lastNameTemp, 50)) {
-    okToSaveData = false;
-    setLastNameError({
-      state: true,
-      text: "Must be less than 50 characters"
-    });
-  }
+  // if(!validateTextMaxLength(lastNameTemp, 50)) {
+  //   okToSaveData = false;
+  //   setLastNameError({
+  //     state: true,
+  //     text: "Must be less than 50 characters"
+  //   });
+  // }
 
   if(!validateTextMaxLength(aboutMeTextTemp, 15)) {
     okToSaveData = false
     setAboutMeTextError({
       state: true,
-      text: "Must be less than 650 characters (There are " + aboutMeTextTemp.length + ")"
+      text: "Must be less than 15 characters (There are " + aboutMeTextTemp.length + ")"
     });
   }
 
@@ -162,67 +155,19 @@ function handleSave() {
     okToSaveData = false
     setAboutMeText2Error({
       state: true,
-      text: "Must be less than 650 characters (There are " + aboutMeText2Temp.length + ")"
+      text: "Must be less than 30 characters (There are " + aboutMeText2Temp.length + ")"
     });
   }
-
-  // if(instagramTemp.includes("instagram.com")){
-  //   instagramHandle = getHandle(instagramTemp);
-  // } else {
-  //   instagramHandle = instagramTemp;
-  // }
-  // setInstagramLink("https://www.instagram.com/" + instagramHandle);
-
-  // if(twitterTemp.includes("twitter.com")) {
-  //   twitterHandle = getHandle(twitterTemp);
-  // } else {
-  //   twitterHandle = twitterTemp;
-  // }
-  // setTwitterLink("https://twitter.com/" + twitterHandle);
-
-
-  // if(linkedInTemp.includes("linkedin.com")){
-  //   linkedInHandle = getHandle(linkedInTemp);
-  // } else {
-  //   linkedInHandle = linkedInTemp;
-  // }
-  // setLinkedInLink("https://www.linkedin.com/in/" + linkedInHandle)
 
   if(okToSaveData) {
     setFirstName(firstNameTemp);
     setLastName(lastNameTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
-    setInstagram(instagramHandle);
-    setTwitter(twitterHandle);
-    setLinkedIn(linkedInHandle);
     exitEditMode();
   }
 }
 
-//   // Parses the URL to extract the handle.
-//   function getHandle(urlString){
-
-//     let url = new URL(urlString);
-//     let pathname = url.pathname;
-//     let hostname = url.hostname;
-//     let handle = "";
-
-//     if(hostname.includes("instagram.com")) {
-//       handle = pathname.replaceAll('/', '');
-//     }
-
-//     else if (hostname.includes("twitter.com")){
-//       handle = pathname.replaceAll('/', '');
-//       handle = '@' + handle;
-//     }
-//     else if (hostname.includes("linkedin.com")) {
-//       handle = pathname.replaceAll('/', '');
-//       handle = handle.replaceAll("in", '');
-//     }
-
-//     return handle
-//   }
 
 
 
@@ -278,12 +223,6 @@ function handleOnMouseLeave() {
   }
 }
 
-function handleContactMe() {
-  alert("Coming Soon! \n\n" +
-    "BTW: There are 10 types of people in the world...\n" +
-    "Those who understand binary, and those who don't!")
-}
-
 function handleOnChangeAboutMeText(e) {
   setAboutMeTextTemp(e.target.value);
 }
@@ -300,17 +239,6 @@ function handleOnChangeLastName(e) {
   setLastNameTemp(e.target.value);
 }
 
-function handleOnChangeInstagram(e) {
-  setInstagramTemp(e.target.value);
-}
-
-function handleOnChangeTwitter(e) {
-  setTwitterTemp(e.target.value);
-}
-
-function handleOnChangeLinkedIn(e) {
-  setLinkedInTemp(e.target.value);
-}
 
 function handleOnMouseOverImage() {
   if (editPermission) {
@@ -324,19 +252,19 @@ function handleOnMouseLeaveImage() {
   }
 }
 
-// Allows a custom rating starts
-const StyledRating = styled(Rating)({
-  '& .MuiRating-iconFilled': {
-    color: Theme.palette.secondary.main,
-    backgroundColor: "primary"
-  },
-  '& .MuiFilledInput-root:after': {
-    borderBottom: "secondary"
-  },
-  '& MuiRating-icon': {
-    color: Theme.palette.secondary.main
-  }
-});
+// // Allows a custom rating starts
+// const StyledRating = styled(Rating)({
+//   '& .MuiRating-iconFilled': {
+//     color: Theme.palette.secondary.main,
+//     backgroundColor: "primary"
+//   },
+//   '& .MuiFilledInput-root:after': {
+//     borderBottom: "secondary"
+//   },
+//   '& MuiRating-icon': {
+//     color: Theme.palette.secondary.main
+//   }
+// });
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -387,10 +315,6 @@ useEffect(() => {
       setMousePointer("");
     }
 
-    setInstagramLink("https://www.instagram.com/" + instagram);
-    setTwitterLink("https://twitter.com/" + twitter);
-    setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
-
   } catch (e) {
     console.log(e.message);
   }
@@ -400,7 +324,7 @@ useEffect(() => {
   return (
     <Grid container justifyContent="center">
       {/* //start of card// */}
-      <Card  sx={{ maxWidth: 345,border: 1, borderColor:"black", width: "300px",backgroundColor: Theme.palette.primary.main, }}>
+      <Card  sx={{ maxWidth: 345,border: 4, borderColor:Theme.palette.secondary.light, width: "300px",backgroundColor: Theme.palette.primary.main, }}>
 
       {/* //start of the heading// */}
       <Grid container 
@@ -449,15 +373,20 @@ useEffect(() => {
               onMouseOver={handleOnMouseOverImage}
               onMouseLeave={handleOnMouseLeaveImage}
             />
+
           </label>
       {/* //end of the image-header// */}
 
-      <CardContent style={{paddingLeft: 0,paddingRight:0,paddingTop:1}}>
+      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0}}>
 
-        <Typography  variant="body5" color="white">
-          I can teach you...
-        </Typography>
+        <Box pt={1}>
+          <Typography  variant="body5" color="white" style={{paddingTop:1}}>
+            I can teach you...
+          </Typography>
+        </Box>
+        
 
+      {/*************************** What Skills can be taught ************************************/}
         <Typography
             style={{backgroundColor: Theme.palette.primary.contrastText}}  
             sx={{
@@ -473,7 +402,7 @@ useEffect(() => {
           }}>
             {aboutMeText}
         </Typography>
-        {/*************************** About Me Text (Edit Mode) ************************************/}
+        {/*************************** What Skills can be taught (Edit Mode) ************************************/}
         <ThemeProvider theme={textFieldTheme}>
             <TextField
               label="How to learn ..."
@@ -491,29 +420,201 @@ useEffect(() => {
               error={aboutMeTextError.state}
             />
         </ThemeProvider>
+        {/*************************** What Skills can be taught DONE ************************************/}
 
-        <Typography variant="body2" color="text.secondary">
-          CHinese langage is awesome
-        </Typography>
-      </CardContent>
-      <Grid container spacing={2}>
-        <Grid item xs={3} justifyContent="left">
-          <img  style={{ 
-                  marginTop: 0, 
-                  width: 70, 
-                  height: 70, 
-                  borderRadius: 200 / 2,
-                  border: "1px solid", 
-                  borderColor: 'black' }} 
-                  src={how}/>
+        {/*************************** Explanation on what can be taught ************************************/}
+        <Grid container>
+          <Grid item xs={2}>
+            <IconButton color="secondary" aria-label="edit" align="left">
+                <DescriptionIcon/>
+            </IconButton>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography
+              variant="body5"
+              // style={{backgroundColor: Theme.palette.primary.contrastText}}  
+              sx={{
+              lineHeight: 1.5,
+              textAlign: "left",
+              marginTop: "10px",
+              color:"white",
+              display: displayAboutMeText2,
+              maxHeight: "75px",
+              height: "auto",
+              flexWrap:"wrap"
+            }}>
+              {aboutMeText2}
+            </Typography>
+          </Grid>
         </Grid>
+        
+        {/*************************** Explanation on what can be taught (Edit Mode) ************************************/}
+        <ThemeProvider theme={textFieldTheme}>
+            <TextField
+              label="Brief explanation of the skill"
+              color="secondary"
+              className={classes.root}
+              multiline
+              variant="filled"
+              rows={2}
+              value={aboutMeText2Temp}
+              fullWidth
+              onChange={handleOnChangeAboutMeText2}
+              sx={{display: displayEditFields, marginTop: "10px"}}
+              helperText={aboutMeText2Error.text}
+              error={aboutMeText2Error.state}
+            />
+        </ThemeProvider>
+
+         {/*************************** Explanation on what can be taught ************************************/}
+         <Grid container >
+          <Grid item xs={2}>
+            <IconButton color="secondary" aria-label="edit" align="left">
+                <PersonPinCircleIcon/>
+            </IconButton>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography
+              variant="body5"
+              // style={{backgroundColor: Theme.palette.primary.contrastText}}  
+              sx={{
+              lineHeight: 1.5,
+              textAlign: "left",
+              marginTop: "10px",
+              color:"white",
+              display: displayAboutMeText2,
+              maxHeight: "75px",
+              height: "auto",
+              flexWrap:"wrap"
+            }}>
+              {aboutMeText2}
+            </Typography>
+          </Grid>
+        </Grid>
+        
+        {/*************************** Explanation on what can be taught (Edit Mode) ************************************/}
+        <ThemeProvider theme={textFieldTheme}>
+            <TextField
+              label="Brief explanation of the skill"
+              color="secondary"
+              className={classes.root}
+              multiline
+              variant="filled"
+              rows={2}
+              value={aboutMeText2Temp}
+              fullWidth
+              onChange={handleOnChangeAboutMeText2}
+              sx={{display: displayEditFields, marginTop: "10px"}}
+              helperText={aboutMeText2Error.text}
+              error={aboutMeText2Error.state}
+            />
+        </ThemeProvider>
+
+         {/******************** Cancel Button *********************/}
+         <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              alignItems: 'safe center',
+              flexWrap: "wrap-reverse"
+            }}>
+              <Grid container justifyContent="center" style={{paddingTop: 2}}>
+                
+                <Grid item xs={3}>
+                  <Fade in={fade}>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      // style={{marginTop: 30, padding: "6px 64px"}}
+                      onClick={handleCancelButton}
+                      sx={{display: displayButton}}
+                    > <CancelPresentationIcon/>
+                    </Button>
+                  </Fade>
+                </Grid>
+
+                <Grid item xs={3}>
+                  <Fade in={fade}>
+                    <Button
+                      color="secondary"
+                      // startIcon={<SaveIcon/>}
+                      variant="contained"
+                      // style={{marginTop: 30, padding: "6px 64px"}}
+                      onClick={handleSave}
+                      sx={{display: displayButton}}
+                    ><SaveIcon/>
+                    </Button>
+
+                  </Fade>
+                </Grid>
+
+              </Grid>
+              
+              {/******************** Save Button *********************/}
+              
+            </Box>
+      </CardContent>
+
+      <Divider variant="middle" style={{color: 'white', border: "1px solid"}}/>
+
+      <Grid container spacing={2} padding>
+        <Grid item xs={3} justifyContent="left">
+          <label htmlFor="icon-button-file">
+
+            <Input
+              accept=".png, .jpg, .jpeg"
+              id="icon-button-file"
+              type="file"
+              name="photo"
+              onChange={handlePhoto}
+              disabled={disableImageUpload}
+            />
+
+            {/** **************************** Image ********************** **/}
+            <div style={{
+                background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
+                backgroundSize: "100px",
+                width: 70,
+                height: 70,
+                borderRadius: 200 / 2,
+                // display: "block",
+                cursor: mousePointer,
+              }}
+
+              alt={"user"}
+              onMouseOver={handleOnMouseOverImage}
+              onMouseLeave={handleOnMouseLeaveImage}
+            />
+            </label>
+        </Grid>
+
+        <Grid item xs={6} justifyContent="left">
+        <Typography
+              variant={"body5"}
+              sx={{
+                textAlign: "left",
+                marginTop: "20px",
+                color: "#ffb609",
+                fontWeight: 600
+              }}
+            >
+              {firstName+lastName}
+            </Typography>
+            {/* <Typography
+              variant={"body5"}
+              sx={{
+                textAlign: "left",
+                marginLeft: "20px",
+                marginTop: "20px",
+                fontWeight: 600
+              }}
+            >
+              {lastName}
+            </Typography> */}
+        </Grid>
+        
       </Grid>
 
-      
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
+    
     </Card>
     </Grid>
     

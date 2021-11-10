@@ -2,13 +2,14 @@ import './App.css';
 import Registration from './components/registration/Registration';
 import Footer from './components/Footer';
 import LandingPage from "./Pages/LandingPage";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import Skills from './Pages/Skills';
 import ProfilePage from "./Pages/ProfilePage";
 import Login from './components/Login';
 import NavBar from './components/NavBar';
 import Testcard from './components/Testcard'
+import { Switch } from 'react-router';
 
 
 function App() {

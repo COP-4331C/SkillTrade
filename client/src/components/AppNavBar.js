@@ -181,6 +181,17 @@ export default function AppNavBar() {
                 size="small"
                 color="secondary"
                 component={RouterLink}
+                to="/profile"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                Profile
+              </Button>
+
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
                 to="/card"
                 sx={{whiteSpace: 'nowrap'}}
               >

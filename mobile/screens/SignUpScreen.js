@@ -16,6 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignInScreen = ({navigation}) => {
     const [data, setData] = React.useState({
@@ -420,34 +421,33 @@ const SignInScreen = ({navigation}) => {
 
                     <View style={styles.button}>
                         <TouchableOpacity
-                            onPress={ () => {
-                            if (data.isValidUser == true && data.isValidPassword == true && data.isValidFirstName == true && data.isValidConfirmPassword == true && (data.email.length > 0 || data.password.length > 0 || data.firstname.length > 0)){
-                                data.isAllThere = true;
-                                connectToSignUpApi(
-                                data.email, data.firstname, 
-                                data.lastname, data.password) 
-                                /*Alert.alert('Account Created Succesfully!', [
-                                    {text: 'Okay'}
-                                ]);*/
-                                
-                            }
-                            else {
-                                Alert.alert('Invalid User!', 'Username, Password, or Firstname is incorrect.', [
-                                    {text: 'Okay'}
-                                ]);
-                            } 
-                            }
-                            }
-                        
-                            style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
-                                // marginTop: 15
-                            }]}
+                            style={styles.signIn}
+                            onPress={() => {
+                                if (data.isValidUser == true && data.isValidPassword == true && data.isValidFirstName == true && data.isValidConfirmPassword == true && (data.email.length > 0 || data.password.length > 0 || data.firstname.length > 0)){
+                                    data.isAllThere = true;
+                                    connectToSignUpApi(
+                                    data.email, data.firstname, 
+                                    data.lastname, data.password) 
+                                    /*Alert.alert('Account Created Succesfully!', [
+                                        {text: 'Okay'}
+                                    ]);*/
+                                    
+                                }
+                                else {
+                                    Alert.alert('Invalid User!', 'Username, Password, or Firstname is incorrect.', [
+                                        {text: 'Okay'}
+                                    ]);
+                                } 
+                            }}
+                        >
+                        <LinearGradient
+                            colors={['#08d4c4', '#01ab9d']}
+                            style={styles.signIn}
                         >
                             <Text style={[styles.textSign, {
-                                color: '#009387'
+                                color:'#fff'
                             }]}>Sign Up</Text>
+                        </LinearGradient>
                         </TouchableOpacity>
 
 

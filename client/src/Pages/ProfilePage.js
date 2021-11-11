@@ -21,6 +21,8 @@ import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
+import Reviews from "../components/Reviews";
+import Paper from "@mui/material/Paper";
 
 export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
@@ -107,7 +109,7 @@ export default function ProfilePage() {
     let linkedInHandle;
 
 
-    if(!validateTextMinLength(firstNameTemp, 1)) {
+    if (!validateTextMinLength(firstNameTemp, 1)) {
       okToSaveData = false;
       setFirstNameError({
         state: true,
@@ -115,7 +117,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(firstNameTemp, 50)) {
+    if (!validateTextMaxLength(firstNameTemp, 50)) {
       okToSaveData = false;
       setFirstNameError({
         state: true,
@@ -123,7 +125,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(lastNameTemp, 50)) {
+    if (!validateTextMaxLength(lastNameTemp, 50)) {
       okToSaveData = false;
       setLastNameError({
         state: true,
@@ -131,7 +133,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(aboutMeTextTemp, 650)) {
+    if (!validateTextMaxLength(aboutMeTextTemp, 650)) {
       okToSaveData = false
       setAboutMeTextError({
         state: true,
@@ -139,14 +141,14 @@ export default function ProfilePage() {
       });
     }
 
-    if(instagramTemp.includes("instagram.com")){
+    if (instagramTemp.includes("instagram.com")) {
       instagramHandle = getHandle(instagramTemp);
     } else {
       instagramHandle = instagramTemp;
     }
     setInstagramLink("https://www.instagram.com/" + instagramHandle);
 
-    if(twitterTemp.includes("twitter.com")) {
+    if (twitterTemp.includes("twitter.com")) {
       twitterHandle = getHandle(twitterTemp);
     } else {
       twitterHandle = twitterTemp;
@@ -154,14 +156,14 @@ export default function ProfilePage() {
     setTwitterLink("https://twitter.com/" + twitterHandle);
 
 
-    if(linkedInTemp.includes("linkedin.com")){
+    if (linkedInTemp.includes("linkedin.com")) {
       linkedInHandle = getHandle(linkedInTemp);
     } else {
       linkedInHandle = linkedInTemp;
     }
     setLinkedInLink("https://www.linkedin.com/in/" + linkedInHandle)
 
-    if(okToSaveData) {
+    if (okToSaveData) {
       setFirstName(firstNameTemp);
       setLastName(lastNameTemp);
       setAboutMeText(aboutMeTextTemp);
@@ -173,22 +175,19 @@ export default function ProfilePage() {
   }
 
   // Parses the URL to extract the handle.
-  function getHandle(urlString){
+  function getHandle(urlString) {
 
     let url = new URL(urlString);
     let pathname = url.pathname;
     let hostname = url.hostname;
     let handle = "";
 
-    if(hostname.includes("instagram.com")) {
+    if (hostname.includes("instagram.com")) {
       handle = pathname.replaceAll('/', '');
-    }
-
-    else if (hostname.includes("twitter.com")){
+    } else if (hostname.includes("twitter.com")) {
       handle = pathname.replaceAll('/', '');
       handle = '@' + handle;
-    }
-    else if (hostname.includes("linkedin.com")) {
+    } else if (hostname.includes("linkedin.com")) {
       handle = pathname.replaceAll('/', '');
       handle = handle.replaceAll("in", '');
     }
@@ -197,14 +196,13 @@ export default function ProfilePage() {
   }
 
 
-
   function handleCancelButton() {
     clearTextValidationErrorMessages();
     exitEditMode();
   }
 
   function validateTextMinLength(text, min) {
-    if(text.length >= min) {
+    if (text.length >= min) {
       return 1;
     } else {
       return 0;
@@ -212,7 +210,7 @@ export default function ProfilePage() {
   }
 
   function validateTextMaxLength(text, max) {
-    if(text.length <= max) {
+    if (text.length <= max) {
       return 1;
     } else {
       return 0;
@@ -364,6 +362,7 @@ export default function ProfilePage() {
   return (
     <Box sx={{flex: 1}}>
       <HomeNavBar/>
+
 
       {/************************* Main Box ***********************/}
       <Box
@@ -697,6 +696,51 @@ export default function ProfilePage() {
           </Stack>
         </Box>
       </Box>
+
+      {/******************************* Skill Listings *******************************/}
+      <Paper
+        sx={{
+          p: 2,
+          margin: 'auto',
+          marginTop: 1,
+          maxWidth: 948,
+          flexGrow: 1,
+          border: "0.5px solid",
+          borderColor: "primary.light",
+          height: 450
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+        </Grid>
+
+      </Paper>
+
+
+      {/******************************* Write a Review Button *******************************/}
+      <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
+        <Button variant="contained" color="secondary" fullWidth={true}>
+          Write a review
+        </Button>
+      </Box>
+      {/******************* Reviews *****************/}
+      <Reviews/>
+      <Reviews/>
+      <Reviews/>
     </Box>
   );
 }

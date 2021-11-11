@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {useState} from "react";
-import EditProfile from "../components/EditProfile";
+import EditProfile from "./EditProfile";
 
 const editModalStyle = {
   position: 'absolute',

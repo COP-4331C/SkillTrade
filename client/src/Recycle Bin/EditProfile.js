@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from "@mui/icons-material/Save";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import {Theme} from "./Theme";
+import {Theme} from "../components/Theme";
 import Box from "@mui/material/Box";
 import {Stack, TextareaAutosize} from "@mui/material";
 

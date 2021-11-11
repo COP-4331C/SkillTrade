@@ -1,13 +1,18 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({navigation}) => {
     return (
       <View style={styles.container}>
         <Text>Settings Screen</Text>
         <Button
-          title="Click Here"
-          onPress={() => alert('Button Clicked!')}
+          title="go back"
+          onPress={() => navigation.goBack()}
+        />
+        <Button
+          title="change password"
+          onPress={() => navigation.navigate('ChangePasswordScreen')}
         />
       </View>
     );

@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet} from 'react-native';
 
-const BookmarkScreen = () => {
+const BookmarkScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text>Bookmarks Screen</Text>
             <Button
-                title="Click Here"
-                onPress={() => alert('Button Clicked!')}
+                title="go back"
+                onPress={() => navigation.goBack()}
                 />
         </View>
     )

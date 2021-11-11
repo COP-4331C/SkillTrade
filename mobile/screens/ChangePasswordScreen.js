@@ -82,25 +82,30 @@ const ChangePasswordScreen = ({navigation}) => {
     }
 
     function connectToChangePasswordApi(userToken, oldPassword, newPassword){
-
-        axios.post('https://cop4331c.herokuapp.com/api/user/change-password', { 
-                oldPassword: "qwert123", // need to be a variable ##
-                newPassword: "123456" // need to be a variable ##
+        axios.put('https://cop4331c.herokuapp.com/api/user/change-password', { 
+                oldPassword: oldPassword,
+                newPassword: newPassword 
             }, {
                 headers: {
-                  'Authorization': `Bearer ${userToken}`  // get the token form SecureStore ##
+                  'Authorization': `Bearer ${userToken}`  
                 }
               })
             .then(function(response) {
-                // console.warn('test good') // for test 
-                console.warn("good job")
-                // navigation.goBack()
+                // console.warn("password changed")
+                Alert.alert(
+                    "Password changed!", // Alert Title
+                    " ", // My Alert Msg
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                )
+                navigation.goBack()
             })
             .catch(function(error) {
-                // console.warn("bad job")
-                Alert.alert('Invalid.', [ // need to change to a proper message ##
-                    {text: 'Okay'}
-                ]);
+                // console.warn("fail to changed password")
+                Alert.alert(
+                    "Fail to changed password!",
+                    "Please input your correct old password.",
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                )
             });
     }
 
@@ -194,27 +199,22 @@ const ChangePasswordScreen = ({navigation}) => {
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={styles.signIn}
-                            onPress={() => {
-                                if (data.isValidPassword == true && data.newPassword.length > 0 ){
-                                    // data.isAllThere = true; // ??
+                            onPress={async () => { // need to add async, if want to add 'await' in coming command
+                                if (data.isValidPassword == true && data.newPassword.length > 0 ){ 
+                                    let userToken = null;
                                     try {
-                                        let userToken 
-                                        userToken = null
-                                        userToken =  SecureStore.getItemAsync('userToken'); // need to add await ## : issue, FIXME
-                                        // userToken = await AsyncStorage.getItem('userToken')
-                                      } catch (e) {
-                                        console.warn('error token');
-                                      }
-
-                                    connectToChangePasswordApi(userToken, data.oldPassword,data.newPassword) 
-                                    /*Alert.alert('Account Created Succesfully!', [
-                                        {text: 'Okay'}
-                                    ]);*/
+                                        userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+                                    } catch (e) {
+                                        console.warn('SecureStore error');
+                                    }
+                                    connectToChangePasswordApi(userToken, data.oldPassword, data.newPassword) 
                                 }
                                 else {
-                                    Alert.alert('Invalid password!', [
-                                        {text: 'Okay'}
-                                    ]);
+                                    Alert.alert(
+                                        "Invalid new password!",
+                                        "Please check your input.",
+                                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                                    )
                                 } 
                             }}
                         >
@@ -239,7 +239,7 @@ const ChangePasswordScreen = ({navigation}) => {
                         >
                             <Text style={[styles.textSign, {
                                 color: '#009387'
-                            }]}>Sign In</Text>
+                            }]}>Go Back</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView> 

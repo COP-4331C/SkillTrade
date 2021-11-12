@@ -31,7 +31,7 @@ const LandingPage = () => {
           variant="contained"
           color="secondary"
           component={RouterLink}
-          to="/Profile"
+          to="/profile"
           sx={{ width: "auto", whiteSpace: 'nowrap'}}
         >
           Profile Page</Button>

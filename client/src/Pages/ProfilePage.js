@@ -733,11 +733,12 @@ export default function ProfilePage() {
 
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
-        <Button variant="contained" color="secondary" fullWidth={true}>
+        <Button variant="contained" color="secondary" fullWidth={true} >
           Write a review
         </Button>
       </Box>
       {/******************* Reviews *****************/}
+      {/*This section can be done using the Fixed Positioning demo of the Bottom Navigation Material UI*/}
       <Reviews/>
       <Reviews/>
       <Reviews/>

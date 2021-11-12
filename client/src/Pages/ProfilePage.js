@@ -24,6 +24,7 @@ import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
 import Paper from "@mui/material/Paper";
 
+
 export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
     "with a notable career trajectory and achievements list. Experience " +
@@ -70,6 +71,7 @@ export default function ProfilePage() {
   const [instagramLink, setInstagramLink] = useState("");
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -194,7 +196,6 @@ export default function ProfilePage() {
 
     return handle
   }
-
 
   function handleCancelButton() {
     clearTextValidationErrorMessages();
@@ -358,6 +359,21 @@ export default function ProfilePage() {
     }
 
   }, []);
+
+
+  // Creates a list of reviews. For each review in reviewList
+  // Render the Review component with the data passed to it.
+  // reviewMessages is an array manually declared at the end of this file.
+  const reviewList = reviewMessages.map((review) =>
+    <Reviews
+      avatar={review.avatar}
+      name={review.name}
+      rating={review.rating}
+      location={review.location}
+      message={review.message}
+    />
+  );
+
 
   return (
     <Box sx={{flex: 1}}>
@@ -738,10 +754,37 @@ export default function ProfilePage() {
         </Button>
       </Box>
       {/******************* Reviews *****************/}
-      {/*This section can be done using the Fixed Positioning demo of the Bottom Navigation Material UI*/}
-      <Reviews/>
-      <Reviews/>
-      <Reviews/>
+      {reviewList}
     </Box>
   );
 }
+
+const reviewMessages = [
+  {
+    avatar: 'https://mui.com/static/images/avatar/1.jpg',
+    name: 'Charlie A.',
+    rating: 4.5,
+    location: 'United States',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+  {
+    avatar: 'https://mui.com/static/images/avatar/2.jpg',
+    name: 'David  B.',
+    rating: 4,
+    location: 'Spain',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+  {
+    avatar: 'https://mui.com/static/images/avatar/3.jpg',
+    name: 'Samantha F.',
+    rating: 5,
+    location: 'U.K.',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+];

@@ -36,11 +36,12 @@ export default function ProfilePage() {
   const [displayButton, setDisplayButton] = useState("none");
   const [displayContactMe, setDisplayContactMe] = useState("inline-flex");
   const [displayEditButton, setDisplayEditButton] = useState("none");
-  const [inEditMode, setEditMode] = useState(false);
   const [displayEditFields, setDisplayEditFields] = useState("none");
+  const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
+  const [displaySocial, setDisplaySocial] = useState("none");
+  const [inEditMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState("Benjamin");
   const [lastName, setLastName] = useState("Harrion");
-  const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
@@ -50,7 +51,6 @@ export default function ProfilePage() {
   const [instagramTemp, setInstagramTemp] = useState("");
   const [twitterTemp, setTwitterTemp] = useState("");
   const [linkedInTemp, setLinkedInTemp] = useState("");
-  const [displaySocial, setDisplaySocial] = useState("none");
   const [imageOpacity, setImageOpacity] = useState(1);
   const [photo, setPhoto] = useState(profileImage)
   const [editPermission, setEditPermission] = useState(true);
@@ -71,7 +71,7 @@ export default function ProfilePage() {
   const [instagramLink, setInstagramLink] = useState("");
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
-
+  const [newReview, setNewReview] = useState(true);
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -329,9 +329,9 @@ export default function ProfilePage() {
   function handlePhoto(e) {
     if (editPermission) {
       alert("Profile picture processing coming soon");
-      // Uploaded image should be in e.target.files or e.target.files[0]
-      // Axios Post will go here
-      // Request to backend with image for cropping and resizing.
+      // TODO: Uploaded image should be in e.target.files or e.target.files[0]
+      //  Axios Post would go here
+      //  Request to backend with image for cropping and resizing.
     }
   }
 
@@ -360,25 +360,37 @@ export default function ProfilePage() {
 
   }, []);
 
+  const [displayNewReview, setDisplayNewReview] = useState("none");
+
 
   // Creates a list of reviews. For each review in reviewList
   // Render the Review component with the data passed to it.
   // reviewMessages is an array manually declared at the end of this file.
-  const reviewList = reviewMessages.map((review) =>
+  const reviewList = reviewMessages.map((reviewElement) =>
     <Reviews
-      avatar={review.avatar}
-      name={review.name}
-      rating={review.rating}
-      location={review.location}
-      message={review.message}
+      avatar={reviewElement.avatar}
+      name={reviewElement.name}
+      rating={reviewElement.rating}
+      location={reviewElement.location}
+      message={reviewElement.message}
+      newReview={false}
+      // ratingReadOnly={true}
     />
   );
+
+  // const [count, setCount] = useState(0) // Name it however you wish
+  const handleCancelWriteReview = () => {
+    setDisplayNewReview("none");
+  }
+
+  function handleWriteReview() {
+    setDisplayNewReview("block");
+  }
 
 
   return (
     <Box sx={{flex: 1}}>
       <HomeNavBar/>
-
 
       {/************************* Main Box ***********************/}
       <Box
@@ -749,12 +761,29 @@ export default function ProfilePage() {
 
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
-        <Button variant="contained" color="secondary" fullWidth={true} >
+        <Button variant="contained" color="secondary" fullWidth={true} onClick={handleWriteReview}>
+          {/*<Button variant="contained" color="secondary" fullWidth={true} onClick={() => setCount(1)}>*/}
           Write a review
         </Button>
       </Box>
+
+      {/******************* Add a new review *****************/}
+      <div style={{display: displayNewReview}}>
+        <Reviews
+          // avatar={"https://mui.com/static/images/avatar/6.jpg"}
+          avatar=""
+          name="[Logged user's name]"
+          rating={5}
+          location="[Logged user's location]"
+          message=""
+          newReview={newReview}
+          onClick={() => { handleCancelWriteReview() }}
+        />
+      </div>
+
       {/******************* Reviews *****************/}
       {reviewList}
+
     </Box>
   );
 }
@@ -765,7 +794,7 @@ const reviewMessages = [
     name: 'Charlie A.',
     rating: 4.5,
     location: 'United States',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
       'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
       'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
   },
@@ -774,7 +803,7 @@ const reviewMessages = [
     name: 'David  B.',
     rating: 4,
     location: 'Spain',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
       'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
       'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
   },
@@ -783,7 +812,7 @@ const reviewMessages = [
     name: 'Samantha F.',
     rating: 5,
     location: 'U.K.',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut " +' +
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
       'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
       'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
   },

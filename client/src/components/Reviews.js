@@ -16,7 +16,11 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/Save";
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function Reviews(props) {
 
@@ -104,6 +108,12 @@ export default function Reviews(props) {
     }
   }
 
+  function handleDeleteButton() {
+    // TODO: handle the delete review event.
+    //  Send a request to the backend, then
+    //  request a new set of reviews.
+  }
+
 
   // Handles the onClick event of the Save button
   function handleSave() {
@@ -116,7 +126,7 @@ export default function Reviews(props) {
     // TODO: Save button does not remember the new Rating when the save button is clicked.
     //  This probably will be fixed once we send the new review to the backend for storage,
     //  then, a new request a new set of reviews.
-    // TODO: after the revies is stored in the backend, then the hidden editable review
+    // TODO: after the reviews is stored in the backend, then the hidden editable review
     //  components needs to be clear of text and the starts reset to a default value of 5.
     setReview({
       ...review,  // Leaves the rest of the variables unchanged
@@ -179,6 +189,19 @@ export default function Reviews(props) {
     // setReviewRatingTemp(review.rating);
 
   }, []);
+
+  // Constant for the Delete Review Dialog
+  const [open, setOpen] = React.useState(false);
+
+  // Handles the open event for the Delete Review Dialog
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // Handles the close event for the Delete Review Dialog
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Paper
@@ -247,7 +270,7 @@ export default function Reviews(props) {
 
                 {/******************************* Edit Button  ************************************/}
                 <Box>
-                  <IconButton color="secondary"
+                  <IconButton color="warning"
                               aria-label="edit review button"
                               onClick={enterEditMode}
                               sx={{display: displayEditButton, padding:0, height:28}}>
@@ -292,7 +315,19 @@ export default function Reviews(props) {
                 // alignItems="stretch"
                 // spacing={2}
               >
-                 {/*TODO Add a delete review button*/}
+
+                {/******************** Delete Review Button *********************/}
+                <Fade in={fadeIn}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    // onClick={handleDeleteButton}
+                    onClick={handleClickOpen}
+                    sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
+                  > Delete Review
+                  </Button>
+                </Fade>
+
                 {/******************** Cancel Button *********************/}
                 <Fade in={fadeIn}>
                   <Button
@@ -317,15 +352,49 @@ export default function Reviews(props) {
                   </Button>
                 </Fade>
 
-
               </Stack>
-
-
             </Grid>
-
           </Grid>
         </Grid>
       </Grid>
+
+      {/******************** Delete Confirmation Dialog *********************/}
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-Delete-Review?"
+          aria-describedby="alert-dialog-This-cannot-be- undone"
+        >
+          <DialogTitle>Delete Review?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Warning! This cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+
+            {/***** Yes, Delete - Button **/}
+            <Button
+              variant="contained"
+              onClick={handleClose}
+              color="error"
+            >
+              Yes, Delete
+            </Button>
+
+            {/***** Cancel, Keep - Button **/}
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              autoFocus
+            >
+              Cancel, Keep
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
     </Paper>
   );
 }

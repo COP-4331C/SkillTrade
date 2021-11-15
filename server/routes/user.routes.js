@@ -7,7 +7,7 @@ const authenticateToken = require('../middleware/auth');
 router.post("/register", users.create);
 
 // Edit Profile
-router.put("/edit-profile", authenticateToken, users.editProfile);
+router.patch("/edit-profile", authenticateToken, users.editProfile);
 
 // Logout*
 router.post("/logout", users.logout);

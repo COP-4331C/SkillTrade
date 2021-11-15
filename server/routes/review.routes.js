@@ -14,7 +14,7 @@ router.get("/get-reviews/:userId", reviews.getReviews);
 router.patch("/edit-review", authenticateToken, reviews.editReview);
 
 // Delete Review
-router.delete("/:reviewId", authenticateToken, reviews.deleteReview);
+router.delete("/delete-review/:reviewId", authenticateToken, reviews.deleteReview);
 
 
 module.exports = router; 

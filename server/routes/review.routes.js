@@ -10,7 +10,7 @@ router.post("/create-review", authenticateToken, reviews.createReview);
 router.get("/get-reviews", reviews.getReviews);
 
 // Edit Review
-router.put("/edit-review", authenticateToken, reviews.editReview);
+router.patch("/edit-review", authenticateToken, reviews.editReview);
 
 // Delete Review
 router.delete("/delete-review", authenticateToken, reviews.deleteReview);

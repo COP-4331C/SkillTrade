@@ -7,12 +7,12 @@ const authenticateToken = require('../middleware/auth');
 router.post("/register", users.create);
 
 // Edit Profile
-router.put("/edit-profile", authenticateToken, users.editProfile);
-
-// Get Profile
-router.get("/profile/:userId", users.getProfile);
+router.patch("/edit-profile", authenticateToken, users.editProfile);
 
 // Change Password
-router.put("/change-password", authenticateToken, users.changePassword);
+router.patch("/change-password", authenticateToken, users.changePassword);
+
+// Verify Email*
+//router.post("/verifyEmail", users.verifyEmail);
 
 module.exports = router;

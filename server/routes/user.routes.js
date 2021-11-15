@@ -9,9 +9,6 @@ router.post("/register", users.create);
 // Edit Profile
 router.patch("/edit-profile", authenticateToken, users.editProfile);
 
-// Logout*
-//router.post("/logout", users.logout);
-
 // Change Password
 router.patch("/change-password", authenticateToken, users.changePassword);
 

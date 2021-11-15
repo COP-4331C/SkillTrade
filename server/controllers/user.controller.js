@@ -81,34 +81,9 @@ exports.changePassword = async (req, res) =>
     });
 }
 
-exports.uploadPicture = async(req, res) => {
 
-  const {picture_content} = req.body;
-
-  picture_content = Buffer.from(picture_content, 'base64').toString('binary');
-
-  // Picture should be less than 1mb, aka 1,000,000 bits
-  if(picture_content.length > 1000000)
-  {
-    return res.status(400).json({ error: "File size is too large." });
-  }
-
-  picture_content = Buffer.from(picture_content).toString('base64');
-
-  const email = req.email;
-  const user = await User.findOne({ email: email });
-  if (!user)
-    return res.status(400).json({ error: "Invalid email" });
-
-  // how to put image as profile pic?
-  // store it in sepearte data folder, and have it be a path to the image?
-  // if so, how to do that?
-
-
-}
-
+// WORK IN PROGRESS! - Rafael
 exports.verifyEmail = async(req, res) => {
-
   const {email} = req.body;
 
   //let transporter = nodemailer.createTransport(transport[,defaults]);

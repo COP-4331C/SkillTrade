@@ -10,12 +10,12 @@ router.post("/register", users.create);
 router.patch("/edit-profile", authenticateToken, users.editProfile);
 
 // Logout*
-router.post("/logout", users.logout);
+//router.post("/logout", users.logout);
 
 // Change Password
 router.patch("/change-password", authenticateToken, users.changePassword);
 
 // Verify Email*
-router.post("/verifyEmail", users.verifyEmail);
+//router.post("/verifyEmail", users.verifyEmail);
 
 module.exports = router;

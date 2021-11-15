@@ -4,25 +4,25 @@ const Review = require("../models/review.model");
 
 exports.createReview = async (req, res) => {
 
-    const {rating, subjectId} = req.body;
+    const {rating, userId} = req.body;
 
-    // Validate that subjectId is for a real user
-    const subject = await User.findById(subjectId);
-    if (!subject)
+    // Validate that userId is for a real user
+    const user = await User.findById(userId);
+    if (!user)
         return res.status(400).json({ error: "Not a valid user to review." });
 
-    // Grab objectId value from author (should be available and valid via authenticationToken)
-    const author = await User.findOne({ email: req.email});
-    if(!author)
-        return res.status(400).json({ error: "Could not obtain author's information." });
+    // Grab objectId value from reviewer (should be available and valid via authenticationToken)
+    const reviewer = await User.findOne({ email: req.email});
+    if(!reviewer)
+        return res.status(400).json({ error: "Could not obtain reviewer's information." });
 
     // Make sure rating is a valid number between 1 and 5
     if(!Number.isInteger(rating) || rating < 1 || rating > 5)
         return res.status(400).json({ error: "Invalid Rating; Must be an Integer from 1-5." });
 
-    // Add author ObjectId to request body, then create and add new review to database.
-    req.body.authorId = author._id;
-    req.body.authorName = author.profile['firstName'];
+    // Add reviewer ObjectId to request body, then create and add new review to database.
+    req.body.reviewerId = reviewer._id;
+    req.body.reviewerName = reviewer.profile['firstName'];
     const review = new Review(req.body);
     review.save()
         .then(() => {
@@ -36,8 +36,8 @@ exports.createReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-    const {subjectId} = req.body;
-    Review.find({subjectId : subjectId})
+    //const {userId} = req.body;
+    Review.find({userId : req.params.userId})
     .then((data) => {
       res.status(200).json(data);
     })
@@ -50,7 +50,7 @@ exports.editReview = async (req, res) => {
 
     const {reviewId, newRating, newContent} = req.body;
 
-    // Grab review for the author's Id
+    // Grab review for the reviewer's Id
     const review = await Review.findById(reviewId);
     if(!review)
         return res.status(400).json({ error: "Invalid review Id; Review does not exist."});
@@ -59,7 +59,7 @@ exports.editReview = async (req, res) => {
     const loggedInUser = await User.findOne({email : req.email});
 
     // Validate that the logged in User is only attempting to edit one of their own reviews
-    if(review.authorId != loggedInUser._id)
+    if(review.reviewerId != loggedInUser._id)
         return res.status(400).json({ error: "Invalid Credentials; Cannot edit another user's review."});
     
 
@@ -80,9 +80,10 @@ exports.editReview = async (req, res) => {
 
 exports.deleteReview = async (req, res) => {
 
-    const{reviewId} = req.body;
+    //const{reviewId} = req.body;
+    const reviewId = req.params.reviewId;
 
-    // Grab review for the author's Id
+    // Grab review for the reviewer's Id
     const review = await Review.findById(reviewId);
     if(!review)
         return res.status(400).json({ error: "Invalid review Id; Review does not exist."});
@@ -91,7 +92,7 @@ exports.deleteReview = async (req, res) => {
     const loggedInUser = await User.findOne({email : req.email});
 
     // Validate that the logged in User is only attempting to delete one of their own reviews
-    if(review.authorId != loggedInUser._id)
+    if(review.reviewerId != loggedInUser._id)
         return res.status(400).json({ error: "Invalid Credentials; Cannot delete another user's review."});
     
     // Once we ensure the user is deleting their own review, then delete it

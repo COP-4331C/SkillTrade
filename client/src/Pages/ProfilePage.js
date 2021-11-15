@@ -17,12 +17,17 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
 import {createTheme, makeStyles} from "@material-ui/core";
-import AppNavBar from '../components/AppNavBar';
 import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
+import Link from "@mui/material/Link";
+import HomeNavBar from "../components/HomeNavBar";
 
 export default function ProfilePage() {
-
+  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
+    "with a notable career trajectory and achievements list. Experience " +
+    "in catering for up to 450 covers at some of the most prestigious " +
+    "establishments in the world. Passionate about working with fresh produce, " +
+    "creating innovative dishes and improving restaurant ratings.\"");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
   const [displayButton, setDisplayButton] = useState("none");
@@ -33,16 +38,11 @@ export default function ProfilePage() {
   const [firstName, setFirstName] = useState("Benjamin");
   const [lastName, setLastName] = useState("Harrion");
   const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
-  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
-    "with a notable career trajectory and achievements list. Experience " +
-    "in catering for up to 450 covers at some of the most prestigious " +
-    "establishments in the world. Passionate about working with fresh produce, " +
-    "creating innovative dishes and improving restaurant ratings.\"");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
   const [instagram, setInstagram] = useState("benharrionchef");
-  const [twitter, setTwitter] = useState("@benchef");
+  const [twitter, setTwitter] = useState("@benjaminHchef");
   const [linkedIn, setLinkedIn] = useState("harrion.benjamin");
   const [instagramTemp, setInstagramTemp] = useState("");
   const [twitterTemp, setTwitterTemp] = useState("");
@@ -53,6 +53,21 @@ export default function ProfilePage() {
   const [editPermission, setEditPermission] = useState(true);
   const [mousePointer, setMousePointer] = useState('');
   const [disableImageUpload, setDisableImageUpload] = useState(true)
+  const [firstNameError, setFirstNameError] = useState({
+    state: false,
+    text: ""
+  });
+  const [lastNameError, setLastNameError] = useState({
+    state: false,
+    text: ""
+  });
+  const [aboutMeTextError, setAboutMeTextError] = useState({
+    state: false,
+    text: ""
+  })
+  const [instagramLink, setInstagramLink] = useState("");
+  const [twitterLink, setTwitterLink] = useState("");
+  const [linkedInLink, setLinkedInLink] = useState("");
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -86,13 +101,137 @@ export default function ProfilePage() {
 
   // Handles the onClick event of the Save button
   function handleSave() {
-    setFirstName(firstNameTemp);
-    setLastName(lastNameTemp);
-    setAboutMeText(aboutMeTextTemp);
-    setInstagram(instagramTemp);
-    setTwitter(twitterTemp);
-    setLinkedIn(linkedInTemp);
+    let okToSaveData = true;
+    let instagramHandle;
+    let twitterHandle;
+    let linkedInHandle;
+
+
+    if(!validateTextMinLength(firstNameTemp, 1)) {
+      okToSaveData = false;
+      setFirstNameError({
+        state: true,
+        text: "Can't be empty"
+      });
+    }
+
+    if(!validateTextMaxLength(firstNameTemp, 50)) {
+      okToSaveData = false;
+      setFirstNameError({
+        state: true,
+        text: "Must be less than 50 characters"
+      });
+    }
+
+    if(!validateTextMaxLength(lastNameTemp, 50)) {
+      okToSaveData = false;
+      setLastNameError({
+        state: true,
+        text: "Must be less than 50 characters"
+      });
+    }
+
+    if(!validateTextMaxLength(aboutMeTextTemp, 650)) {
+      okToSaveData = false
+      setAboutMeTextError({
+        state: true,
+        text: "Must be less than 650 characters (There are " + aboutMeTextTemp.length + ")"
+      });
+    }
+
+    if(instagramTemp.includes("instagram.com")){
+      instagramHandle = getHandle(instagramTemp);
+    } else {
+      instagramHandle = instagramTemp;
+    }
+    setInstagramLink("https://www.instagram.com/" + instagramHandle);
+
+    if(twitterTemp.includes("twitter.com")) {
+      twitterHandle = getHandle(twitterTemp);
+    } else {
+      twitterHandle = twitterTemp;
+    }
+    setTwitterLink("https://twitter.com/" + twitterHandle);
+
+
+    if(linkedInTemp.includes("linkedin.com")){
+      linkedInHandle = getHandle(linkedInTemp);
+    } else {
+      linkedInHandle = linkedInTemp;
+    }
+    setLinkedInLink("https://www.linkedin.com/in/" + linkedInHandle)
+
+    if(okToSaveData) {
+      setFirstName(firstNameTemp);
+      setLastName(lastNameTemp);
+      setAboutMeText(aboutMeTextTemp);
+      setInstagram(instagramHandle);
+      setTwitter(twitterHandle);
+      setLinkedIn(linkedInHandle);
+      exitEditMode();
+    }
+  }
+
+  // Parses the URL to extract the handle.
+  function getHandle(urlString){
+
+    let url = new URL(urlString);
+    let pathname = url.pathname;
+    let hostname = url.hostname;
+    let handle = "";
+
+    if(hostname.includes("instagram.com")) {
+      handle = pathname.replaceAll('/', '');
+    }
+
+    else if (hostname.includes("twitter.com")){
+      handle = pathname.replaceAll('/', '');
+      handle = '@' + handle;
+    }
+    else if (hostname.includes("linkedin.com")) {
+      handle = pathname.replaceAll('/', '');
+      handle = handle.replaceAll("in", '');
+    }
+
+    return handle
+  }
+
+
+
+  function handleCancelButton() {
+    clearTextValidationErrorMessages();
     exitEditMode();
+  }
+
+  function validateTextMinLength(text, min) {
+    if(text.length >= min) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  function validateTextMaxLength(text, max) {
+    if(text.length <= max) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  function clearTextValidationErrorMessages() {
+    setFirstNameError({
+      state: false,
+      text: ""
+    });
+    setLastNameError({
+      state: false,
+      text: ""
+    });
+    setAboutMeTextError({
+      state: false,
+      text: ""
+    });
   }
 
   function handleOnMouseOver() {
@@ -188,7 +327,6 @@ export default function ProfilePage() {
     display: 'none',
   });
 
-
   function handlePhoto(e) {
     if (editPermission) {
       alert("Profile picture processing coming soon");
@@ -213,6 +351,10 @@ export default function ProfilePage() {
         setMousePointer("");
       }
 
+      setInstagramLink("https://www.instagram.com/" + instagram);
+      setTwitterLink("https://twitter.com/" + twitter);
+      setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
+
     } catch (e) {
       console.log(e.message);
     }
@@ -221,7 +363,7 @@ export default function ProfilePage() {
 
   return (
     <Box sx={{flex: 1}}>
-      <AppNavBar/>
+      <HomeNavBar/>
 
       {/************************* Main Box ***********************/}
       <Box
@@ -321,7 +463,7 @@ export default function ProfilePage() {
             </Box>
           </Box>
 
-          {/** ****************** Names (Edit Mode) *************************** **/}
+          {/** ****************** First and Last Names (Edit Mode) *************************** **/}
           <Box sx={{display: displayEditFields, width: "100%", justifyContent: "left"}}>
             <ThemeProvider theme={textFieldTheme}>
               <TextField
@@ -333,6 +475,8 @@ export default function ProfilePage() {
                 required
                 sx={{marginRight: "1rem", marginTop: "1rem"}}
                 onChange={handleOnChangeFirstName}
+                helperText={firstNameError.text}
+                error={firstNameError.state}
               >
               </TextField>
               <TextField
@@ -343,6 +487,8 @@ export default function ProfilePage() {
                 className={classes.root}
                 sx={{marginTop: "1rem"}}
                 onChange={handleOnChangeLastName}
+                helperText={lastNameError.text}
+                error={lastNameError.state}
               >
               </TextField>
             </ThemeProvider>
@@ -362,7 +508,7 @@ export default function ProfilePage() {
           }}>
             {aboutMeText}
           </Box>
-
+          {/*************************** About Me Text (Edit Mode) ************************************/}
           <ThemeProvider theme={textFieldTheme}>
             <TextField
               label="About Me"
@@ -375,6 +521,8 @@ export default function ProfilePage() {
               fullWidth
               onChange={handleOnChangeAboutMeText}
               sx={{display: displayEditFields, marginTop: "10px"}}
+              helperText={aboutMeTextError.text}
+              error={aboutMeTextError.state}
             />
           </ThemeProvider>
 
@@ -397,7 +545,7 @@ export default function ProfilePage() {
                   variant="outlined"
                   color="secondary"
                   style={{marginTop: 30, padding: "6px 64px"}}
-                  onClick={exitEditMode}
+                  onClick={handleCancelButton}
                   sx={{display: displayButton}}
                 > Cancel
                 </Button>
@@ -454,15 +602,18 @@ export default function ProfilePage() {
 
                 {/***************** Instagram  Icon ****************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <InstagramIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/***** Instagram Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}</Typography>
+                  <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}
+                    </Typography>
+                  </Link>
                   <ThemeProvider theme={textFieldTheme}>
 
                     {/**** Instagram Hidden Edit Text field ****/}
@@ -482,15 +633,18 @@ export default function ProfilePage() {
 
                 {/****************** Twitter Icon *******************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <TwitterIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/***** Twitter Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}</Typography>
+                  <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}
+                    </Typography>
+                  </Link>
 
                   {/***** Twitter Hidden Edit Text Field *****/}
                   <ThemeProvider theme={textFieldTheme}>
@@ -510,15 +664,18 @@ export default function ProfilePage() {
 
                 {/******************* LinkedIn Icon *****************/}
                 <Grid item xs={0.6} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}}>
+                  <IconButton sx={{padding: 0}} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <LinkedInIcon color={"secondary"}/>
                   </IconButton>
                 </Grid>
 
                 {/****** LinkedIn Handle *****/}
                 <Grid item xs>
-                  <Typography color={"white"} align={"left"}
-                              sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}</Typography>
+                  <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
+                    <Typography color={"white"} align={"left"}
+                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}
+                    </Typography>
+                  </Link>
 
                   {/****** LinkedIn Hidden Edit Text Field *****/}
                   <ThemeProvider theme={textFieldTheme}>

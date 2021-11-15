@@ -11,6 +11,7 @@ import {
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SplashScreen = ({navigation}) => {
     return (
@@ -31,17 +32,18 @@ const SplashScreen = ({navigation}) => {
                 <Text style={styles.title}>Stay connected with everyone !</Text>
                 <Text style={styles.text}>Sign in with account</Text>
                 <View style={styles.button}>
-                <TouchableOpacity 
-                    onPress={()=>navigation.navigate('SignInScreen')}
-                    style={[styles.signIn, {
-                                borderColor: '#007AFF',
-                                borderWidth: 3,
-                                // marginTop: 10
-                            }]}
+                <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
+                    <LinearGradient
+                        colors={['#08d4c4', '#01ab9d']}
+                        style={styles.signIn}
                     >
-                    <Text style={[styles.textSign, {
-                        color: '#007AFF'
-                    }]}>Get Started</Text>
+                        <Text style={styles.textSign}>Get Started</Text>
+                        <MaterialIcons 
+                            name="navigate-next"
+                            color="#fff"
+                            size={20}
+                        />
+                    </LinearGradient>
                 </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 50,
+      borderRadius: 20,
       flexDirection: 'row'
   },
   textSign: {

@@ -1,17 +1,19 @@
 const Skill = require("../models/skill.model");
+const User = require("../models/user.model");
 
 exports.createSkill = async (req, res) => {
   const skill = new Skill(req.body);
 
+  const user = await User.findOne({ email: req.email })
+  req.body.userId = user._id;
+  
   skill
     .save()
     .then(() => {
       return res.status(200).json({ message: "Successfully created skill!" });
     })
     .catch((err) => {
-      console.log("An error occured.");
-      console.log(err);
-      return res.status(400).json({ error: err });
+      return res.status(400).json({ error: "Failed to create skill." });
     });
 };
 
@@ -21,7 +23,7 @@ exports.fetchOne = async (req, res) => {
       res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      res.status(500).json({ error: "Failed to fetch skill." });
     });
 };
 
@@ -43,6 +45,13 @@ exports.search = async (req, res) => {
 
 exports.editSkill = async (req, res) => {
   let skill = await Skill.findOne({ _id: req.params.skillId });
+  let loggedInUser = await User.findOne({ email: req.email });
+  
+  if (skill.userId != loggedInUser._id)
+    return res.status(400).json({
+      error: "Invalid Credentials: Cannot edit another user's skill.",
+    });
+    
   var newValues = req.body;
 
   var changeable_fields = [

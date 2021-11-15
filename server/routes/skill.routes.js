@@ -6,12 +6,12 @@ const authenticateToken = require("../middleware/auth");
 router
   .route("/")
   .get(skill.search) // Fetch by page (query parameter)
-  .post(skill.createSkill); // Add skill
+  .post(authenticateToken, skill.createSkill); // Add skill
 
 router
   .route("/:skillId")
   .get(skill.fetchOne) // Get single skill
   .delete(authenticateToken, skill.deleteSkill) // Delete skill
-  .put(skill.editSkill); // Edit skill
+  .put(authenticateToken, skill.editSkill); // Edit skill
 
 module.exports = router;

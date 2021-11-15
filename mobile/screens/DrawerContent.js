@@ -100,8 +100,8 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Settings" // the Setting Icon is not working properly in web brower  ##FIXME
-                            onPress={() => {props.navigation.navigate('SettingScreen')}}
+                            label="Settings" 
+                            onPress={() => {props.navigation.navigate('SettingScreen')}} // error: not handle by any navigator ??
                         />
                         <DrawerItem
                             icon = {({color, size}) => (

@@ -21,6 +21,9 @@ import TextField from '@mui/material/TextField';
 import profileImage from '../images/users/chef.png';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
+import Reviews from "../components/Reviews";
+import Paper from "@mui/material/Paper";
+
 
 export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
@@ -33,11 +36,12 @@ export default function ProfilePage() {
   const [displayButton, setDisplayButton] = useState("none");
   const [displayContactMe, setDisplayContactMe] = useState("inline-flex");
   const [displayEditButton, setDisplayEditButton] = useState("none");
-  const [inEditMode, setEditMode] = useState(false);
   const [displayEditFields, setDisplayEditFields] = useState("none");
+  const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
+  const [displaySocial, setDisplaySocial] = useState("none");
+  const [inEditMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState("Benjamin");
   const [lastName, setLastName] = useState("Harrion");
-  const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
@@ -47,7 +51,6 @@ export default function ProfilePage() {
   const [instagramTemp, setInstagramTemp] = useState("");
   const [twitterTemp, setTwitterTemp] = useState("");
   const [linkedInTemp, setLinkedInTemp] = useState("");
-  const [displaySocial, setDisplaySocial] = useState("none");
   const [imageOpacity, setImageOpacity] = useState(1);
   const [photo, setPhoto] = useState(profileImage)
   const [editPermission, setEditPermission] = useState(true);
@@ -68,6 +71,7 @@ export default function ProfilePage() {
   const [instagramLink, setInstagramLink] = useState("");
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
+  const [newReview, setNewReview] = useState(true);
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -107,7 +111,7 @@ export default function ProfilePage() {
     let linkedInHandle;
 
 
-    if(!validateTextMinLength(firstNameTemp, 1)) {
+    if (!validateTextMinLength(firstNameTemp, 1)) {
       okToSaveData = false;
       setFirstNameError({
         state: true,
@@ -115,7 +119,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(firstNameTemp, 50)) {
+    if (!validateTextMaxLength(firstNameTemp, 50)) {
       okToSaveData = false;
       setFirstNameError({
         state: true,
@@ -123,7 +127,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(lastNameTemp, 50)) {
+    if (!validateTextMaxLength(lastNameTemp, 50)) {
       okToSaveData = false;
       setLastNameError({
         state: true,
@@ -131,7 +135,7 @@ export default function ProfilePage() {
       });
     }
 
-    if(!validateTextMaxLength(aboutMeTextTemp, 650)) {
+    if (!validateTextMaxLength(aboutMeTextTemp, 650)) {
       okToSaveData = false
       setAboutMeTextError({
         state: true,
@@ -139,14 +143,14 @@ export default function ProfilePage() {
       });
     }
 
-    if(instagramTemp.includes("instagram.com")){
+    if (instagramTemp.includes("instagram.com")) {
       instagramHandle = getHandle(instagramTemp);
     } else {
       instagramHandle = instagramTemp;
     }
     setInstagramLink("https://www.instagram.com/" + instagramHandle);
 
-    if(twitterTemp.includes("twitter.com")) {
+    if (twitterTemp.includes("twitter.com")) {
       twitterHandle = getHandle(twitterTemp);
     } else {
       twitterHandle = twitterTemp;
@@ -154,14 +158,14 @@ export default function ProfilePage() {
     setTwitterLink("https://twitter.com/" + twitterHandle);
 
 
-    if(linkedInTemp.includes("linkedin.com")){
+    if (linkedInTemp.includes("linkedin.com")) {
       linkedInHandle = getHandle(linkedInTemp);
     } else {
       linkedInHandle = linkedInTemp;
     }
     setLinkedInLink("https://www.linkedin.com/in/" + linkedInHandle)
 
-    if(okToSaveData) {
+    if (okToSaveData) {
       setFirstName(firstNameTemp);
       setLastName(lastNameTemp);
       setAboutMeText(aboutMeTextTemp);
@@ -173,22 +177,19 @@ export default function ProfilePage() {
   }
 
   // Parses the URL to extract the handle.
-  function getHandle(urlString){
+  function getHandle(urlString) {
 
     let url = new URL(urlString);
     let pathname = url.pathname;
     let hostname = url.hostname;
     let handle = "";
 
-    if(hostname.includes("instagram.com")) {
+    if (hostname.includes("instagram.com")) {
       handle = pathname.replaceAll('/', '');
-    }
-
-    else if (hostname.includes("twitter.com")){
+    } else if (hostname.includes("twitter.com")) {
       handle = pathname.replaceAll('/', '');
       handle = '@' + handle;
-    }
-    else if (hostname.includes("linkedin.com")) {
+    } else if (hostname.includes("linkedin.com")) {
       handle = pathname.replaceAll('/', '');
       handle = handle.replaceAll("in", '');
     }
@@ -196,15 +197,13 @@ export default function ProfilePage() {
     return handle
   }
 
-
-
   function handleCancelButton() {
     clearTextValidationErrorMessages();
     exitEditMode();
   }
 
   function validateTextMinLength(text, min) {
-    if(text.length >= min) {
+    if (text.length >= min) {
       return 1;
     } else {
       return 0;
@@ -212,7 +211,7 @@ export default function ProfilePage() {
   }
 
   function validateTextMaxLength(text, max) {
-    if(text.length <= max) {
+    if (text.length <= max) {
       return 1;
     } else {
       return 0;
@@ -330,9 +329,9 @@ export default function ProfilePage() {
   function handlePhoto(e) {
     if (editPermission) {
       alert("Profile picture processing coming soon");
-      // Uploaded image should be in e.target.files or e.target.files[0]
-      // Axios Post will go here
-      // Request to backend with image for cropping and resizing.
+      // TODO: Uploaded image should be in e.target.files or e.target.files[0]
+      //  Axios Post would go here
+      //  Request to backend with image for cropping and resizing.
     }
   }
 
@@ -360,6 +359,34 @@ export default function ProfilePage() {
     }
 
   }, []);
+
+  const [displayNewReview, setDisplayNewReview] = useState("none");
+
+
+  // Creates a list of reviews. For each review in reviewList
+  // Render the Review component with the data passed to it.
+  // reviewMessages is an array manually declared at the end of this file.
+  const reviewList = reviewMessages.map((reviewElement) =>
+    <Reviews
+      avatar={reviewElement.avatar}
+      name={reviewElement.name}
+      rating={reviewElement.rating}
+      location={reviewElement.location}
+      message={reviewElement.message}
+      newReview={false}
+      // ratingReadOnly={true}
+    />
+  );
+
+  // const [count, setCount] = useState(0) // Name it however you wish
+  const handleCancelWriteReview = () => {
+    setDisplayNewReview("none");
+  }
+
+  function handleWriteReview() {
+    setDisplayNewReview("block");
+  }
+
 
   return (
     <Box sx={{flex: 1}}>
@@ -697,6 +724,96 @@ export default function ProfilePage() {
           </Stack>
         </Box>
       </Box>
+
+      {/******************************* Skill Listings *******************************/}
+      <Paper
+        sx={{
+          p: 2,
+          margin: 'auto',
+          marginTop: 1,
+          maxWidth: 948,
+          flexGrow: 1,
+          border: "0.5px solid",
+          borderColor: "primary.light",
+          height: 450
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper elevation={3} sx={{height: 450}}>
+              Placeholder
+            </Paper>
+          </Grid>
+        </Grid>
+
+      </Paper>
+
+
+      {/******************************* Write a Review Button *******************************/}
+      <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
+        <Button variant="contained" color="secondary" fullWidth={true} onClick={handleWriteReview}>
+          {/*<Button variant="contained" color="secondary" fullWidth={true} onClick={() => setCount(1)}>*/}
+          Write a review
+        </Button>
+      </Box>
+
+      {/******************* Add a new review *****************/}
+      <div style={{display: displayNewReview}}>
+        <Reviews
+          // avatar={"https://mui.com/static/images/avatar/6.jpg"}
+          avatar=""
+          name="[Logged user's name]"
+          rating={5}
+          location="[Logged user's location]"
+          message=""
+          newReview={newReview}
+          onClick={() => { handleCancelWriteReview() }}
+        />
+      </div>
+
+      {/******************* Reviews *****************/}
+      {reviewList}
+
     </Box>
   );
 }
+
+const reviewMessages = [
+  {
+    avatar: 'https://mui.com/static/images/avatar/1.jpg',
+    name: 'Charlie A.',
+    rating: 4.5,
+    location: 'United States',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+  {
+    avatar: 'https://mui.com/static/images/avatar/2.jpg',
+    name: 'David  B.',
+    rating: 4,
+    location: 'Spain',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+  {
+    avatar: 'https://mui.com/static/images/avatar/3.jpg',
+    name: 'Samantha F.',
+    rating: 5,
+    location: 'U.K.',
+    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
+      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
+      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
+  },
+];

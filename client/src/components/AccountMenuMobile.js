@@ -8,14 +8,15 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Logout from '@mui/icons-material/Logout';
-import testUserAvatar from "../images/avatars/testUserAvatar.jpg";
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
 import {logoutUser} from "./Logout";
+import {useState} from "react";
 
 export default function AccountMenuMobile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [testUserAvatar, setTestUserAvatar] = useState("https://mui.com/static/images/avatar/1.jpg");
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

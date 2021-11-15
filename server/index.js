@@ -22,6 +22,7 @@ app.use("/api/conversations", require("./routes/conversation.routes.js"));
 app.use("/api/messages", require("./routes/message.routes.js"));
 app.use("/api/file", require("./routes/file.routes.js"));
 app.use("/api/review", require("./routes/review.routes.js"));
+app.use("/api/skills", require("./routes/skill.routes.js"));
 connect();
 
 function listen() {

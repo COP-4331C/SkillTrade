@@ -53,6 +53,30 @@ export default function HomeNavBar() {
     },
   }));
 
+
+  // Avoid displaying the search bar in the Profile Page
+  function displaySearchBarIfNeeded () {
+
+    // If the user is in the profile Page, send an empty <></> instead of the search bar.
+    if (window.location.href.toLowerCase().includes("profile")) {
+      return (<></>);
+    }
+    else {
+        // Return the search bar to be displayed.
+       return(
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon/>
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search for skills to learn..."
+            inputProps={{'aria-label': 'search'}}
+          />
+        </Search>
+      );
+    }
+  }
+
   return (
     <Box sx={{flexGrow: 1}}>
       <AppBar position="static">
@@ -66,23 +90,14 @@ export default function HomeNavBar() {
 
             {/** ******************** Search field ***************************************/}
             <Grid item xs={6} sx={{alignItems:"center", justifyContent:"center", display:{xs:"none", sm:"flex", md:"flex"}}}>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon/>
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search for skills to learn..."
-                  inputProps={{'aria-label': 'search'}}
-                />
-              </Search>
+              {displaySearchBarIfNeeded()}
             </Grid>
 
             {/** ************************** Avatar and My Skills ***************************************/}
             <Grid item xs={6} sm={3} md={3} sx={{justifyContent:"right"}}>
                 <AccountMenuMobile/>
             </Grid>
-
-
+            
           </Grid>
         </Toolbar>
       </AppBar>

@@ -8,6 +8,7 @@ import MainTabScreen from './screens/MainTabScreen';
 import SupportScreen from './screens/SupportScreen';
 import SettingScreen from './screens/SettingScreen';
 import BookmarkScreen from './screens/BookmarkScreen';
+import ChangePasswordScreen from './screens/ChangePasswordScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
 import * as SecureStore from 'expo-secure-store';
@@ -130,8 +131,9 @@ const App = () => {
       <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
         <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-        <Drawer.Screen name="SettingsScreen" component={SettingScreen} />
+        <Drawer.Screen name="SettingScreen" component={SettingScreen} />
         <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
+        <Drawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       </Drawer.Navigator>
     )
     :

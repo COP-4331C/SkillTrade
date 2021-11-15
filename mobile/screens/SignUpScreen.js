@@ -415,7 +415,7 @@ const SignInScreen = ({navigation}) => {
                         <Button 
                             title="By signing up you agree to our Terms of service and Privacy policy."
                             color= '#009387'
-                            onPress={() => navigation.navigate('ChangePasswordScreen') } // how to jump to ChangePasswordScreen? FIXME
+                            onPress={() => navigation.navigate('TermsScreen') } 
                         />
                     </View>
 

@@ -7,13 +7,14 @@ const authenticateToken = require('../middleware/auth');
 router.post("/create-review", authenticateToken, reviews.createReview);
 
 // Get Review(s)
-router.get("/get-reviews", reviews.getReviews);
+//router.get("/get-reviews", reviews.getReviews);
+router.get("/get-reviews/:userId", reviews.getReviews);
 
 // Edit Review
-router.put("/edit-review", authenticateToken, reviews.editReview);
+router.patch("/edit-review", authenticateToken, reviews.editReview);
 
 // Delete Review
-router.delete("/delete-review", authenticateToken, reviews.deleteReview);
+router.delete("/delete-review/:reviewId", authenticateToken, reviews.deleteReview);
 
 
 module.exports = router; 

@@ -98,19 +98,19 @@ exports.verifyEmail = async(req, res) => {
   // });
 
   var transport = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'hotmail',
     auth: {
-      user: 'rafael.a0vg@gmail.com',
-      pass: 'yourpassword'
+      user: 'datherp5671@hotmail.com',
+      pass: process.env.PASSWORD
     }
   });
 
   var message = {
-    from: "sender@server.com",
+    from: "datherp5671@hotmail.com",
     to: email,
-    subject: "Message title",
+    subject: "TEST SUBJECT",
     text: "Plaintext version of the message - tester!",
-    html: "<p>HTML version of the message</p>"
+    html: "<p>HTML text - nodemailer!</p>"
   };
 
   transport.sendMail(message, function(error, info){

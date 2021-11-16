@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const uploadFile = require("../middleware/upload");
 
 exports.create = async (req, res) => {
 
@@ -132,5 +133,33 @@ exports.verifyEmail = async(req, res) => {
   // });
 
 }
+
+exports.uploadProfilePic = async (req, res) => {
+  try {
+    req.directory = "ProfilePictures";
+    await uploadFile(req, res);
+
+    let user = await User.findOne({ email: req.email });
+    user.profile.profilePic = req.file.location;
+  
+    user.save().then(() => {
+      return res.status(200).json({
+        message: "Successfully added profile photo!",
+        URL: req.file.location
+      });
+    });
+
+  } catch (err) {
+    if (err.code == "LIMIT_FILE_SIZE") {
+      return res.status(500).send({
+        message: "File size cannot be larger than 2MB!",
+      });
+    }
+
+    res.status(500).send({
+      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
+  }
+};
 
 

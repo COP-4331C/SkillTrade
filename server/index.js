@@ -20,9 +20,8 @@ app.use("/api/auth", require("./routes/auth.routes.js"));
 app.use("/api/user", require("./routes/user.routes.js"));
 app.use("/api/conversations", require("./routes/conversation.routes.js"));
 app.use("/api/messages", require("./routes/message.routes.js"));
-app.use("/api/file", require("./routes/file.routes.js"));
 app.use("/api/review", require("./routes/review.routes.js"));
-app.use("/api/skills", require("./routes/skill.routes.js"));
+app.use("/api/skill", require("./routes/skill.routes.js"));
 connect();
 
 function listen() {
@@ -32,7 +31,7 @@ function listen() {
     console.log(`Server started on port ${port}`);
   });
 
-  aws_test();
+  // aws_test();
 }
 
 function aws_test() {
@@ -53,7 +52,7 @@ function aws_test() {
     if (err) {
       console.log("Error", err);
     } else {
-      console.log("Success", data.Buckets);
+      console.log("Success", data.Contents);
     }
   });
 }

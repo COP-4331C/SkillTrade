@@ -15,4 +15,7 @@ router.patch("/change-password", authenticateToken, users.changePassword);
 // Verify Email*
 //router.post("/verifyEmail", users.verifyEmail);
 
+// Upload Profile Picture
+router.post("/upload-profile-pic", authenticateToken, users.uploadProfilePic);
+
 module.exports = router;

@@ -11,7 +11,9 @@ s3 = new aws.S3();
 
 let storage = multerS3({
   s3: s3,
-  bucket: 'skilltrade-bucket',
+  bucket:  function (req, file, cb) {
+    cb(null, `skilltrade-bucket/${req.directory}`);
+  },
   key: function(req, file, next) {
     console.log(file);
     next(null, file.originalname); // <--- Here can change filename

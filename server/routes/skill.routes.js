@@ -12,6 +12,7 @@ router
   .route("/:skillId")
   .get(skill.fetchOne) // Get single skill
   .delete(authenticateToken, skill.deleteSkill) // Delete skill
-  .put(authenticateToken, skill.editSkill); // Edit skill
+  .put(authenticateToken, skill.editSkill) // Edit skill
+  .post(authenticateToken, skill.uploadSkillPic); // Upload skill picture
 
 module.exports = router;

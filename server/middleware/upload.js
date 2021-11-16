@@ -1,15 +1,21 @@
 const util = require("util");
+const aws = require("aws-sdk");
 const multer = require("multer");
+const multerS3 = require("multer-s3");
+
 const maxSize = 2 * 1024 * 1024;
 
-let storage = multer.diskStorage({
-  destination: (req, file, next) => {
-    next(null, "server/uploads");
-  },
-  filename: (req, file, next) => {
-    console.log(file.originalname);
-    next(null, file.originalname);
-  },
+aws.config.update({ region: "us-east-2" });
+
+s3 = new aws.S3();
+
+let storage = multerS3({
+  s3: s3,
+  bucket: 'skilltrade-bucket',
+  key: function(req, file, next) {
+    console.log(file);
+    next(null, file.originalname); // <--- Here can change filename
+  }
 });
 
 let uploadFile = multer({

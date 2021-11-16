@@ -8,6 +8,8 @@ exports.upload = async (req, res) => {
       return res.status(400).send({ message: "Please upload a file!" });
     }
 
+    console.log(req.file.location);
+
     res.status(200).send({
       message: "Uploaded the file successfully: " + req.file.originalname,
     });

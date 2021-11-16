@@ -12,7 +12,8 @@ router.patch("/edit-profile", authenticateToken, users.editProfile);
 // Change Password
 router.patch("/change-password", authenticateToken, users.changePassword);
 
-// Verify Email*
-router.post("/verifyEmail", users.verifyEmail);
+// Verify Email (2 part: initiation and acutal verification)
+router.post("/verifyEmail", users.initiateEmailVerification);
+router.patch("/verifyEmail/:verificationCode", users.verifyEmail);
 
 module.exports = router;

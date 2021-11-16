@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 exports.create = async (req, res) => {
 
@@ -83,7 +84,7 @@ exports.changePassword = async (req, res) =>
 
 
 // WORK IN PROGRESS! - Rafael
-exports.verifyEmail = async(req, res) => {
+exports.initiateEmailVerification = async(req, res) => {
   const {email} = req.body;
 
   //let transporter = nodemailer.createTransport(transport[,defaults]);
@@ -105,12 +106,15 @@ exports.verifyEmail = async(req, res) => {
     }
   });
 
+  var URL = "http://localhost:5000";
+  var randomVerificationLink = URL + "/api/user/verifyEmail/" + crypto.randomUUID();
+
   var message = {
     from: "datherp5671@hotmail.com",
     to: email,
     subject: "TEST SUBJECT",
     text: "Plaintext version of the message - tester!",
-    html: "<p>HTML text - nodemailer!</p>"
+    html: "<h>Click this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
   };
 
   transport.sendMail(message, function(error, info){
@@ -133,4 +137,7 @@ exports.verifyEmail = async(req, res) => {
 
 }
 
+exports.verifyEmail = async(req, res) => {
+
+}
 

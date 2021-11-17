@@ -3,7 +3,6 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Avatar from '@mui/material/Avatar'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
@@ -14,20 +13,16 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff"; 
 import Visibility from "@mui/icons-material/Visibility";
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
-import AppNavBar from '../AppNavBar';
-import {Theme} from "../Theme";
-import NavBar from "../../Recycle Bin/NavBar";
-import { Box } from '@mui/material';
+import AppNavBar from '../components/AppNavBar';
+import {Theme} from "../components/Theme";
 
 
 
 
-export default function Registration() {
+export default function RegistrationPage() {
 
 const [email, setEmail] = useState("");
 

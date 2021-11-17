@@ -19,12 +19,9 @@ import Checkbox from '@mui/material/Checkbox';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
-import CloseIcon from '@mui/icons-material/Close';
-import {storeToken} from "./TokenStorage";
-import {Theme} from "./Theme";
-import Box from "@mui/material/Box";
-import NavBar from '../Recycle Bin/NavBar';
-import AppNavBar from './AppNavBar';
+import {storeToken} from "../components/TokenStorage";
+import {Theme} from "../components/Theme";
+import AppNavBar from '../components/AppNavBar';
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
@@ -32,7 +29,7 @@ import AppNavBar from './AppNavBar';
 // TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
 //      on desktops, when the browser's size is reduced horizontally.
 
-export default function Login() {
+export default function LoginPage() {
 
   //***************************************** //
   //     Global Variables and constants

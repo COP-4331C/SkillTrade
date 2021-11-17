@@ -7,7 +7,7 @@ const authenticateToken = require("../middleware/auth");
 router.post("/register", users.create);
 
 // Get Profile
-router.get("/profile/:userId", authenticateToken, users.getProfile);
+router.get("/profile/:userId?", authenticateToken, users.getProfile);
 
 // Edit Profile
 router.put("/edit-profile", authenticateToken, users.editProfile);

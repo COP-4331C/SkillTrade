@@ -30,7 +30,7 @@ exports.getProfile = async (req, res) => {
     userId = user._id;
   }
 
-  User.findOne({ _id: req.params.userId })
+  User.findById(userId)
     .then((data) => {
       res.status(200).json(data.profile);
     })

@@ -4,12 +4,11 @@ const nodemailer = require("nodemailer");
 const uploadFile = require("../middleware/upload");
 
 exports.create = async (req, res) => {
-
   const { firstName, lastName } = req.body;
-  req.body["profile"] = { firstName: firstName, lastName: lastName};
+  req.body["profile"] = { firstName: firstName, lastName: lastName };
 
   const user = new User(req.body);
-  
+
   user
     .save()
     .then(() => {
@@ -23,69 +22,80 @@ exports.create = async (req, res) => {
 };
 
 exports.editProfile = async (req, res) => {
-
   let user = await User.findOne({ email: req.email });
   var newValues = req.body;
 
-  var changeable_fields = ['firstName', 'lastName', 'aboutMe', 'profilePic'];
+  var changeable_fields = [
+    "firstName",
+    "lastName",
+    "aboutMe",
+    "profilePic",
+    "instagram",
+    "twitter",
+    "linkedIn",
+    "city",
+    "state",
+    "country",
+  ];
 
-  for (const p of changeable_fields)
-    user.profile[p] = newValues[p];
+  for (const p of changeable_fields) user.profile[p] = newValues[p];
 
-  user.save()
-      .then(() => {
-        return res.status(200).json({ message: "Successfully edited user!" });
-      })
-      .catch((err) => {
-        console.log("An error occured.");
-        console.log(err);
-        return res.status(400).json({ error: err });
-      });
-};
-
-exports.changePassword = async (req, res) =>
-{
-  const {oldPassword, newPassword} = req.body;
-
-  const space_regex = new RegExp('.* .*');
-  const validity_regex = new RegExp('(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])');
-
-  if(space_regex.test(newPassword) ||  newPassword.length < 8 || !validity_regex.test(newPassword))
-  {
-    return res.status(400).json({ error: "Invalid new password" });
-  }
-
-  const email = req.email;
-
-
-  const user = await User.findOne({ email: email });
-  if (!user)
-    return res.status(400).json({ error: "Invalid email" });
-
-  let validPassword = user.authenticate(oldPassword);
-  if (!validPassword)
-    return res.status(400).json({ error: "Incorrect original password." });
-
-  user.password = newPassword;
-  
   user
     .save()
     .then(() => {
-
-      return res.status(200).json({message: "Successfully changed password!"});
-
+      return res.status(200).json({ message: "Successfully edited user!" });
     })
     .catch((err) => {
       console.log("An error occured.");
       console.log(err);
       return res.status(400).json({ error: err });
     });
-}
+};
 
+exports.changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const space_regex = new RegExp(".* .*");
+  const validity_regex = new RegExp(
+    "(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])"
+  );
+
+  if (
+    space_regex.test(newPassword) ||
+    newPassword.length < 8 ||
+    !validity_regex.test(newPassword)
+  ) {
+    return res.status(400).json({ error: "Invalid new password" });
+  }
+
+  const email = req.email;
+
+  const user = await User.findOne({ email: email });
+  if (!user) return res.status(400).json({ error: "Invalid email" });
+
+  let validPassword = user.authenticate(oldPassword);
+  if (!validPassword)
+    return res.status(400).json({ error: "Incorrect original password." });
+
+  user.password = newPassword;
+
+  user
+    .save()
+    .then(() => {
+      return res
+        .status(200)
+        .json({ message: "Successfully changed password!" });
+    })
+    .catch((err) => {
+      console.log("An error occured.");
+      console.log(err);
+      return res.status(400).json({ error: err });
+    });
+};
 
 // WORK IN PROGRESS! - Rafael
-exports.verifyEmail = async(req, res) => {
-  const {email} = req.body;
+exports.verifyEmail = async (req, res) => {
+  const { email } = req.body;
 
   //let transporter = nodemailer.createTransport(transport[,defaults]);
 
@@ -99,11 +109,11 @@ exports.verifyEmail = async(req, res) => {
   // });
 
   var transport = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
-      user: 'rafael.a0vg@gmail.com',
-      pass: 'yourpassword'
-    }
+      user: "rafael.a0vg@gmail.com",
+      pass: "yourpassword",
+    },
   });
 
   var message = {
@@ -111,14 +121,14 @@ exports.verifyEmail = async(req, res) => {
     to: email,
     subject: "Message title",
     text: "Plaintext version of the message - tester!",
-    html: "<p>HTML version of the message</p>"
+    html: "<p>HTML version of the message</p>",
   };
 
-  transport.sendMail(message, function(error, info){
+  transport.sendMail(message, function (error, info) {
     if (error) {
       return res.status(400).json({ error: "something went wrong" });
     } else {
-      return res.status(200).json({ message : "something WORKED!" });
+      return res.status(200).json({ message: "something WORKED!" });
     }
   });
 
@@ -131,8 +141,7 @@ exports.verifyEmail = async(req, res) => {
   //     pass: "password",
   //   },
   // });
-
-}
+};
 
 exports.uploadProfilePic = async (req, res) => {
   try {
@@ -141,14 +150,13 @@ exports.uploadProfilePic = async (req, res) => {
 
     let user = await User.findOne({ email: req.email });
     user.profile.profilePic = req.file.location;
-  
+
     user.save().then(() => {
       return res.status(200).json({
         message: "Successfully added profile photo!",
-        URL: req.file.location
+        URL: req.file.location,
       });
     });
-
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
@@ -161,5 +169,3 @@ exports.uploadProfilePic = async (req, res) => {
     });
   }
 };
-
-

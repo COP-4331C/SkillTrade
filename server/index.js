@@ -12,7 +12,7 @@ app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static(path.resolve("client/build")));
-  app.get("/*", function (req, res) {
+  app.get(/\/((?!api).)*/, function (req, res) {
     res.sendFile(path.join(path.resolve("client/build"), "index.html"));
   });
 }
@@ -21,7 +21,7 @@ app.use("/api/user", require("./routes/user.routes.js"));
 app.use("/api/conversations", require("./routes/conversation.routes.js"));
 app.use("/api/messages", require("./routes/message.routes.js"));
 app.use("/api/review", require("./routes/review.routes.js"));
-app.use("/api/skill", require("./routes/skill.routes.js"));
+app.use("/api/skills", require("./routes/skill.routes.js"));
 connect();
 
 function listen() {
@@ -44,7 +44,7 @@ function aws_test() {
   s3 = new AWS.S3();
 
   var bucketParams = {
-    Bucket : 'skilltrade-bucket'
+    Bucket: "skilltrade-bucket",
   };
 
   // Call S3 to list the buckets

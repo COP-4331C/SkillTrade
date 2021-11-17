@@ -16,11 +16,10 @@ import TextField from '@mui/material/TextField';
 import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
-import AppNavBar from '../AppNavBar';
-import {Theme} from "../Theme";
+import AppNavBar from '../components/AppNavBar';
+import { Theme } from '../components/Theme';
 import { FormControlLabel } from '@mui/material';
-import Checkbox from 'antd/lib/checkbox/Checkbox';
-
+import { Checkbox } from '@mui/material';
 
 export default function Registration() {
 

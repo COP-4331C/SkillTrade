@@ -24,6 +24,7 @@
   "homepage": "https://github.com/COP-4331C/Large-Project#readme",
   "dependencies": {
     "@material-ui/core": "^4.12.3",
+    "antd": "^4.16.13",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

@@ -21,6 +21,24 @@ exports.create = async (req, res) => {
     });
 };
 
+exports.getProfile = async (req, res) => {
+  let userId = req.params.userId;
+
+  // Use logged in user id if the userId is not supplied as a request parameter.
+  if (!userId) {
+    let user = await User.findOne({ email: req.email });
+    userId = user._id;
+  }
+
+  User.findOne({ _id: req.params.userId })
+    .then((data) => {
+      res.status(200).json(data.profile);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Invalid userId" });
+    });
+};
+
 exports.editProfile = async (req, res) => {
   let user = await User.findOne({ email: req.email });
   var newValues = req.body;
@@ -29,7 +47,6 @@ exports.editProfile = async (req, res) => {
     "firstName",
     "lastName",
     "aboutMe",
-    "profilePic",
     "instagram",
     "twitter",
     "linkedIn",

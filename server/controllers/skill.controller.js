@@ -30,6 +30,23 @@ exports.fetchOne = async (req, res) => {
     });
 };
 
+exports.fetchByUser = async (req, res) => {
+  let userId = req.params.userId;
+
+  if (!userId) {
+    let user = await User.findOne({ email: req.email });
+    userId = user._id;
+  }
+
+  Skill.find({ userId: { $in: userId } })
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+};
+
 exports.search = async (req, res) => {
   const { search, location, page } = req.query;
   const limit = 15;

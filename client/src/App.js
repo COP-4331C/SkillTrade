@@ -7,7 +7,7 @@ import HomePage from "./Pages/HomePage";
 import Skills from './Pages/Skills';
 import ProfilePage from "./Pages/ProfilePage";
 import LoginPage from './Pages/LoginPage';
-
+import Testcard from './components/Testcard';
 
 function App() {
   return (
@@ -19,7 +19,10 @@ function App() {
             <Route path="/login" component={LoginPage} />
             <Route path="/home" component={HomePage} />
             <Route path="/profile" component={ProfilePage} />
-            <Route path="/card" component={Skills}/>
+            <Route path="/card/:userId?" component={Testcard}/>
+            
+            {/* <Route path="/card/:userId?" component={Testcard}/> */}
+
           </Switch>
           <Footer />
         </div>

@@ -16,9 +16,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import { Paper } from '@mui/material';
+import axios from 'axios';
 
-
-export default function Testcard() {
+export default function Testcard(props) {
 
 //skills to be learnt 
 const [aboutMeText, setAboutMeText] = useState("learn Web-Development"); 
@@ -95,6 +95,28 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   state: false,
   text: ""
 })
+
+useEffect(() => {
+  fetchSkills();
+});
+
+function fetchSkills(){
+
+  const userId = props.match.params.userId;
+  const token = localStorage.getItem('token_data');
+
+  axios.get(`./api/skills/?search=example&page=0`, {
+    headers: { 'Authorization': `Bearer ${token}`}
+  })
+  .then((res) => {
+    if(res.data.length == 0) return;
+    let firstSkill = res.data[0];
+    console.log(firstSkill);
+  })
+  .catch((err) => {
+
+  })
+}
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -373,8 +395,7 @@ useEffect(() => {
               <Grid item xs={2} >
                 <IconButton 
                   color="secondary" 
-                  aria-label="edit" 
-                  alignItems="center" 
+                  aria-label="edit"  
                   sx={{display: displayContainer}}>
                     <DescriptionIcon/>
                 </IconButton>
@@ -441,7 +462,6 @@ useEffect(() => {
                 <IconButton 
                   color="secondary" 
                   aria-label="edit" 
-                  alignItems="center" 
                   sx={{display: displayContainer}}>
                     <PersonPinCircleIcon/>
                 </IconButton>

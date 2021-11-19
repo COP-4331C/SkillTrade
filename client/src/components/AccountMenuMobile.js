@@ -13,6 +13,8 @@ import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
 import {logoutUser} from "./Logout";
 import {useState} from "react";
+import {retrieveToken} from "./TokenStorage";
+import axios from 'axios';
 
 export default function AccountMenuMobile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -25,6 +27,38 @@ export default function AccountMenuMobile() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function getProfileAndRedirect() {
+
+    // Get token from the local storage
+    const token = retrieveToken()
+
+    const URL = "./api/user/profile";
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    axios.get(URL, config)
+      .then(function(response) {
+        //Handle success
+        // console.log(response);
+        console.log(response.data);
+        // console.log(response.data["profilePic"]);
+        // console.log(response.data["firstName"]);
+        // console.log(response.data["lastName"]);
+        // console.log(response.data["aboutMe"]);
+        // console.log(response.data["instagram"]);
+        // console.log(response.data["linkedIn"]);
+        // console.log(response.data["twitter"]);
+        // console.log(response.data["profilePic"]);
+        // console.log(response.data["_id"]);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log("Error: " + error);
+      });
+  }
 
   return (
     <React.Fragment>
@@ -70,7 +104,10 @@ export default function AccountMenuMobile() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem component={RouterLink} to="/profile">
-          <Avatar alt="Remy Sharp" src={testUserAvatar}/> Profile
+        {/*<MenuItem onClick={() => getProfileAndRedirect()}>*/}
+        {/*<MenuItem component={RouterLink} to={{pathname: "/profile", getProfileAndRedirect(){}   }}>*/}
+          <Avatar alt="user avatar" src={testUserAvatar}/>
+          Profile
         </MenuItem>
         <MenuItem>
           <ListItemIcon>

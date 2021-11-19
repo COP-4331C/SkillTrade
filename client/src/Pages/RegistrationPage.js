@@ -374,7 +374,7 @@ export default function Registration() {
           /> */}
 
           {/********************* already have an account  *********************/}
-          <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
+          <Typography fontSize="0.9rem" align="center" paddingTop="20px">Already have an account?{' '}
             <Link style={{color: "blue"}} component={RouterLink} to="/Login">Login</Link>
           </Typography>
 

@@ -96,27 +96,75 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   text: ""
 })
 
-useEffect(() => {
-  fetchSkills();
-});
+// useEffect(() => {
+//   fetchSkills();
+//   // editSkills();
+// });
 
-function fetchSkills(){
+// function fetchSkills(){
 
-  const userId = props.match.params.userId;
-  const token = localStorage.getItem('token_data');
+//   const userId = props.match.params.userId;
+//   const token = localStorage.getItem('token_data');
 
-  axios.get(`./api/skills/?search=example&page=0`, {
-    headers: { 'Authorization': `Bearer ${token}`}
-  })
-  .then((res) => {
-    if(res.data.length == 0) return;
-    let firstSkill = res.data[0];
-    console.log(firstSkill);
-  })
-  .catch((err) => {
+//   axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+//     // axios.get(`./api/skills/?search=example&page=0`, {
+//       headers: { 'Authorization': `Bearer ${token}`}
+//   })
+//   .then((res) => {
+//     if(res.data.length == 0) return;
+//     let firstSkill = res.data[0];
+//     console.log(firstSkill);
+//     setAboutMeText(res.data[0]["summary"]);
+//   })
+//   .catch((err) => {
+//     console.log("error");
+//   })
+// }
 
-  })
-}
+// function editSkills(){
+
+//   const userId = props.match.params.userId;
+//   const token = localStorage.getItem('token_data');
+
+//   //value to commit to Backend changable_fields
+//   const payload = {
+//     summary: aboutMeTextTemp, 
+//     title:    aboutMeTextTemp,
+//     description: aboutMeTextTemp,
+//     price: 50,
+//     status: "Teaching"
+//   };
+
+//   // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+//     console.log(token);
+//     axios.put(`/api/skills/6196faaa0f949a7477b0d998`, payload,{
+//       headers: { 'Authorization': `Bearer ${token}`}
+//   })
+//   .then((res) => {
+//     console.log("success")
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
+// }
+
+// function fetchSkills(){
+
+//   const userId = props.match.params.userId;
+//   const token = localStorage.getItem('token_data');
+
+//   axios.get(`./api/skills/?search=example&page=0`, {
+//     headers: { 'Authorization': `Bearer ${token}`}
+//   })
+//   .then((res) => {
+//     if(res.data.length == 0) return;
+//     let firstSkill = res.data[0];
+//     console.log(firstSkill);
+//   })
+//   .catch((err) => {
+
+//   })
+// }
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -178,6 +226,31 @@ function handleSave() {
     setStateAdd(stateAddTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
+
+    const userId = props.match.params.userId;
+    const token = localStorage.getItem('token_data');
+  
+    //value to commit to Backend changable_fields
+    const payload = {
+      summary: aboutMeTextTemp, 
+      title:    aboutMeTextTemp,
+      description: aboutMeTextTemp,
+      price: 50,
+      status: "Teaching"
+    };
+  
+    // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+      console.log(token);
+      axios.put(`/api/skills/6196faaa0f949a7477b0d998`, payload,{
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    .then((res) => {
+      console.log("success")
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
     exitEditMode();
   }
 }
@@ -289,6 +362,8 @@ useEffect(() => {
   
   return (
     <Grid container justifyContent="center">
+            {/* <form onSubmit={editSkills}> */}
+
 
       {/* //start of card// */}
       <Card  sx={{ maxWidth: 345,border: 4, borderRadius:5, borderColor:"black", width: "300px"}}>
@@ -571,7 +646,9 @@ useEffect(() => {
                     <Button
                       color="secondary"
                       variant="contained"
-                      onClick={handleSave}
+                      onClick={handleSave }
+                      // type="submit"
+                      // onClick={editSkills }
                       sx={{display: displayButton}}
                     ><SaveIcon/>
                     </Button>
@@ -671,6 +748,7 @@ useEffect(() => {
 
     
     </Card>
+    {/* </form> */}
     </Grid>
     
   );

@@ -1,91 +1,47 @@
-import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView } from 'react-native';
+import React, { Component, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity } from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 
-// let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-
-// async () => {
-//   let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-//   await axios.get('https://cop4331c.herokuapp.com/api/user/profile', { //connect API, need to be await
-          
-//       }, {
-//         headers: {
-//           'Authorization': `Bearer ${userToken}`  
-//         }
-//       }) 
-//       .then(function(response) { 
-//         console.warn("connetcted to profile")
-//       })
-//       .catch(function(error) {
-//         console.warn("Fail to connetcted to profile!")
-//       });
-// }
-
-let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-
-function connectToProfileApi(userToken){
-  axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
-          headers: {
-            Authorization: `Bearer ${userToken}`  
-          }
-        })
-      .then(function(response) {
-          // console.warn("connetcted to profile!")
-          // console.warn(response.data)
-          setProfileData(response.data)
-          console.warn()
-          // setProfileData(response.data.firstName, response.data.lastName, response.data.aboutMe, response.data.profilePic, 
-          //   response.data.instagram, response.data.twitter, response.data.linkedIn, response.data._id, response.data.city, 
-          //   response.data.country,response.data.state)
-      })
-      .catch(function(error) {
-          console.warn("Fail to connetcted to profile!")
-      });
-}
-
-connectToProfileApi(userToken)
-
-
 
 const ProfileScreen = () => {
-  
-  const [profileData, setProfileData] = React.useState({ });
 
-  // const [profileData, setProfileData] = React.useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   aboutMe: '',
-  //   profilePic: '',
-  //   instagram: '',
-  //   twitter: '',
-  //   linkedIn: '',
-  //   _id: '',
-  //   city: '',
-  //   country: '',
-  //   state: '',
-  // });
+  const [profileData, setProfileData] = React.useState({
+    firstName: '',
+    lastName: '',
+    aboutMe: '',
+    profilePic: '',
+    instagram: '',
+    twitter: '',
+    linkedIn: '',
+    _id: '',
+    city: '',
+    country: '',
+    state: '',
+  });
 
+  let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
 
+  useEffect(() => {
+    connectToProfileApi(userToken)
+  }, [])
 
-  // function connectToProfileApi(userToken){
-  //   axios.get('https://cop4331c.herokuapp.com/api/user/profile', { 
-            
-  //       }, {
-  //           headers: {
-  //             'Authorization': `Bearer ${userToken}`  
-  //           }
-  //         })
-  //       .then(function(response) {
-  //           // console.warn("connetcted to profile")
-  //           console.warn("connetcted to profile")
-  //       })
-  //       .catch(function(error) {
-  //           console.warn("Fail to connetcted to profile!")
-  //       });
-  // }
+  function connectToProfileApi(userToken){
+    axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
+            headers: {
+              Authorization: `Bearer ${userToken}`  
+            }
+          })
+        .then(function(response) {
+            setProfileData(response.data)
+            // console.warn(profileData)
+        })
+        .catch(function(error) {
+            console.warn("Fail to connetcted to profile!")
+        });
+  }
 
   return (
 
@@ -94,13 +50,15 @@ const ProfileScreen = () => {
 
         <View style={styles.titleBar}>
           <AntDesign name="adduser" size={32} color="black"></AntDesign>
-          <Ionicons name="location-sharp" size={24} color="black"><Text style={{fontSize:24}}> Orlando   </Text></Ionicons>
+          <Ionicons name="location-sharp" size={24} color="black">
+            <Text style={{fontSize:24}}> {profileData.city}.{profileData.state}.{profileData.country}</Text>
+          </Ionicons>
           <Entypo name="dots-three-vertical" size={24} color="black"></Entypo>
         </View>
 
         <View style={{alignSelf:"center"}}>
           <View style={styles.profileImage}>
-            <Image source={{uri:'http://img.touxiangwu.com/2020/3/iMnuMj.jpg'}} style={styles.image} resizeMode="center"></Image>
+            <Image source={{uri:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
           </View>
           <View style={styles.dm}>
             <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
@@ -112,7 +70,7 @@ const ProfileScreen = () => {
         </View>
 
         <View style={styles.infoContainer}>
-          <Text style={[styles.text, {fontWeight:"200", fontSize: 36}]}>@Weiyuan Wu</Text>
+          <Text style={[styles.text, {fontWeight:"200", fontSize: 36}]}>@{profileData.firstName} {profileData.lastName}</Text>
           <Text style={[styles.text, {color:"#AEB5BC", fontSize:14}]}>Chef/Photographer/Surfer/Bookworm</Text>
         </View>
 
@@ -131,34 +89,27 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        <View style={styles.mediaContainer}>
+        <View style={styles.mediaContainer}> 
           <View style={styles.statsBox}>
-           <AntDesign name="facebook-square" size={24} color="black"></AntDesign>
+            <TouchableOpacity onPress={()=>{ Linking.openURL( `https://www.instagram.com/${profileData.instagram}` )}} > 
+              <AntDesign name="instagram" size={24} color="black" />
+            </TouchableOpacity>
           </View>
           <View style={styles.statsBox}>
-            <AntDesign name="twitter" size={24} color="black"></AntDesign>
+          < TouchableOpacity onPress={()=>{ Linking.openURL( `https://twitter.com/${profileData.twitter}` )}} > 
+              <AntDesign name="twitter" size={24} color="black" />
+            </TouchableOpacity>
           </View>
           <View style={styles.statsBox}>
-           <AntDesign name="instagram" size={24} color="black"></AntDesign>
-          </View>
-          <View style={styles.statsBox}>
-           <AntDesign name="youtube" size={24} color="black"></AntDesign>
-          </View>
-          <View style={styles.statsBox}>
-           <Ionicons name="logo-snapchat" size={24} color="black"></Ionicons>
-          </View>
-          <View style={styles.statsBox}>
-           <Entypo name="pinterest" size={24} color="black"></Entypo>
+            <TouchableOpacity onPress={()=>{ Linking.openURL( `https://www.linkedin.com/${profileData.linkedIn}` )}} > 
+              <AntDesign name="linkedin-square" size={24} color="black" />
+            </TouchableOpacity>
           </View>
         </View>
 
         <View style={[styles.sectionContainer, {marginTop:15}]}>
           <Text style={styles.sectionTitle}> ABOUT ME </Text>
-          <Text style={styles.about}>I am passionate about my work. Because I love what I do, 
-            I have a steady source of motivation that drives me to do my best. 
-            In my last job, this passion led me to challenge myself daily 
-            and learn new skills that helped me to do better work.
-          </Text>
+          <Text style={styles.about}>{profileData.aboutMe}</Text>
         </View>
         
         <View style={styles.sectionContainer}>

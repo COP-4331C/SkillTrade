@@ -19,19 +19,6 @@ import * as ImagePicker from 'expo-image-picker';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 const EditProfileScreen = () => {
-  const [data, setData] = React.useState({
-    firstname: '',
-    lastname: '',
-    aboutMe: '',
-    instagramUrl: '',
-    twitterUrl: '',
-    linkdinUrl: '',
-    city: '',
-    state: '',
-    country: '',
-    uriImage: '',
-
-});
 
   const [pickedImagePath, setPickedImagePath] = useState('');
 
@@ -202,11 +189,46 @@ const EditProfileScreen = () => {
         </View>
 
         <View style={styles.action}>
-          <Feather name="phone" size={20} />
+          <Feather name="twitter" size={20} />
           <TextInput 
-            placeholder="Phone"
+            placeholder="Twitter Url"
             placeholderTextColor="#666666"
             keyboardType='number-pad'
+            autoCorrect={false}
+            // Some dark theme stuff here
+            // style={styles.textInput}
+            style={[
+              styles.textInput,
+              {
+                color: colors.text,
+              },
+            ]}
+          />
+        </View>
+
+
+        <View style={styles.action}>
+          <Feather name="instagram" size={20} />
+          <TextInput 
+            placeholder="Instagram Url"
+            placeholderTextColor="#666666"
+            autoCorrect={false}
+            // Some dark theme stuff here
+            // style={styles.textInput}
+            style={[
+              styles.textInput,
+              {
+                color: colors.text,
+              },
+            ]}
+          />
+        </View>
+
+        <View style={styles.action}>
+          <Feather name="linkedin" size={20} />
+          <TextInput 
+            placeholder="LinkedIn Url"
+            placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -224,7 +246,6 @@ const EditProfileScreen = () => {
           <TextInput 
             placeholder="Email"
             placeholderTextColor="#666666"
-            keyboardType='number-pad'
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}

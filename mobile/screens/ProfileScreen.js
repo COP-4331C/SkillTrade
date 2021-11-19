@@ -4,6 +4,7 @@ import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 
 const ProfileScreen = () => {
@@ -22,9 +23,13 @@ const ProfileScreen = () => {
     state: '',
   });
 
-  let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-
-  useEffect(() => {
+  useEffect(async() => {
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn('SecureStore error');
+    }
     connectToProfileApi(userToken)
   }, [])
 

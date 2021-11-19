@@ -1,11 +1,94 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView } from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TextInput } from 'react-native-gesture-handler';
+import axios from 'axios';
+
+// let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
+
+// async () => {
+//   let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
+//   await axios.get('https://cop4331c.herokuapp.com/api/user/profile', { //connect API, need to be await
+          
+//       }, {
+//         headers: {
+//           'Authorization': `Bearer ${userToken}`  
+//         }
+//       }) 
+//       .then(function(response) { 
+//         console.warn("connetcted to profile")
+//       })
+//       .catch(function(error) {
+//         console.warn("Fail to connetcted to profile!")
+//       });
+// }
+
+let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
+
+function connectToProfileApi(userToken){
+  axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
+          headers: {
+            Authorization: `Bearer ${userToken}`  
+          }
+        })
+      .then(function(response) {
+          // console.warn("connetcted to profile!")
+          // console.warn(response.data)
+          setProfileData(response.data)
+          console.warn()
+          // setProfileData(response.data.firstName, response.data.lastName, response.data.aboutMe, response.data.profilePic, 
+          //   response.data.instagram, response.data.twitter, response.data.linkedIn, response.data._id, response.data.city, 
+          //   response.data.country,response.data.state)
+      })
+      .catch(function(error) {
+          console.warn("Fail to connetcted to profile!")
+      });
+}
+
+connectToProfileApi(userToken)
+
+
 
 const ProfileScreen = () => {
+  
+  const [profileData, setProfileData] = React.useState({ });
+
+  // const [profileData, setProfileData] = React.useState({
+  //   firstName: '',
+  //   lastName: '',
+  //   aboutMe: '',
+  //   profilePic: '',
+  //   instagram: '',
+  //   twitter: '',
+  //   linkedIn: '',
+  //   _id: '',
+  //   city: '',
+  //   country: '',
+  //   state: '',
+  // });
+
+
+
+  // function connectToProfileApi(userToken){
+  //   axios.get('https://cop4331c.herokuapp.com/api/user/profile', { 
+            
+  //       }, {
+  //           headers: {
+  //             'Authorization': `Bearer ${userToken}`  
+  //           }
+  //         })
+  //       .then(function(response) {
+  //           // console.warn("connetcted to profile")
+  //           console.warn("connetcted to profile")
+  //       })
+  //       .catch(function(error) {
+  //           console.warn("Fail to connetcted to profile!")
+  //       });
+  // }
+
   return (
+
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
 

@@ -1,15 +1,19 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useTheme} from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-
+import Feather from 'react-native-vector-icons/Feather';
 import HomeScreen from './HomeScreen';
 import DetailsScreen from './DetailsScreen';
 import ExploreScreen from './ExploreScreen';
 import ProfileScreen from './ProfileScreen';
+import EditProfileScreen from './EditProfileScreen';
 
 const HomeStack = createStackNavigator();
 const DetailseStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
+
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => (
@@ -41,7 +45,7 @@ const MainTabScreen = () => (
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarColor: '#694fad',
@@ -103,4 +107,44 @@ const DetailsStackScreen = ({navigation}) => (
             }} />
         </DetailseStack.Navigator>
     );
+
+const ProfileStackScreen = ({navigation}) => {
+  const {colors} = useTheme();
+  return (
+  <ProfileStack.Navigator screenOptions={{
+          headerStyle: {
+          backgroundColor: colors.background,
+          shadowColor: colors.background,
+          elevation: 0,
+          },
+          headerTintColor: colors.text,
+      }}>
+          <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{
+          headerLeft: () => (
+              <Icon.Button name="ios-menu"
+              size={25} backgroundColor={colors.background}
+              color={colors.text}
+              onPress={() => navigation.openDrawer()}></Icon.Button>
+          ),
+
+          headerRight: () => (
+            <Feather.Button name="edit" 
+            size={25} backgroundColor={colors.background}
+            color={colors.text}
+            onPress={() => navigation.navigate('EditProfile')}></Feather.Button>
+        )
+
+        }}
+        />
+        <ProfileStack.Screen
+        name="EditProfile"
+        options={{
+          title: 'Edit Profile',
+        }}
+        component={EditProfileScreen}
+      />
+
+          
+  </ProfileStack.Navigator>
+)};
 

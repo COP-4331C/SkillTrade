@@ -135,7 +135,7 @@ const SignInScreen = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{alignItems: 'left', justifyContent:'left'}}>
+                <View style={{alignItems: 'center', justifyContent:'flex-start'}}>
                     <Button 
                         title="Forgot password?"
                         color= '#009387'

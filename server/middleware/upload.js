@@ -2,6 +2,7 @@ const util = require("util");
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const crypto = require("crypto");
 
 const maxSize = 2 * 1024 * 1024;
 
@@ -16,7 +17,18 @@ let storage = multerS3({
   },
   key: function(req, file, next) {
     console.log(file);
-    next(null, file.originalname); // <--- Here can change filename
+    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp']
+    var fileExtension = "";
+
+    for (var ext of validExtensions)
+      if (file.originalname.endsWith(ext))
+        fileExtension = ext;
+
+    if (fileExtension.length == 0)
+      next("Error: missing or invalid file type");
+
+    var newFileName = crypto.randomBytes(20).toString('hex') + fileExtension;
+    next(null, newFileName);
   }
 });
 

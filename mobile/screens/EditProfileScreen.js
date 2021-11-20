@@ -1,5 +1,5 @@
 // dark theme customisation at the end at abt 29:57
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,8 @@ import {
   ImageBackground,
   TextInput,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
-
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -16,12 +16,48 @@ import Feather from 'react-native-vector-icons/Feather';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 const EditProfileScreen = () => {
+  const [profileData, setProfileData] = React.useState({
+    firstName: '',
+    lastName: '',
+    aboutMe: '',
+    profilePic: '',
+    instagram: '',
+    twitter: '',
+    linkedIn: '',
+    _id: '',
+    city: '',
+    country: '',
+    state: '',
+  });
+
+  let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
+
+  useEffect(() => {
+    connectToProfileApi(userToken)
+  }, [])
+
+  function connectToProfileApi(userToken){
+    axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
+            headers: {
+              Authorization: `Bearer ${userToken}`  
+            }
+          })
+        .then(function(response) {
+            setProfileData(response.data)
+            // console.warn(profileData)
+        })
+        .catch(function(error) {
+            console.warn("Fail to connetcted to profile!")
+        });
+  }
 
   const [pickedImagePath, setPickedImagePath] = useState('');
-
+  // setPickedImagePath(profileData.profilePic);
   // This function is triggered when the "Select an image" button pressed
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
@@ -101,6 +137,7 @@ const EditProfileScreen = () => {
 
 
   return (
+    <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
       <BottomSheet 
         ref={bs}
@@ -189,11 +226,27 @@ const EditProfileScreen = () => {
         </View>
 
         <View style={styles.action}>
+          <FontAwesome name="user-o" size={20} />
+          <TextInput 
+            placeholder="About Me"
+            placeholderTextColor="#666666"
+            autoCorrect={false}
+            // Some dark theme stuff here
+            // style={styles.textInput}
+            style={[
+              styles.textInput,
+              {
+                color: colors.text,
+              },
+            ]}
+          />
+        </View>
+
+        <View style={styles.action}>
           <Feather name="twitter" size={20} />
           <TextInput 
             placeholder="Twitter Url"
             placeholderTextColor="#666666"
-            keyboardType='number-pad'
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -242,9 +295,9 @@ const EditProfileScreen = () => {
         </View>
 
         <View style={styles.action}>
-          <FontAwesome name="envelope-o" size={20} />
+          <FontAwesome name="globe" size={20} />
           <TextInput 
-            placeholder="Email"
+            placeholder="Country"
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -261,7 +314,7 @@ const EditProfileScreen = () => {
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
-            placeholder="Country"
+            placeholder="State"
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -298,6 +351,7 @@ const EditProfileScreen = () => {
 
       </Animated.View>
     </View>
+    </ScrollView>
   );
 };
 

@@ -12,16 +12,7 @@ router.patch("/edit-profile", authenticateToken, users.editProfile);
 // Change Password
 router.patch("/change-password", authenticateToken, users.changePassword);
 
-// Verify Email (2 part: initiation and acutal verification)
-//router.post("/verifyEmail", authenticateToken, users.initiateEmailVerification);
-
-// router.get("/verifyEmail/?userId&verificationCode", function(req,res){
-//             res.render();},///????????????????????????????????
-//             users.verifyEmail);
-
-router
-            .route("/")
-            .get(users.verifyEmail); // Fetch by page (query parameter)
-            //.post(users.verifyEmail); // Add skill
+// Verify Email
+router.route("/").get(users.verifyEmail);
 
 module.exports = router;

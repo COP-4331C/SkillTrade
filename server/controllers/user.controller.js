@@ -14,7 +14,32 @@ exports.create = async (req, res) => {
   user
     .save()
     .then(() => {
-      //return res.status(200).json({ message: "Successfully created user!" });
+      var transport = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+          user: 'datherp5671@hotmail.com',
+          pass: process.env.PASSWORD
+        }
+      });
+    
+      var URL = "http://localhost:5000";
+      var randomVerificationLink = URL + "/api/user/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
+    
+      var message = {
+        from: "datherp5671@hotmail.com",
+        to: user.email,
+        subject: "Email Verification - Skill Trade",
+        text: "Email Verification - Skill Trade",
+        html: "<h>Click this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
+      };
+    
+      transport.sendMail(message, function(error, info){
+        if (error) {
+          return res.status(400).json({ error: "something went wrong" });
+        } else {
+          return res.status(200).json({ message : "something WORKED!" });
+        }
+      });
     })
     .catch((err) => {
       console.log("An error occured.");
@@ -22,38 +47,6 @@ exports.create = async (req, res) => {
       return res.status(400).json({ error: err });
     });
 
-    console.log("made it to here");
-
-    var transport = nodemailer.createTransport({
-      service: 'hotmail',
-      auth: {
-        user: 'datherp5671@hotmail.com',
-        pass: process.env.PASSWORD
-      }
-    });
-  
-    var URL = "http://localhost:5000";
-    //var verificationCode = crypto.randomUUID();
-    //user.verificationCode = verificationCode;
-    var randomVerificationLink = URL + "/api/user/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
-  
-    var message = {
-      from: "datherp5671@hotmail.com",
-      to: user.email,
-      subject: "Email Verification - Skill Trade",
-      text: "Email Verification - Skill Trade",
-      html: "<h>Click this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
-    };
-  
-    transport.sendMail(message, function(error, info){
-      if (error) {
-        return res.status(400).json({ error: "something went wrong" });
-      } else {
-        return res.status(200).json({ message : "something WORKED!" });
-      }
-    });
-
-    //return res.status(200).json({message: "done!"});
 };
 
 exports.editProfile = async (req, res) => {
@@ -116,50 +109,14 @@ exports.changePassword = async (req, res) =>
     });
 }
 
-
-// // WORK IN PROGRESS! - Rafael
-// exports.initiateEmailVerification = async(req, res) => {
-//   const {email} = req.body;
-//   const user = await User.findOne({email: req.email});
-
-//   var transport = nodemailer.createTransport({
-//     service: 'hotmail',
-//     auth: {
-//       user: 'datherp5671@hotmail.com',
-//       pass: process.env.PASSWORD
-//     }
-//   });
-
-//   var URL = "http://localhost:5000";
-//   //var verificationCode = crypto.randomUUID();
-//   //user.verificationCode = verificationCode;
-//   var randomVerificationLink = URL + "/api/user/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
-
-//   var message = {
-//     from: "datherp5671@hotmail.com",
-//     to: email,
-//     subject: "Email Verification - Skill Trade",
-//     text: "Email Verification - Skill Trade",
-//     html: "<h>Click this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
-//   };
-
-//   transport.sendMail(message, function(error, info){
-//     if (error) {
-//       return res.status(400).json({ error: "something went wrong" });
-//     } else {
-//       return res.status(200).json({ message : "something WORKED!" });
-//     }
-//   });
-//}
-
 exports.verifyEmail = async(req, res) => {
   const {userId, verificationCode} = req.query;
 
-  User.findById(userId)
+  User
+    .findById(userId)
     .then(async (data) => {
-      //res.status(200).json(data);
       const user = await User.findById(userId);
-      if(user.emailVerified == true)
+      if(user.emailVerified || user.verificationCode == "")
       {
         return res.status(405).json({error: "Email is already verified"});
       }
@@ -182,18 +139,9 @@ exports.verifyEmail = async(req, res) => {
             console.log(err);
             return res.status(400).json({ error: err });
           });
-
-        //return res.status(200).json({message: "Email Verified!"});
       }
     })
     .catch((err) => {
       res.status(500).json({error : "Failed to retrieve user info."});
-    });
-  
+    }); 
 }
-
-// exports.verifyEmail = async(req, res) => {
-//   //const {verificationCode} = req.body;
-//   console.log("creation");
-// }
-

@@ -2,11 +2,14 @@ import React, { Component, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity } from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { TextInput } from 'react-native-gesture-handler';
+import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+import AddSkillScreen from './AddSkillScreen';
+// import { DirectConnect } from 'aws-sdk';
 
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -22,9 +25,13 @@ const ProfileScreen = () => {
     state: '',
   });
 
-  let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-
-  useEffect(() => {
+  useEffect(async() => {
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn('SecureStore error');
+    }
     connectToProfileApi(userToken)
   }, [])
 
@@ -113,13 +120,28 @@ const ProfileScreen = () => {
         </View>
         
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}> MY SKILLS </Text>
+          <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
+            <Text style={styles.sectionTitle}> MY SKILLS </Text>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
+             <Entypo name="add-to-list" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.skillContainer}>
+            <View style={styles.skillBar}>
+              <Text style={[styles.about, {fontWeight:"600"}]}>Cooking chinese food</Text>
+              <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteSkillScreen')}} > 
+                <AntDesign name="delete" size={24} color="black" />
+              </TouchableOpacity>
+
+            </View>
             <Text style={[styles.about, {fontWeight:"400"}]}>
-              <Text style={{fontWeight: "600"}}>Cooking chinese food -- </Text>
               I am good at cooking and have been a chef in a chinese resturant couple years ago.
             </Text>
+
             <View style={{marginTop:10}}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View style={styles.imageContainer}>
@@ -130,26 +152,6 @@ const ProfileScreen = () => {
                 </View>
                 <View style={styles.imageContainer}>
                   <Image source={{uri:'https://p5.itc.cn/images01/20210301/547198d3eb884443ace76c9a9d3d77fb.jpeg'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-              </ScrollView>
-            </View>
-          </View>
-
-         <View style={styles.skillContainer}>
-            <Text style={[styles.about, {fontWeight:"400"}]}>
-              <Text style={{fontWeight: "600"}}>Coding in Java -- </Text>
-              I hava completed entry level and intermediate level university coding course. My projects are show in Github www.github.com/mywork
-            </Text>
-            <View style={{marginTop:10}}>
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://tupian.qqw21.com/article/UploadPic/2020-6/20206221658856629.jpg'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://image.biaobaiju.com/uploads/20190624/14/1561359547-DGktevYNab.jpg'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://img2.woyaogexing.com/2020/04/16/4aa9895e9e604aa8b19afa416ad236b3!400x400.jpeg'}} style={styles.image} resizeMode="cover"></Image>
                 </View>
               </ScrollView>
             </View>
@@ -184,11 +186,28 @@ const ProfileScreen = () => {
           </View>
         </View>
 
+
         <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionTitle, {marginBottom:18}]}> REVIEWS </Text>
-          <Text style={[styles.text, {fontWeight: "500"}]}>@Selina: 
-          <Text style={{fontWeight:"400"}}> Wu is a great chef, my cat love his food.</Text>
-          </Text>
+
+          <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
+            <Text style={[styles.sectionTitle, {marginBottom:18}]}> REVIEWS </Text>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('AddReviewScreen')}} > 
+              <Entypo name="add-to-list" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+            <Text style={[styles.text, {fontWeight: "500"}]}>@Selina: 
+            <Text style={{fontWeight:"400"}}> Wu is a great chef, my cat love his food!!!</Text>
+            </Text>
+          <View flexDirection="row" justifyContent='flex-end'>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
+              <AntDesign name="edit" size={18} color="black" />
+            </TouchableOpacity>
+            <Text>        </Text>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteReviewScreen')}} >                 
+              <AntDesign name="delete" size={18} color="black" />
+            </TouchableOpacity>
+          </View>
+
         </View>
 
       </ScrollView>
@@ -341,6 +360,12 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     marginBottom: 4,
     // backgroundColor: 
-  }
+  },
+  skillBar: {
+    flexDirection: "row",
+    justifyContent: 'space-between', // 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'
+    // marginTop: 0,
+    // marginHorizontal: 0
+}
   
 });

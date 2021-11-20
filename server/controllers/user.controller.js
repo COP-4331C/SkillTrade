@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 const uploadFile = require("../middleware/upload");
 
 exports.create = async (req, res) => {
@@ -8,17 +9,45 @@ exports.create = async (req, res) => {
   req.body["profile"] = { firstName: firstName, lastName: lastName };
 
   const user = new User(req.body);
+  user.verificationCode = crypto.randomUUID();
+  
 
   user
     .save()
     .then(() => {
-      return res.status(200).json({ message: "Successfully created user!" });
+      var transport = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+          user: 'datherp5671@hotmail.com',
+          pass: process.env.PASSWORD
+        }
+      });
+    
+      var URL = "http://localhost:5000";
+      var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
+    
+      var message = {
+        from: "datherp5671@hotmail.com",
+        to: user.email,
+        subject: "Email Verification - Skill Trade",
+        text: "Email Verification - Skill Trade",
+        html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
+      };
+    
+      transport.sendMail(message, function(error, info){
+        if (error) {
+          return res.status(400).json({ error: "something went wrong" });
+        } else {
+          return res.status(200).json({ message : "something WORKED!" });
+        }
+      });
     })
     .catch((err) => {
       console.log("An error occured.");
       console.log(err);
       return res.status(400).json({ error: err });
     });
+
 };
 
 exports.getProfile = async (req, res) => {
@@ -108,57 +137,47 @@ exports.changePassword = async (req, res) => {
       console.log(err);
       return res.status(400).json({ error: err });
     });
-};
+}
 
-// WORK IN PROGRESS! - Rafael
-exports.verifyEmail = async (req, res) => {
-  const { email } = req.body;
+exports.verifyEmail = async(req, res) => {
+  const {userId, verificationCode} = req.query;
 
-  //let transporter = nodemailer.createTransport(transport[,defaults]);
+  User
+    .findById(userId)
+    .then(async (data) => {
+      const user = await User.findById(userId);
+      if(user.emailVerified || user.verificationCode == "")
+      {
+        return res.status(405).json({error: "Email is already verified"});
+      }
+      else if(user.verificationCode != verificationCode)
+      {
+        console.log("userV:" + user.verificationCode + " - emailV:" + verificationCode);
+        return res.status(401).json({error: "Invalid verification code."});
+      }
+      else
+      {
+        user.emailVerified = true;
+        user.verificationCode = "";
+        user
+          .save()
+          .then(() => {
+            res.writeHead(301, { Location: 'https://cop4331c.herokuapp.com/' });
+            return res.end();
+          })
+          .catch((err) => {
+            console.log("An error occured.");
+            console.log(err);
+            return res.status(400).json({ error: err });
+          });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error : "Failed to retrieve user info."});
+    }); 
+}
 
-  // var transport = nodemailer.createTransport({
-  //   host: "smtp.mailtrap.io",
-  //   port: 2525,
-  //   auth: {
-  //     user: "b602b7a4557dcc",
-  //     pass: "4eb888412f4b4e"
-  //   }
-  // });
 
-  var transport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "rafael.a0vg@gmail.com",
-      pass: "yourpassword",
-    },
-  });
-
-  var message = {
-    from: "sender@server.com",
-    to: email,
-    subject: "Message title",
-    text: "Plaintext version of the message - tester!",
-    html: "<p>HTML version of the message</p>",
-  };
-
-  transport.sendMail(message, function (error, info) {
-    if (error) {
-      return res.status(400).json({ error: "something went wrong" });
-    } else {
-      return res.status(200).json({ message: "something WORKED!" });
-    }
-  });
-
-  // const transporter = nodemailer.createTransport({
-  //   host: "smtp.example.com",
-  //   port: 587,
-  //   secure: false, // upgrade later with STARTTLS
-  //   auth: {
-  //     user: "username",
-  //     pass: "password",
-  //   },
-  // });
-};
 
 exports.uploadProfilePic = async (req, res) => {
   try {

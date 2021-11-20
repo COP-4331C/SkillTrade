@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema({
     default: false,
     required: true,
   },
+  verificationCode: {
+    type: String,
+    default: "",
+  },
   role: {
     type: Number,
     default: 0,

@@ -7,7 +7,7 @@ router
   .route("/")
   .get(skill.search) // Fetch by page (query parameter)
   .post(authenticateToken, skill.createSkill); // Add skill
-
+ 
 router
   .route("/:skillId")
   .get(skill.fetchOne) // Get single skill

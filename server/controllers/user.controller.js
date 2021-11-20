@@ -23,14 +23,14 @@ exports.create = async (req, res) => {
       });
     
       var URL = "http://localhost:5000";
-      var randomVerificationLink = URL + "/api/user/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
+      var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
     
       var message = {
         from: "datherp5671@hotmail.com",
         to: user.email,
         subject: "Email Verification - Skill Trade",
         text: "Email Verification - Skill Trade",
-        html: "<h>Click this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
+        html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
       };
     
       transport.sendMail(message, function(error, info){
@@ -132,7 +132,8 @@ exports.verifyEmail = async(req, res) => {
         user
           .save()
           .then(() => {
-            return res.status(200).json({ message: "Successfully verified email!" });
+            res.writeHead(301, { Location: 'https://cop4331c.herokuapp.com/' });
+            return res.end();
           })
           .catch((err) => {
             console.log("An error occured.");

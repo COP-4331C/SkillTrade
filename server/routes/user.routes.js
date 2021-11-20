@@ -13,6 +13,6 @@ router.patch("/edit-profile", authenticateToken, users.editProfile);
 router.patch("/change-password", authenticateToken, users.changePassword);
 
 // Verify Email
-router.route("/").get(users.verifyEmail);
+router.route("/verify/").get(users.verifyEmail);
 
 module.exports = router;

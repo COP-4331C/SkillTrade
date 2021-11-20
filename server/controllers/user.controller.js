@@ -1,16 +1,17 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const uploadFile = require("../middleware/upload");
 
 exports.create = async (req, res) => {
-
   const { firstName, lastName } = req.body;
-  req.body["profile"] = { firstName: firstName, lastName: lastName};
+  req.body["profile"] = { firstName: firstName, lastName: lastName };
 
   const user = new User(req.body);
   user.verificationCode = crypto.randomUUID();
   
+
   user
     .save()
     .then(() => {
@@ -49,58 +50,87 @@ exports.create = async (req, res) => {
 
 };
 
-exports.editProfile = async (req, res) => {
+exports.getProfile = async (req, res) => {
+  let userId = req.params.userId;
 
+  // Use logged in user id if the userId is not supplied as a request parameter.
+  if (!userId) {
+    let user = await User.findOne({ email: req.email });
+    userId = user._id;
+  }
+
+  User.findById(userId)
+    .then((data) => {
+      res.status(200).json(data.profile);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Invalid userId" });
+    });
+};
+
+exports.editProfile = async (req, res) => {
   let user = await User.findOne({ email: req.email });
   var newValues = req.body;
 
-  var changeable_fields = ['firstName', 'lastName', 'aboutMe', 'profilePic'];
+  var changeable_fields = [
+    "firstName",
+    "lastName",
+    "aboutMe",
+    "instagram",
+    "twitter",
+    "linkedIn",
+    "city",
+    "state",
+    "country",
+  ];
 
-  for (const p of changeable_fields)
-    user.profile[p] = newValues[p];
+  for (const p of changeable_fields) user.profile[p] = newValues[p];
 
-  user.save()
-      .then(() => {
-        return res.status(200).json({ message: "Successfully edited user!" });
-      })
-      .catch((err) => {
-        console.log("An error occured.");
-        console.log(err);
-        return res.status(400).json({ error: err });
-      });
+  user
+    .save()
+    .then(() => {
+      return res.status(200).json({ message: "Successfully edited user!" });
+    })
+    .catch((err) => {
+      console.log("An error occured.");
+      console.log(err);
+      return res.status(400).json({ error: err });
+    });
 };
 
-exports.changePassword = async (req, res) =>
-{
-  const {oldPassword, newPassword} = req.body;
+exports.changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
 
-  const space_regex = new RegExp('.* .*');
-  const validity_regex = new RegExp('(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])');
+  const space_regex = new RegExp(".* .*");
+  const validity_regex = new RegExp(
+    "(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])"
+  );
 
-  if(space_regex.test(newPassword) ||  newPassword.length < 8 || !validity_regex.test(newPassword))
-  {
+  if (
+    space_regex.test(newPassword) ||
+    newPassword.length < 8 ||
+    !validity_regex.test(newPassword)
+  ) {
     return res.status(400).json({ error: "Invalid new password" });
   }
 
   const email = req.email;
 
-
   const user = await User.findOne({ email: email });
-  if (!user)
-    return res.status(400).json({ error: "Invalid email" });
+  if (!user) return res.status(400).json({ error: "Invalid email" });
 
   let validPassword = user.authenticate(oldPassword);
   if (!validPassword)
     return res.status(400).json({ error: "Incorrect original password." });
 
   user.password = newPassword;
-  
+
   user
     .save()
     .then(() => {
-
-      return res.status(200).json({message: "Successfully changed password!"});
-
+      return res
+        .status(200)
+        .json({ message: "Successfully changed password!" });
     })
     .catch((err) => {
       console.log("An error occured.");
@@ -146,3 +176,32 @@ exports.verifyEmail = async(req, res) => {
       res.status(500).json({error : "Failed to retrieve user info."});
     }); 
 }
+
+
+
+exports.uploadProfilePic = async (req, res) => {
+  try {
+    req.directory = "ProfilePictures";
+    await uploadFile(req, res);
+
+    let user = await User.findOne({ email: req.email });
+    user.profile.profilePic = req.file.location;
+
+    user.save().then(() => {
+      return res.status(200).json({
+        message: "Successfully added profile photo!",
+        URL: req.file.location,
+      });
+    });
+  } catch (err) {
+    if (err.code == "LIMIT_FILE_SIZE") {
+      return res.status(500).send({
+        message: "File size cannot be larger than 2MB!",
+      });
+    }
+
+    res.status(500).send({
+      message: err
+    });
+  }
+};

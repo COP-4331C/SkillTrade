@@ -17,6 +17,7 @@
     "@react-navigation/stack": "5.x",
     "axios": "^0.24.0",
     "expo": "~43.0.0",
+    "expo-image-picker": "~11.0.3",
     "expo-linear-gradient": "^10.0.3",
     "expo-secure-store": "~11.0.3",
     "expo-status-bar": "~1.1.0",
@@ -31,7 +32,8 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-vector-icons": "^9.0.0",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

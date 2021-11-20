@@ -36,16 +36,6 @@ export default function Skills() {
           How to speak in chinese
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {/* <FormControl>
-            <item> 
-              <TextField
-                id="required"
-                label="Enter Description"
-                defaultValue="Description"
-                inputProps={{ maxLength: 50 }}
-              />
-            </item>
-          </FormControl> */}
           CHinese langage is awesome
         </Typography>
       </CardContent>

@@ -411,7 +411,7 @@ const SignInScreen = ({navigation}) => {
                     </Animatable.View>
                     }
 
-                    <View style={{alignItems: 'left', justifyContent:'left'}}>
+                    <View style={{alignItems: 'center', justifyContent:'flex-start'}}>
                         <Button 
                             title="By signing up you agree to our Terms of service and Privacy policy."
                             color= '#009387'

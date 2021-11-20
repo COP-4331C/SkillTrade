@@ -14,6 +14,14 @@ import RootStackScreen from './screens/RootStackScreen';
 import * as SecureStore from 'expo-secure-store';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
+import AddSkillScreen from './screens/AddSkillScreen';
+import EditSkillScreen from './screens/EditSkillScreen';
+import DeleteSkillScreen from './screens/DeleteSkillScreen';
+import AddReviewScreen from './screens/AddReviewScreen';
+import EditReviewScreen from './screens/EditReviewScreen';
+import DeleteReviewScreen from './screens/DeleteReview';
 
 const Drawer = createDrawerNavigator(); 
 
@@ -134,6 +142,14 @@ const App = () => {
         <Drawer.Screen name="SettingScreen" component={SettingScreen} />
         <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
         <Drawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
+        <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Drawer.Screen name="EditProfileScreen" component={EditProfileScreen} />
+        <Drawer.Screen name="AddSkillScreen" component={AddSkillScreen} />
+        <Drawer.Screen name="EditSkillScreen" component={EditSkillScreen} />
+        <Drawer.Screen name="DeleteSkillScreen" component={DeleteSkillScreen} />
+        <Drawer.Screen name="AddReviewScreen" component={AddReviewScreen} />
+        <Drawer.Screen name="EditReviewScreen" component={EditReviewScreen} />
+        <Drawer.Screen name="DeleteReviewScreen" component={DeleteReviewScreen} />
       </Drawer.Navigator>
     )
     :

@@ -50,17 +50,27 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
+  const deleteSkillHandler = () => {
+    navigation.navigate('EditSkillScreen') // FIXME: connect to delete skill API and delete record
+  }
+
+  const deleteReviewHandler = () => {
+    navigation.navigate('EditReviewScreen') // FIXME: connect to delete review API and delete record
+  }
+
+
+
   return (
 
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.titleBar}>
-          <AntDesign name="adduser" size={32} color="black"></AntDesign>
           <Ionicons name="location-sharp" size={24} color="black">
-            <Text style={{fontSize:24}}> {profileData.city}.{profileData.state}.{profileData.country}</Text>
+            <Text style={{fontSize:24}}>{profileData.city}</Text>
           </Ionicons>
-          <Entypo name="dots-three-vertical" size={24} color="black"></Entypo>
+          <Text style={{fontSize:24}}>{profileData.state}</Text>
+          <Text style={{fontSize:24}}>{profileData.country}</Text>
         </View>
 
         <View style={{alignSelf:"center"}}>
@@ -131,10 +141,10 @@ const ProfileScreen = ({navigation}) => {
             <View style={styles.skillBar}>
               <Text style={[styles.about, {fontWeight:"600"}]}>Cooking chinese food</Text>
               <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-                <AntDesign name="edit" size={24} color="black" />
+                <AntDesign name="edit" size={18} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteSkillScreen')}} > 
-                <AntDesign name="delete" size={24} color="black" />
+              <TouchableOpacity onPress={()=>{ deleteSkillHandler() }} > 
+                <AntDesign name="delete" size={18} color="black" />
               </TouchableOpacity>
 
             </View>
@@ -203,7 +213,7 @@ const ProfileScreen = ({navigation}) => {
               <AntDesign name="edit" size={18} color="black" />
             </TouchableOpacity>
             <Text>        </Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteReviewScreen')}} >                 
+            <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
               <AntDesign name="delete" size={18} color="black" />
             </TouchableOpacity>
           </View>

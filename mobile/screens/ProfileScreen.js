@@ -75,7 +75,7 @@ const ProfileScreen = ({navigation}) => {
 
         <View style={{alignSelf:"center"}}>
           <View style={styles.profileImage}>
-            <Image source={{uri:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
+            <Image source={{url:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
           </View>
           <View style={styles.dm}>
             <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>

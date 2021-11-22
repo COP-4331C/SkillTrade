@@ -457,7 +457,6 @@ export default function ProfilePage() {
     />
   );
 
-  // const [count, setCount] = useState(0) // Name it however you wish
   const handleCancelWriteReview = () => {
     setDisplayNewReview("none");
   }
@@ -708,7 +707,7 @@ export default function ProfilePage() {
               <Grid container>
 
                 {/***************** Instagram  Icon ****************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1}sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <InstagramIcon color={"secondary"}/>
                   </IconButton>
@@ -718,7 +717,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{instagram}
                     </Typography>
                   </Link>
                   <ThemeProvider theme={textFieldTheme}>
@@ -739,7 +738,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/****************** Twitter Icon *******************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <TwitterIcon color={"secondary"}/>
                   </IconButton>
@@ -749,7 +748,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{twitter}
                     </Typography>
                   </Link>
 
@@ -770,7 +769,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/******************* LinkedIn Icon *****************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <LinkedInIcon color={"secondary"}/>
                   </IconButton>
@@ -780,7 +779,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{linkedIn}
                     </Typography>
                   </Link>
 

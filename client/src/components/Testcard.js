@@ -594,20 +594,23 @@ useEffect(() => {
         
         {/*************************** LOCATION (Edit Mode) ************************************/}
 
+          <Grid container>
+            <Grid item xs={6}>
+              <TextField
+                label="City"
+                variant="filled"
+                rows={1}
+                value={cityAddTemp}
+                fullWidth
+                onChange={handleOnChangeCityAddress}
+                sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+            <Grid item xs={6}>
             <TextField
-              label="Brief explanation of the skill"
-              variant="filled"
-              rows={1}
-              value={cityAddTemp}
-              fullWidth
-              onChange={handleOnChangeCityAddress}
-              sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
-              // helperText={aboutMeText2Error.text}
-              // error={aboutMeText2Error.state}
-            />
-
-            <TextField
-              label="Brief explanation of the skill"
+              label="State"
               variant="filled"
               rows={1}
               value={stateAddTemp}
@@ -617,6 +620,12 @@ useEffect(() => {
               // helperText={aboutMeText2Error.text}
               // error={aboutMeText2Error.state}
             />
+            </Grid>
+
+          </Grid>
+            
+
+            
 
               
 

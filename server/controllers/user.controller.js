@@ -177,8 +177,6 @@ exports.verifyEmail = async(req, res) => {
     }); 
 }
 
-
-
 exports.uploadProfilePic = async (req, res) => {
   try {
     req.directory = "ProfilePictures";

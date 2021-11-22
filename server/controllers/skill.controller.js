@@ -30,6 +30,25 @@ exports.fetchOne = async (req, res) => {
     });
 };
 
+exports.fetchByUser = async (req, res) => {
+
+  let userId = req.params.userId;
+  let status = req.query.status;
+
+  var searchFor = { userId: userId }
+
+  if (status)
+    searchFor["status"] = status;
+
+  Skill.find(searchFor)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+};
+
 exports.search = async (req, res) => {
   const { search, location, page } = req.query;
   const limit = 15;

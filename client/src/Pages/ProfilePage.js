@@ -27,7 +27,7 @@ import {retrieveToken} from "../components/TokenStorage";
 import axios from "axios";
 
 
-export default function ProfilePage(props) {
+export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
     "with a notable career trajectory and achievements list. Experience " +
     "in catering for up to 450 covers at some of the most prestigious " +
@@ -43,7 +43,6 @@ export default function ProfilePage(props) {
   const [displaySocial, setDisplaySocial] = useState("none");
   const [inEditMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState("Benjamin");
-  // const [firstName, setFirstName] = useState(props.name);
   const [lastName, setLastName] = useState("Harrion");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
@@ -79,6 +78,7 @@ export default function ProfilePage(props) {
 
   useEffect( () => {
     setMounted(true);
+    setEditPermission(true);
   },[]);
 
 
@@ -233,8 +233,8 @@ export default function ProfilePage(props) {
       }
 
       // Saves the Profile data
-      axios.put(URL, data, config)
-        .then(console.log).catch(console.log);
+      axios.put(URL, data, config).catch(console.log)
+        // .then(console.log).catch(console.log);
 
       exitEditMode();
     }
@@ -464,6 +464,7 @@ export default function ProfilePage(props) {
 
   function handleWriteReview() {
     setDisplayNewReview("block");
+    setNewReview(true);
   }
 
 

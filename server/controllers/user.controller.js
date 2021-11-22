@@ -10,7 +10,6 @@ exports.create = async (req, res) => {
 
   const user = new User(req.body);
   user.verificationCode = crypto.randomUUID();
-  
 
   user
     .save()
@@ -34,17 +33,14 @@ exports.create = async (req, res) => {
         html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
       };
     
-      transport.sendMail(message, function(error, info){
-        if (error) {
-          return res.status(400).json({ error: "something went wrong" });
-        } else {
-          return res.status(200).json({ message : "something WORKED!" });
-        }
+      transport.sendMail(message, function(error, info) {
+          return res.status(200).json({ message : "Verification email sent!" });
       });
     })
     .catch((err) => {
-      console.log("An error occured.");
-      console.log(err);
+      if (err.code == 11000)
+        return res.status(400).json({ error: "Duplicate email" });
+
       return res.status(400).json({ error: err });
     });
 

@@ -1,5 +1,5 @@
 // dark theme customisation at the end at abt 29:57
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,13 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
+  Image,
+  Alert
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import { MaterialCommunityIcons, Entypo, FontAwesome5 } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
 
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
@@ -19,22 +23,121 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 const AddReviewScreen = ({navigation}) => {
+
   const [data, setData] = React.useState({
-    userId: '', // get from storage
-    reviewerId: '', // get from storage
-    reviewerName: '', // get from storage & database??
-    rating: 0,
+    userId: '', 
+    // rating: 0,
     content: '',
-});
+    userToken: '',
+  }); 
+
+  // Confirm FirstName is there
+  const contentInputChange = (val) => { // check contentInputChange 
+    if(val.length > 0 && val.length <= 300){
+        setData({
+            ...data,
+            content:val,
+        })
+    } else {
+        setData({
+            ...data,
+            firstname:val,
+            isValidContent:false,
+        })
+        console.warn("review must between 1~600 characters.")// add a warning FIXME
+    }
+  }
+
+
+  useEffect(async() => { // get userId from storage 
+    let userIdData = null;
+    let userTokenData = null;
+    try {
+      userIdData = await SecureStore.getItemAsync('userId'); // need to add 'await' 
+      userTokenData = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    // console.warn(userIdData)
+    setData({
+      ...data,
+      userId: userIdData,
+      userToken: userTokenData,
+    })
+  }, [])
+
+  
+
+  // defaultRating varable hold the user input rating as a number within 1~5
+  const [defaultRating, setdefaulRating] = useState(0) // initial rating
+  const [maxRating, setmaxRating] = useState([1,2,3,4,5])
+
+  const starImgFilled = 'https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true' // source={require('../assets/logo.png')} // '../assets/star_filled.png' ?
+  const starImgCorner = 'https://github.com/tranhonghan/images/blob/main/star_corner.png?raw=true'  // '../assets/star_corner.png' ?
+
+  const CustomRatingBar = () => {
+    return (
+      <View style={styles.customRatingBarStyle}>
+        {
+          maxRating.map((item, key) => {
+            return (
+              <TouchableOpacity
+              activeOpacity={0.7}
+              key={item}
+              onPress={() => setdefaulRating(item)}
+              >
+                <Image
+                  style={styles.starImgStyle}
+                  source={
+                    item <= defaultRating
+                    ? {uri: starImgFilled} // source={require('../assets/logo.png')} // require(starImgFilled) ?
+                    : {uri: starImgCorner}
+                  }
+                />
+              </TouchableOpacity>
+            )
+          })
+        }
+      </View>
+    )
+  }
 
   const {colors} = useTheme();
   const bs = React.createRef();
   const fall = new Animated.Value(1); 
 
+  
+  function connectToAddReviewApi(userId, defaultRating, content, userToken){
+    axios.post('https://cop4331c.herokuapp.com/api/review/create-review', {
+          userId: userId, // userId !== reviewerID, can not review yourself
+          rating: defaultRating,  // int
+          content: content, 
+      }, {
+          headers: {
+            'Authorization': `Bearer ${userToken}`  
+          }
+        })
+      .then(function(response) {
+          Alert.alert(
+            "Review created!", // Alert Title
+            " ", // My Alert Msg
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          )
+          navigation.goBack()
+      })
+      .catch(function(error) {
+          // console.warn(error)
+          Alert.alert(
+            "Fail to add your review!",
+            "You can not write review for yourself.",
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          )
+      });
+  }
 
   return (
     <View style={styles.container}>
-      
+
       <Animated.View style={{margin: 20,
       opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),      
       }}>
@@ -44,44 +147,36 @@ const AddReviewScreen = ({navigation}) => {
           </TouchableOpacity>
         </SafeAreaView>
 
-        
-        <View style={styles.action}> 
-        <FontAwesome5 name="comment-dollar" size={24} color="black" /> 
-          <TextInput 
-            placeholder="rating" // FIXME: need to implement 5 star rating 
-            placeholderTextColor="#666666"
-            keyboardType='decimal-pad'
-            autoCorrect={false}
-            // Some dark theme stuff here
-            // style={styles.textInput}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View> 
+      <Text style={styles.textStyle}> Rating </Text>
+      <CustomRatingBar/>
+      <Text style={styles.textStyle}> {defaultRating + ' / ' + maxRating.length} </Text> 
 
-            
+      <Text style={[styles.textStyle,{fontSize:18}]} >write your review:</Text>
+      <Text style={[styles.textStyle,{fontSize:18}]} >(no more than 300 characters)</Text>
         <View style={styles.action}>
-        <MaterialCommunityIcons name="earth" size={24} color="black" />
+          
           <TextInput 
-            placeholder="review content" // FIXME: need to have a big input box, input length limit(can not enter when overfit), 
+            placeholder="review content" // FIXME: input length limit(can not enter when overfit), 
             placeholderTextColor="#666666"
             autoCorrect={false}
+            multiline={true}
+            onChangeText={(val) => contentInputChange(val)} 
             // Some dark theme stuff here
             // style={styles.textInput}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
+            style={[styles.textInput, {color: colors.text,}, ]}
           />
         </View>
 
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.commandButton} onPress={() => {
+            if (data.content.length > 0 && data.content.length < 300 ){
+              connectToAddReviewApi( data.userId, defaultRating, data.content, data.userToken) 
+            }
+            else {
+              Alert.alert('Review must between 1 to 300 characters', '', 
+                  {text: 'OK', onPress: () => console.log("OK Pressed") }
+              );
+            } 
+        }}>
           <Text style={styles.panelButtonTitle}>Add Review</Text>
         </TouchableOpacity>
 
@@ -89,7 +184,6 @@ const AddReviewScreen = ({navigation}) => {
     </View>
   );
 };
-
 
 export default AddReviewScreen;
 
@@ -138,8 +232,27 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    marginTop: 0,
+    // marginTop: 0,
     paddingLeft: 10,
     color: '#05375a',
+    height: 150,
+    margin:20,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
+  textStyle: {
+    textAlign: 'center',
+    fontSize: 23,
+    marginTop: 20
+  },
+  customRatingBarStyle: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginTop:30
+  },
+  starImgStyle: {
+    width: 40,
+    height: 40,
+    resizeMode: 'cover'
+  }
 });

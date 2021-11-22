@@ -25,12 +25,13 @@ const ProfileScreen = ({navigation}) => {
     state: '',
   });
 
+  
   useEffect(async() => {
     let userToken = null;
     try {
         userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
     } catch (e) {
-        console.warn('SecureStore error');
+        console.warn(e);
     }
     connectToProfileApi(userToken)
   }, [])
@@ -50,6 +51,13 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
+  let userId = profileData._id
+  try {
+    SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
+  } catch (e) {
+    console.log(e);
+  }
+
   const deleteSkillHandler = () => {
     navigation.navigate('EditSkillScreen') // FIXME: connect to delete skill API and delete record
   }
@@ -57,7 +65,6 @@ const ProfileScreen = ({navigation}) => {
   const deleteReviewHandler = () => {
     navigation.navigate('EditReviewScreen') // FIXME: connect to delete review API and delete record
   }
-
 
 
   return (

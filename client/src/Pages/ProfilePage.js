@@ -23,9 +23,11 @@ import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
 import Paper from "@mui/material/Paper";
+import {retrieveToken} from "../components/TokenStorage";
+import axios from "axios";
 
 
-export default function ProfilePage() {
+export default function ProfilePage(props) {
   const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
     "with a notable career trajectory and achievements list. Experience " +
     "in catering for up to 450 covers at some of the most prestigious " +
@@ -41,6 +43,7 @@ export default function ProfilePage() {
   const [displaySocial, setDisplaySocial] = useState("none");
   const [inEditMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState("Benjamin");
+  // const [firstName, setFirstName] = useState(props.name);
   const [lastName, setLastName] = useState("Harrion");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
@@ -72,6 +75,43 @@ export default function ProfilePage() {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect( () => {
+    setMounted(true);
+  },[]);
+
+
+  // Fetches and displays the profile information on page load
+  // TODO: It is not loading before rendering. need to fix
+  if(!mounted) {
+
+    // Get token from the local storage
+    const token = retrieveToken();
+    // console.log(token);
+
+    const URL = "./api/user/profile";
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Fetches the profile data
+    axios.get(URL, config)
+      .then(function(response) {
+        // Handle success
+        setFirstName(response.data["firstName"]);
+        setLastName(response.data["lastName"]);
+        setAboutMeText(response.data["aboutMe"])
+        setPhoto(response.data["profilePic"]);
+        setInstagram(response.data["instagram"]);
+        setTwitter(response.data["twitter"]);
+        setLinkedIn(response.data["linkedIn"]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -109,7 +149,6 @@ export default function ProfilePage() {
     let instagramHandle;
     let twitterHandle;
     let linkedInHandle;
-
 
     if (!validateTextMinLength(firstNameTemp, 1)) {
       okToSaveData = false;
@@ -172,6 +211,31 @@ export default function ProfilePage() {
       setInstagram(instagramHandle);
       setTwitter(twitterHandle);
       setLinkedIn(linkedInHandle);
+
+      // Send data to backend
+      const URL = "./api/user/edit-profile";
+      const token = retrieveToken();
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
+      const data = {
+          firstName: firstNameTemp,
+          lastName: lastNameTemp,
+          aboutMe:  aboutMeTextTemp,
+          instagram: instagramHandle,
+          twitter: twitterHandle,
+          linkedIn: linkedInHandle,
+          city: "",
+          state: "",
+          country:""
+        // TODO: Add city, state, and country in Profile
+      }
+
+      // Saves the Profile data
+      axios.put(URL, data, config)
+        .then(console.log).catch(console.log);
+
       exitEditMode();
     }
   }
@@ -327,11 +391,26 @@ export default function ProfilePage() {
   });
 
   function handlePhoto(e) {
+
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    // console.log(`length: ${e.target.files[0]}`);
+
     if (editPermission) {
-      alert("Profile picture processing coming soon");
-      // TODO: Uploaded image should be in e.target.files or e.target.files[0]
-      //  Axios Post would go here
-      //  Request to backend with image for cropping and resizing.
+
+      const URL = "./api/user/upload-profile-pic";
+      const token = retrieveToken();
+      const config = {
+        headers: { Authorization: `Bearer ${token}`,'content-type': 'multipart/form-data' }
+      };
+      // console.log(e.target.files[0])
+
+      // Saves the profile picture
+      axios.post(URL, formData, config)
+        .then( function(response){
+          setPhoto(response.data.URL);
+        })
+        .catch(console.log);
     }
   }
 

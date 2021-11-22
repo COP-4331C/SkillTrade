@@ -1,4 +1,3 @@
-import { padding } from "@mui/system";
 
 const Footer = () => {
   return (

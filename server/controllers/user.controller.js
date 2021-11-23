@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
         }
       });
     
-      var URL = "http://localhost:5000";
+      var URL = "https://cop4331c.herokuapp.com";
       var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
     
       var message = {

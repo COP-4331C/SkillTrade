@@ -200,3 +200,20 @@ exports.uploadProfilePic = async (req, res) => {
     });
   }
 };
+
+exports.search = async (req, res) => {
+  const { search, location, page } = req.query;
+  const limit = 15;
+  // TODO: Implement support for location?
+  const searchQuery = {$regex: search, $options: "i"}
+
+  User.find({ $or: [ {"profile.firstName": searchQuery}, {"profile.lastName": searchQuery}, {"profile.aboutMe": searchQuery}] })
+    .skip(limit * page)
+    .limit(limit)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+};

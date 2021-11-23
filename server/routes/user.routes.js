@@ -21,4 +21,7 @@ router.route("/verify/").get(users.verifyEmail);
 // Upload Profile Picture
 router.post("/upload-profile-pic", authenticateToken, users.uploadProfilePic);
 
+// Search for users
+router.get("/search", users.search);
+
 module.exports = router;

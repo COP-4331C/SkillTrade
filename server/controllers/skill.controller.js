@@ -53,8 +53,9 @@ exports.search = async (req, res) => {
   const { search, location, page } = req.query;
   const limit = 15;
   // TODO: Implement support for location?
+  const searchQuery = {$regex: search, $options: "i"}
 
-  Skill.find({ title: { $regex: search } })
+  Skill.find({ $or: [ {title: searchQuery}, {summary: searchQuery}, {description: searchQuery} ] })
     .skip(limit * page)
     .limit(limit)
     .then((data) => {

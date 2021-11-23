@@ -29,7 +29,7 @@ exports.createReview = async (req, res) => {
         return res.status(200).json({ message: "Successfully created review!" });
         })
         .catch((err) => {
-        console.log("An error occured; could not create review.");
+        console.log("An error occurred; could not create review.");
         console.log(err);
         return res.status(400).json({ error: err });
         });

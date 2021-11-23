@@ -10,7 +10,7 @@ const ReviewSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    reviewerName: {
+    authorFullName: {
       type: String,
       required: true
     },

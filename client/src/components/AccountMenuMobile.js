@@ -86,6 +86,12 @@ export default function AccountMenuMobile() {
             </ListItemIcon> My Skills
         </MenuItem>
 
+        <MenuItem component={RouterLink} to="/cards">
+          <ListItemIcon>
+              <ConstructionOutlinedIcon />
+            </ListItemIcon> Test Add Skills
+        </MenuItem>
+
         {/* <MenuItem>
           <ListItemIcon>
             <ConstructionOutlinedIcon />

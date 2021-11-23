@@ -8,6 +8,7 @@ import Skills from './Pages/Skills';
 import ProfilePage from "./Pages/ProfilePage";
 import LoginPage from './Pages/LoginPage';
 import Testcard from './components/Testcard';
+import Addskills from './components/Addskills';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/home" component={HomePage} />
             <Route path="/profile" component={ProfilePage} />
             <Route path="/card/:userId?" component={Testcard}/>
+            <Route path="/cards/:userId?" component={Addskills}/>
             
             {/* <Route path="/card/:userId?" component={Testcard}/> */}
 

@@ -316,7 +316,7 @@ export default function Registration() {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDown}
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {values.showPassword ? <Visibility />:<VisibilityOff />  }
                   </IconButton>
                 </InputAdornment>
               }
@@ -340,7 +340,7 @@ export default function Registration() {
                     onClick={handleClickShowConfirm}
                     onMouseDown={handleMouseDownConfirm}
                   >
-                    {values.showConfirm ? <VisibilityOff /> : <Visibility />}
+                    {values.showConfirm ? <Visibility />:<VisibilityOff /> }
                   </IconButton>
                 </InputAdornment>
               }

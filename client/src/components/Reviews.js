@@ -21,16 +21,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import {retrieveData} from "./DataStorage";
+import axios from "axios";
 
 export default function Reviews(props) {
 
   const [review, setReview] = useState({
     avatar: props.avatar,
-    name: props.name,
+    userID: props.userID,
+    reviewerName: props.reviewerName,
     rating: props.rating,
     location: props.location,
     message: props.message,
     newReview: props.newReview,
+    reviewerID: props.reviewerID
     // ratingReadOnly: props.ratingReadOnly
   });
 
@@ -122,10 +126,10 @@ export default function Reviews(props) {
     //  sending it to the backend, and requesting a new set of reviews that would
     //  include the new review).
     //  Otherwise, if the user wants to edit it, and press cancel, the review
-    //  disappear (because it is still a newReview).
+    //  disappears (because it is still a newReview).
     // TODO: Save button does not remember the new Rating when the save button is clicked.
-    //  This probably will be fixed once we send the new review to the backend for storage,
-    //  then, a new request a new set of reviews.
+    //  This will probably be fixed once we send the new review to the backend for storage,
+    //  then, request a new set of reviews.
     // TODO: after the reviews is stored in the backend, then the hidden editable review
     //  components needs to be clear of text and the starts reset to a default value of 5.
     setReview({
@@ -134,6 +138,22 @@ export default function Reviews(props) {
       newReview: false,
       rating: reviewRatingTemp
     });
+
+    const URL = "./api/review/create-review";
+    // const token = retrieveToken();
+    const token = retrieveData('token');
+    const config = {
+      headers: { Authorization: `Bearer ${token}`}
+    };
+
+    const data = {
+      userId: props.userID,
+      rating: reviewRatingTemp,
+      content: reviewMessageTemp,
+    }
+
+    // Saves the review
+    axios.post(URL, data, config).then(console.log).catch(console.log);
 
     exitEditMode();
     // props.onClick();
@@ -235,7 +255,7 @@ export default function Reviews(props) {
                 {/*********************************** Name  ************************************/}
                 <Typography variant="subtitle1" component="div">
                     {/*{props.name}*/}
-                  {review.name}
+                  {review.reviewerName}
                 </Typography>
 
                 {/*********************************** Rating  ************************************/}

@@ -13,7 +13,7 @@ import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
 import {logoutUser} from "./Logout";
 import {useEffect, useState} from "react";
-import {retrieveToken} from "./TokenStorage";
+import {retrieveData} from "./DataStorage";
 import axios from 'axios';
 
 export default function AccountMenuMobile() {
@@ -61,7 +61,7 @@ export default function AccountMenuMobile() {
   }
 
   useEffect( () => {
-    const token = retrieveToken();
+    const token = retrieveData('token');
     const URL = "./api/user/profile";
     const config = {
       headers: { Authorization: `Bearer ${token}` }

@@ -135,12 +135,25 @@ export default function AccountMenuMobile() {
           My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+
+        <MenuItem component={RouterLink} to="/card">
+          <ListItemIcon>
+              <ConstructionOutlinedIcon />
+            </ListItemIcon> My Skills
+        </MenuItem>
+
+        <MenuItem component={RouterLink} to="/cards">
+          <ListItemIcon>
+              <ConstructionOutlinedIcon />
+            </ListItemIcon> Test Add Skills
+        </MenuItem>
+
+        {/* <MenuItem>
           <ListItemIcon>
             <ConstructionOutlinedIcon />
           </ListItemIcon>
           My Skills
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={() => logoutUser()}>
           <ListItemIcon>
             <Logout fontSize="small" />

@@ -8,6 +8,7 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,11 +18,67 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+
+
 
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
-const EditProfileScreen = () => {
-  const [profileData, setProfileData] = React.useState({
+const EditProfileScreen = ({navigation}) => {
+  const [data, setData] = React.useState({
+    firstName: '',
+    lastName: '',
+    aboutMe: '',
+    // profilePic: '',
+    instagram: '',
+    twitter: '',
+    linkedIn: '',
+    _id: '',
+    city: '',
+    country: '',
+    state: '',
+    /*firstname: '',
+    lastname: '',
+    password: '',
+    confirm_password: '',
+    check_email_InputChange: false,
+    check_firstnameInputChange: false,
+    check_lastnameInputChange: false,
+    secureTextEntry: true,
+    confirm_secureTextEntry: true,
+    isValidUser: true,
+    // firstClickUser: false,
+    isValidPassword: true, 
+    // firstClickPassword: false,
+    isValidFirstName: true,
+    // firstClickFirstName: false,
+    isValidLastName: true,
+    isValidConfirmPassword: true,
+    // firstClickConfirmPassword: false,
+  // isAllThere: true,*/
+
+});
+{/*const firstNameInputChange = (val) => { // check firstNameInputChange 
+  if(val.length > 0 && val.length <= 50){
+      setData({
+          ...data,
+          firstName:val,
+          //check_firstnameInputChange:true,
+          //isValidFirstName:true,
+          // firstClickUser: true
+      })
+  } else {
+      setData({
+          ...data,
+          firstName:val,
+          // check_firstnameInputChange:false,
+          // isValidFirstName:false,
+          // firstClickUser: true
+      })
+  }
+}*/}
+
+ {/* const [profileData, setProfileData] = React.useState({
     firstName: '',
     lastName: '',
     aboutMe: '',
@@ -33,11 +90,19 @@ const EditProfileScreen = () => {
     city: '',
     country: '',
     state: '',
-  });
+  });*/}
 
-  let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
-
-  useEffect(() => {
+  //let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
+  const [pickedImagePath, setPickedImagePath] = useState('');
+  // const [TwitterUrlPath, setTwitterUrlPath] = useState("Twitter");
+  // setPickedImagePath(profileData.profilePic);
+  /*useEffect(async() => {
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn('SecureStore error');
+    }
     connectToProfileApi(userToken)
   }, [])
 
@@ -48,16 +113,105 @@ const EditProfileScreen = () => {
             }
           })
         .then(function(response) {
-            setProfileData(response.data)
+            //setProfileData(response.data)
+            // console.warn(profileData)
+          // handlePicChange(response.data["profilePic"]);
+          handleFirstNameChange(response.data["firstName"]);
+          handleLastNameChange(response.data["lastName"]);
+          handleAboutMeChange(response.data["aboutMe"]);
+          handleTwitterChange(response.data["twitter"]);
+          handleInstagramChange(response.data["instagram"]);
+          handleLinkedInChange(response.data["linkedIn"]);
+          handleCountryChange(response.data["country"]);
+          handleStateChange(response.data["state"]);
+          handleCityChange(response.data["city"]);
+          console.warn("Connetcted to profile!")
+        })
+        .catch(function(error) {
+            console.warn("Fail to connetcted to profile!")
+        });
+  }/*
+
+  /*useEffect(() => {
+    connectToProfileApi()
+  }, [])
+
+  async function getValueFor() {
+    let userToken = null;
+    try {
+        userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+        return userToken
+    } catch (e) {
+        console.warn('SecureStore error');
+    }
+  }
+
+  function connectToProfileApi(){
+    let userToken = getValueFor()
+    axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
+            headers: {
+              Authorization: `Bearer ${userToken}`  
+            }
+          })
+        .then(function(response) {
+          handlePicChange(response.data["profilePic"]);
+          handleFirstNameChange(response.data["firstName"]);
+          handleLastNameChange(response.data["lastName"]);
+          handleAboutMeChange(response.data["aboutMe"]);
+          handleTwitterChange(response.data["twitter"]);
+          handleInstagramChange(response.data["instagram"]);
+          handleLinkedInChange(response.data["linkedIn"]);
+          handleCountryChange(response.data["country"]);
+          handleStateChange(response.data["state"]);
+          handleCityChange(response.data["city"]);
+            // setData(response.data)
+            // setPickedImagePath(response.profilePic)
+            // setTwitterUrlPath(response.twitter)
             // console.warn(profileData)
         })
         .catch(function(error) {
             console.warn("Fail to connetcted to profile!")
         });
-  }
+  }*/
+  /*function connectToEditProfileApi(userToken, firstname, lastname, aboutme, instagram, twitter, linkedin, country, state, city, Pic){
+    axios.put('https://cop4331c.herokuapp.com/api/user/edit-profile', { 
+                  firstName: firstname,
+                  lastName: lastname,
+                  aboutMe: aboutme,
+                  instagram: instagram,
+                  twitter: twitter,
+                  linkedIn: linkedin,
+                  country: country,
+                  state: state,
+                  city: city,
+                  profilePic: Pic
+            }, {
+                headers: {
+                  'Authorization': `Bearer ${userToken}`  
+                }
+              })
+            .then(function(response) {
+                console.warn("profile changed")
+                // navigation.goBack()
+                Alert.alert(
+                    "Profile Changed!", // Alert Title
+                    " ", // My Alert Msg
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                )
+                navigation.goBack()
+                // navigation.navigate('ProfileStackScreen')
+            })
+            .catch(function(error) {
+                console.warn("profile not changed")
+                Alert.alert(
+                    "Must Have a First Name!",
+                    "Please try again.",
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                )
 
-  const [pickedImagePath, setPickedImagePath] = useState('');
-  // setPickedImagePath(profileData.profilePic);
+            });
+  }*/
+
   // This function is triggered when the "Select an image" button pressed
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
@@ -126,7 +280,84 @@ const EditProfileScreen = () => {
 
     </View>
   );
+  const handlePicChange = (val) => {
+    
+    setPickedImagePath({
+        ...data,
+        pickedImagePath: val,
+    })
+}
+  const handleFirstNameChange = (val) => {
+    
+        setData({
+            ...data,
+            firstName: val,
+        })
+  }
 
+  const handleLastNameChange = (val) => {
+    
+    setData({
+        ...data,
+        lastName: val,
+    })
+}
+
+const handleAboutMeChange = (val) => {
+    
+  setData({
+      ...data,
+      aboutMe: val,
+  })
+}
+
+const handleInstagramChange = (val) => {
+    
+  setData({
+      ...data,
+      instagram: val,
+  })
+}
+
+const handleTwitterChange = (val) => {
+    
+  setData({
+      ...data,
+      twitter: val,
+  })
+}
+
+const handleLinkedInChange = (val) => {
+    
+  setData({
+      ...data,
+      linkedIn: val,
+  })
+}
+
+const handleCityChange = (val) => {
+    
+  setData({
+      ...data,
+      city: val,
+  })
+}
+
+const handleStateChange = (val) => {
+    
+  setData({
+      ...data,
+      state: val,
+  })
+}
+
+const handleCountryChange = (val) => {
+    
+  setData({
+      ...data,
+      country: val,
+  })
+}
 
 
   const {colors} = useTheme();
@@ -196,6 +427,8 @@ const EditProfileScreen = () => {
           <TextInput 
             placeholder="First Name"
             placeholderTextColor="#666666"
+            // onChangeText={(val) => firstNameInputChange(val)} 
+            onChangeText={(val) => handleFirstNameChange(val)} 
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -205,14 +438,17 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
-          />
+            />
         </View>
+        <Text>Your name is {data.firstName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="Last Name"
+            onChangeText={(val) => handleLastNameChange(val)} 
             placeholderTextColor="#666666"
+            // onChangeText = "Hello"
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -224,13 +460,16 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>Your name is {data.lastName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="About Me"
+            onChangeText={(val) => handleAboutMeChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
+            multiline={true}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -241,11 +480,13 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
-
+        <Text>About Me {data.aboutMe}</Text>
         <View style={styles.action}>
           <Feather name="twitter" size={20} />
           <TextInput 
             placeholder="Twitter Url"
+            onChangeText={(val) => handleTwitterChange(val)} 
+            // onChangeText={(val) => setTwitterUrlPath(val)}
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -258,12 +499,14 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.twitter}</Text>
 
 
         <View style={styles.action}>
           <Feather name="instagram" size={20} />
           <TextInput 
             placeholder="Instagram Url"
+            onChangeText={(val) => handleInstagramChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -276,11 +519,13 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.instagram}</Text>
 
         <View style={styles.action}>
           <Feather name="linkedin" size={20} />
           <TextInput 
             placeholder="LinkedIn Url"
+            onChangeText={(val) => handleLinkedInChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -293,11 +538,13 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.linkedIn}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="Country"
+            onChangeText={(val) => handleCountryChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -310,11 +557,13 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.country}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="State"
+            onChangeText={(val) => handleStateChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -327,11 +576,14 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.state}</Text>
+
 
         <View style={styles.action}>
           <Icon name="map-marker-outline" size={20} />
           <TextInput 
             placeholder="City"
+            onChangeText={(val) => handleCityChange(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -344,8 +596,17 @@ const EditProfileScreen = () => {
             ]}
           />
         </View>
+        <Text>About Me {data.city}</Text>
 
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.commandButton} onPress={async() => {
+          // let userToken = null;
+          // try {
+          //    userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+          // } catch (e) {
+          //    console.warn('SecureStore error');
+          // }
+          //  connectToEditProfileApi(userToken, data.firstName, data.lastName, data.aboutMe, data.instagram, data.twitter, data.linkedIn, data.country, data.state, data.city, pickedImagePath)
+        }}>
           <Text style={styles.panelButtonTitle}>Submit</Text>
         </TouchableOpacity>
 

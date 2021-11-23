@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, Alert } from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
@@ -9,7 +9,14 @@ import AddSkillScreen from './AddSkillScreen';
 // import { DirectConnect } from 'aws-sdk';
 
 
+
 const ProfileScreen = ({navigation}) => {
+  /*useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      Alert.alert("refreshed");
+    });
+    return unsubscribe;
+  }, [navigation]);*/
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -24,16 +31,17 @@ const ProfileScreen = ({navigation}) => {
     country: '',
     state: '',
   });
-
   useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn('SecureStore error');
-    }
-    connectToProfileApi(userToken)
-  }, [])
+        let userToken = null;
+            try {
+                userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+            } catch (e) {
+                console.warn('SecureStore error');
+            }
+            // navigation.addListener("focus", () =>  connectToProfileApi(userToken));
+            connectToProfileApi(userToken)
+          
+  }, [navigation]);
 
   function connectToProfileApi(userToken){
     axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
@@ -43,12 +51,14 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setProfileData(response.data)
-            // console.warn(profileData)
+            console.warn("connected")
         })
         .catch(function(error) {
             console.warn("Fail to connetcted to profile!")
         });
   }
+
+
 
   return (
 

@@ -38,6 +38,7 @@ exports.createReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
     var listOfReviews = await Review.find({subjectId : req.params.userId})
+    .sort( { updatedAt: -1} )
     .lean()
     .catch((err) => {
       res.status(500).json(err);

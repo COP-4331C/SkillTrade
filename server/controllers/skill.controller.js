@@ -1,6 +1,7 @@
 const Skill = require("../models/skill.model");
 const User = require("../models/user.model");
 const uploadFile = require("../middleware/upload");
+const Review = require("../models/review.model");
 
 exports.createSkill = async (req, res) => {
 
@@ -55,15 +56,39 @@ exports.search = async (req, res) => {
   // TODO: Implement support for location?
   const searchQuery = {$regex: search, $options: "i"}
 
-  Skill.find({ $or: [ {title: searchQuery}, {summary: searchQuery}, {description: searchQuery} ] })
+  var listOfSkills = await Skill.find({ $or: [ {title: searchQuery}, {summary: searchQuery}, {description: searchQuery} ] })
     .skip(limit * page)
     .limit(limit)
-    .then((data) => {
-      res.status(200).json(data);
-    })
+    .sort( { updatedAt: -1} )
+    .lean()
     .catch((err) => {
       res.status(500).json(err);
     });
+
+  for (var skill of listOfSkills) {
+    var user = await User.findById(skill.userId);
+
+    if (!user)
+      continue;
+
+    skill["userFullName"] = user.profile.firstName + " " + user.profile.lastName;
+    skill["userProfilePic"] = user.profile.profilePic;
+
+    var listOfReviews = await Review.find( { subjectId: skill.userId } );
+
+    if (!listOfReviews)
+      continue;
+
+    var sumRatings = 0;
+
+    for (var review of listOfReviews)
+      sumRatings += review.rating;
+
+    skill["averageRating"] = sumRatings / listOfReviews.length;
+    skill["numReviews"] = listOfReviews.length;
+  }
+
+  res.status(200).json(listOfSkills);
 };
 
 exports.editSkill = async (req, res) => {

@@ -210,6 +210,7 @@ exports.search = async (req, res) => {
   User.find({ $or: [ {"profile.firstName": searchQuery}, {"profile.lastName": searchQuery}, {"profile.aboutMe": searchQuery}] })
     .skip(limit * page)
     .limit(limit)
+    .sort( { updatedAt: -1} )
     .then((data) => {
       res.status(200).json(data);
     })

@@ -1,13 +1,19 @@
 import React, { Component, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, FlatList, StatusBar } from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import AddSkillScreen from './AddSkillScreen';
+import moment from "moment";
 // import { DirectConnect } from 'aws-sdk';
 
+const Item = ({ title }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+  </View>
+);
 
 const ProfileScreen = ({navigation}) => {
 
@@ -25,6 +31,8 @@ const ProfileScreen = ({navigation}) => {
     state: '',
   });
 
+  const [reviewData, setReviewData] = React.useState([]);
+
   
   useEffect(async() => {
     let userToken = null;
@@ -33,7 +41,15 @@ const ProfileScreen = ({navigation}) => {
     } catch (e) {
         console.warn(e);
     }
-    connectToProfileApi(userToken)
+    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
+
+    let userId = '6189698db9e8c8287e27ab7a'; //should be null; 
+    // try {
+    //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
+    // } catch (e) {
+    //     console.warn(e);
+    // }
+    connectToGetReviewApi(userId)
   }, [])
 
   function connectToProfileApi(userToken){
@@ -47,7 +63,20 @@ const ProfileScreen = ({navigation}) => {
             // console.warn(profileData)
         })
         .catch(function(error) {
-            console.warn("Fail to connetcted to profile!")
+            console.warn(error)
+        });
+  }
+
+  function connectToGetReviewApi(userId){
+    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${userId}`,  {
+            
+          })
+        .then(function(response) {
+            setReviewData(response.data)
+            // console.warn(profileData)
+        })
+        .catch(function(error) {
+            console.warn(error)
         });
   }
 
@@ -66,9 +95,33 @@ const ProfileScreen = ({navigation}) => {
     navigation.navigate('EditReviewScreen') // FIXME: connect to delete review API and delete record
   }
 
+  const renderItem = ({ item }) => (
+    <Item title={item.reviewerName} />
+  );
+
+  const renderPost = post => { // const???
+    return (
+        <View>
+            <View style={styles.reviewContainer}>
+              <Text style={[styles.text, {fontWeight: "500"}]}>@{post.reviewerName}: 
+              <Text style={{fontWeight:"400"}}> {post.content}</Text>
+              </Text>
+              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
+                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
+                  <AntDesign name="edit" size={18} color="black" />
+                </TouchableOpacity>
+                <Text>           </Text>
+                <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
+                  <AntDesign name="delete" size={18} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+        </View>
+    );
+  };
 
   return (
-
+    
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
 
@@ -212,18 +265,14 @@ const ProfileScreen = ({navigation}) => {
               <Entypo name="add-to-list" size={24} color="black" />
             </TouchableOpacity>
           </View>
-            <Text style={[styles.text, {fontWeight: "500"}]}>@Selina: 
-            <Text style={{fontWeight:"400"}}> Wu is a great chef, my cat love his food!!!</Text>
-            </Text>
-          <View flexDirection="row" justifyContent='flex-end'>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
-              <AntDesign name="edit" size={18} color="black" />
-            </TouchableOpacity>
-            <Text>        </Text>
-            <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
-              <AntDesign name="delete" size={18} color="black" />
-            </TouchableOpacity>
-          </View>
+
+          <SafeAreaView style={{flex: 1}}> 
+            <FlatList //VirtualizedLists should never be nested inside plain ScrollViews with the same orientation: error FIXME
+              data={reviewData}
+              renderItem={({item}) => renderPost(item)}
+              keyExtractor={item => item._id}
+            />
+          </SafeAreaView>
 
         </View>
 
@@ -369,6 +418,12 @@ const styles = StyleSheet.create({
   sectionContainer: {
     paddingVertical: 16,
     paddingHorizontal: 32,
+    // marginBottom: 8,
+    // backgroundColor: 
+  },
+  reviewContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     // marginBottom: 8,
     // backgroundColor: 
   },

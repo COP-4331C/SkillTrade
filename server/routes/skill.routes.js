@@ -9,7 +9,7 @@ router
   .post(authenticateToken, skill.createSkill); // Add skill
 
 router
-  .route("/user/:userId")
+  .route("/user/:userId?")
   .get(authenticateToken, skill.fetchByUser) // Fetch skills for user (Query parameter: status)
 
 router

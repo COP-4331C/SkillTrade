@@ -36,12 +36,19 @@ exports.fetchByUser = async (req, res) => {
   let userId = req.params.userId;
   let status = req.query.status;
 
+  // Defaults to logged in user if no userId is supplied
+  if (!userId) {
+    let user = await User.findOne( { email: req.email } );
+    userId = user._id;
+  }
+
   var searchFor = { userId: userId }
 
   if (status)
     searchFor["status"] = status;
 
   Skill.find(searchFor)
+    .sort( { updatedAt: -1} )
     .then((data) => {
       res.status(200).json(data);
     })

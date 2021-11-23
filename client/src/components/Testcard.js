@@ -15,13 +15,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Paper } from '@mui/material';
+import axios from 'axios';
 
-
-export default function Testcard() {
+export default function Testcard(props) {
 
 //skills to be learnt 
-const [aboutMeText, setAboutMeText] = useState("learn Web-Development"); 
+const [aboutMeText, setAboutMeText] = useState(""); 
 //explanation of skill
 const [aboutMeText2, setAboutMeText2] = useState(" We will teach you basics of JavaScript, CSS, HTML and how to utilize MERN Stack! ");   
 
@@ -96,6 +97,80 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   text: ""
 })
 
+useEffect(() => {
+  fetchSkills();
+  // editSkills();
+});
+
+function fetchSkills(){
+
+  const userId = props.match.params.userId;
+  const token = localStorage.getItem('token_data');
+
+  axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+    // axios.get(`./api/skills/?search=example&page=0`, {
+      headers: { 'Authorization': `Bearer ${token}`}
+  })
+  .then((res) => {
+    if(res.data.length == 0) return;
+    let firstSkill = res.data[1];
+    console.log(firstSkill);
+    setAboutMeText2(res.data[0]["description"]);
+    setAboutMeText(res.data[0]["summary"]);
+    //add locations
+    //add Price
+    
+  })
+  .catch((err) => {
+    console.log("error");
+  })
+}
+
+// function editSkills(){
+
+//   const userId = props.match.params.userId;
+//   const token = localStorage.getItem('token_data');
+
+//   //value to commit to Backend changable_fields
+//   const payload = {
+//     summary: aboutMeTextTemp, 
+//     title:    aboutMeTextTemp,
+//     description: aboutMeTextTemp,
+//     price: 50,
+//     status: "Teaching"
+//   };
+
+//   // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+//     console.log(token);
+//     axios.put(`/api/skills/6196faaa0f949a7477b0d998`, payload,{
+//       headers: { 'Authorization': `Bearer ${token}`}
+//   })
+//   .then((res) => {
+//     console.log("success")
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
+// }
+
+// function fetchSkills(){
+
+//   const userId = props.match.params.userId;
+//   const token = localStorage.getItem('token_data');
+
+//   axios.get(`./api/skills/?search=example&page=0`, {
+//     headers: { 'Authorization': `Bearer ${token}`}
+//   })
+//   .then((res) => {
+//     if(res.data.length == 0) return;
+//     let firstSkill = res.data[0];
+//     console.log(firstSkill);
+//   })
+//   .catch((err) => {
+
+//   })
+// }
+
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
 
@@ -156,6 +231,31 @@ function handleSave() {
     setStateAdd(stateAddTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
+
+    const userId = props.match.params.skillId;
+    const token = localStorage.getItem('token_data');
+  
+    //value to commit to Backend changable_fields
+    const payload = {
+      summary: aboutMeTextTemp, 
+      title:    aboutMeTextTemp,
+      description: aboutMeText2Temp,
+      price: 50,
+      status: "Teaching"
+    };
+  
+    // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+      console.log(token);
+      axios.put(`/api/skills/6196f8740f949a7477b0d985`, payload,{
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    .then((res) => {
+      console.log("success")
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
     exitEditMode();
   }
 }
@@ -164,6 +264,25 @@ function handleSave() {
 function handleCancelButton() {
   clearTextValidationErrorMessages();
   exitEditMode();
+}
+
+function handleDeleteButton(){
+
+  const userId = props.match.params.skillId;
+  const token = localStorage.getItem('token_data');
+
+  console.log(token);
+  axios.delete(`/api/skills/619c2acaae801d9248e1e887`,{
+    headers: { 'Authorization': `Bearer ${token}`}
+})
+.then((res) => {
+  console.log("success")
+})
+.catch((err) => {
+  console.log(err);
+})
+
+exitEditMode();
 }
 
 // function validateTextMinLength(text, min) {
@@ -267,6 +386,8 @@ useEffect(() => {
   
   return (
     <Grid container justifyContent="center">
+            {/* <form onSubmit={editSkills}> */}
+
 
       {/* //start of card// */}
       <Card  sx={{ maxWidth: 345,border: 4, borderRadius:5, borderColor:"black", width: "300px"}}>
@@ -373,8 +494,7 @@ useEffect(() => {
               <Grid item xs={2} >
                 <IconButton 
                   color="secondary" 
-                  aria-label="edit" 
-                  alignItems="center" 
+                  aria-label="edit"  
                   sx={{display: displayContainer}}>
                     <DescriptionIcon/>
                 </IconButton>
@@ -441,7 +561,6 @@ useEffect(() => {
                 <IconButton 
                   color="secondary" 
                   aria-label="edit" 
-                  alignItems="center" 
                   sx={{display: displayContainer}}>
                     <PersonPinCircleIcon/>
                 </IconButton>
@@ -499,20 +618,23 @@ useEffect(() => {
         
         {/*************************** LOCATION (Edit Mode) ************************************/}
 
+          <Grid container>
+            <Grid item xs={6}>
+              <TextField
+                label="City"
+                variant="filled"
+                rows={1}
+                value={cityAddTemp}
+                fullWidth
+                onChange={handleOnChangeCityAddress}
+                sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+            <Grid item xs={6}>
             <TextField
-              label="Brief explanation of the skill"
-              variant="filled"
-              rows={1}
-              value={cityAddTemp}
-              fullWidth
-              onChange={handleOnChangeCityAddress}
-              sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
-              // helperText={aboutMeText2Error.text}
-              // error={aboutMeText2Error.state}
-            />
-
-            <TextField
-              label="Brief explanation of the skill"
+              label="State"
               variant="filled"
               rows={1}
               value={stateAddTemp}
@@ -522,6 +644,12 @@ useEffect(() => {
               // helperText={aboutMeText2Error.text}
               // error={aboutMeText2Error.state}
             />
+            </Grid>
+
+          </Grid>
+            
+
+            
 
               
 
@@ -534,6 +662,19 @@ useEffect(() => {
             }}>
               <Grid container justifyContent="center" style={{paddingTop: "10px"}}>
                 
+
+              <Grid item xs={3}>
+                  <Fade in={fade}>
+                    <Button
+                      variant="contained"
+                      // color="alert"
+                      onClick={handleDeleteButton}
+                      sx={{display: displayButton}}
+                    > <DeleteForeverIcon/>
+                    </Button>
+                  </Fade>
+                </Grid>
+
                 <Grid item xs={3}>
                   <Fade in={fade}>
                     <Button
@@ -551,7 +692,9 @@ useEffect(() => {
                     <Button
                       color="secondary"
                       variant="contained"
-                      onClick={handleSave}
+                      onClick={handleSave }
+                      // type="submit"
+                      // onClick={editSkills }
                       sx={{display: displayButton}}
                     ><SaveIcon/>
                     </Button>
@@ -651,6 +794,7 @@ useEffect(() => {
 
     
     </Card>
+    {/* </form> */}
     </Grid>
     
   );

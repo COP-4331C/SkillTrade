@@ -6,7 +6,7 @@ const ReviewSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    reviewerId: {
+    authorId: {
       type: String,
       required: true
     },

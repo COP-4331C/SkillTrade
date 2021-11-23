@@ -4,15 +4,15 @@ const Review = require("../models/review.model");
 
 exports.createReview = async (req, res) => {
 
-    const {rating, userId} = req.body;
+    const {rating, subjectId} = req.body;
 
     // Validate that userId is for a real user
-    const user = await User.findById(userId);
+    const user = await User.findById(subjectId);
     if (!user)
         return res.status(400).json({ error: "Not a valid user to review." });
 
     // Grab objectId value from reviewer (should be available and valid via authenticationToken)
-    const author = await User.findOne({ email: req.email});
+    const author = await User.findOne({ email: req.email });
     if(!author)
         return res.status(400).json({ error: "Could not obtain reviewer's information." });
 

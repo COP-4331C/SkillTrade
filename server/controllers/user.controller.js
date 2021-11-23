@@ -10,7 +10,6 @@ exports.create = async (req, res) => {
 
   const user = new User(req.body);
   user.verificationCode = crypto.randomUUID();
-  
 
   user
     .save()
@@ -23,7 +22,7 @@ exports.create = async (req, res) => {
         }
       });
     
-      var URL = "http://localhost:5000";
+      var URL = "https://cop4331c.herokuapp.com";
       var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
     
       var message = {
@@ -34,17 +33,14 @@ exports.create = async (req, res) => {
         html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
       };
     
-      transport.sendMail(message, function(error, info){
-        if (error) {
-          return res.status(400).json({ error: "something went wrong" });
-        } else {
-          return res.status(200).json({ message : "something WORKED!" });
-        }
+      transport.sendMail(message, function(error, info) {
+          return res.status(200).json({ message : "Verification email sent!" });
       });
     })
     .catch((err) => {
-      console.log("An error occured.");
-      console.log(err);
+      if (err.code == 11000)
+        return res.status(400).json({ error: "Duplicate email" });
+
       return res.status(400).json({ error: err });
     });
 
@@ -177,8 +173,6 @@ exports.verifyEmail = async(req, res) => {
     }); 
 }
 
-
-
 exports.uploadProfilePic = async (req, res) => {
   try {
     req.directory = "ProfilePictures";
@@ -201,7 +195,26 @@ exports.uploadProfilePic = async (req, res) => {
     }
 
     res.status(500).send({
+      // message: `Could not upload the file: ${req.file.originalname}. ${err}`,
       message: err
     });
   }
+};
+
+exports.search = async (req, res) => {
+  const { search, location, page } = req.query;
+  const limit = 15;
+  // TODO: Implement support for location?
+  const searchQuery = {$regex: search, $options: "i"}
+
+  User.find({ $or: [ {"profile.firstName": searchQuery}, {"profile.lastName": searchQuery}, {"profile.aboutMe": searchQuery}] })
+    .skip(limit * page)
+    .limit(limit)
+    .sort( { updatedAt: -1} )
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 };

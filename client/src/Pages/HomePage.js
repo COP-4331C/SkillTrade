@@ -7,7 +7,9 @@ import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import {Theme} from "../components/Theme";
 import Grid from "@mui/material/Grid";
-
+import {useEffect} from "react";
+import axios from "axios";
+import {retrieveData, storeData} from "../components/DataStorage";
 
 // TODO: Check if the user is login, if not, then redirect user to login or landing page.
 
@@ -54,6 +56,28 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 const HomePage = () => {
+
+  const token = retrieveData('token');
+  const URL = "./api/user/profile";
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  };
+
+  useEffect( () => {
+
+    // Fetches the profile data
+    axios.get(URL, config)
+      .then(function(response) {
+        storeData('firstName', response.data["firstName"]);
+        storeData('lastName', response.data["lastName"]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  },[]);
+
+
   return (
     <>
       <HomeNavBar/>

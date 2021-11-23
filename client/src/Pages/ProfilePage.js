@@ -18,19 +18,16 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
 import {createTheme, makeStyles} from "@material-ui/core";
 import TextField from '@mui/material/TextField';
-import profileImage from '../images/users/chef.png';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
 import Paper from "@mui/material/Paper";
+import {retrieveData} from "../components/DataStorage";
+import axios from "axios";
 
 
 export default function ProfilePage() {
-  const [aboutMeText, setAboutMeText] = useState("\"Proactive, Ambitious and Creative Executive Chef " +
-    "with a notable career trajectory and achievements list. Experience " +
-    "in catering for up to 450 covers at some of the most prestigious " +
-    "establishments in the world. Passionate about working with fresh produce, " +
-    "creating innovative dishes and improving restaurant ratings.\"");
+  const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
   const [displayButton, setDisplayButton] = useState("none");
@@ -40,19 +37,19 @@ export default function ProfilePage() {
   const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
   const [displaySocial, setDisplaySocial] = useState("none");
   const [inEditMode, setEditMode] = useState(false);
-  const [firstName, setFirstName] = useState("Benjamin");
-  const [lastName, setLastName] = useState("Harrion");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
   const [firstNameTemp, setFirstNameTemp] = useState("");
   const [lastNameTemp, setLastNameTemp] = useState("");
-  const [instagram, setInstagram] = useState("benharrionchef");
-  const [twitter, setTwitter] = useState("@benjaminHchef");
-  const [linkedIn, setLinkedIn] = useState("harrion.benjamin");
+  const [instagram, setInstagram] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [linkedIn, setLinkedIn] = useState("");
   const [instagramTemp, setInstagramTemp] = useState("");
   const [twitterTemp, setTwitterTemp] = useState("");
   const [linkedInTemp, setLinkedInTemp] = useState("");
   const [imageOpacity, setImageOpacity] = useState(1);
-  const [photo, setPhoto] = useState(profileImage)
+  const [photo, setPhoto] = useState("");
   const [editPermission, setEditPermission] = useState(true);
   const [mousePointer, setMousePointer] = useState('');
   const [disableImageUpload, setDisableImageUpload] = useState(true)
@@ -72,6 +69,19 @@ export default function ProfilePage() {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
+  const [profileUserID, setProfileUserID] = useState("61887889e62859a35bc0de9c");
+  const [loggedUser, setLoggedUser] = useState({
+    firstName: "",
+    lastName: "",
+    location: "TODO: [City, State, Country]",
+  });
+  const [reviewMessages, setReviewMessages] = useState([]);
+  const token = retrieveData('token');
+
+  useEffect( () => {
+    setEditPermission(true);
+  },[]);
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -109,7 +119,6 @@ export default function ProfilePage() {
     let instagramHandle;
     let twitterHandle;
     let linkedInHandle;
-
 
     if (!validateTextMinLength(firstNameTemp, 1)) {
       okToSaveData = false;
@@ -172,6 +181,30 @@ export default function ProfilePage() {
       setInstagram(instagramHandle);
       setTwitter(twitterHandle);
       setLinkedIn(linkedInHandle);
+
+      // Send data to backend
+      const URL = "./api/user/edit-profile";
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
+      const data = {
+          firstName: firstNameTemp,
+          lastName: lastNameTemp,
+          aboutMe:  aboutMeTextTemp,
+          instagram: instagramHandle,
+          twitter: twitterHandle,
+          linkedIn: linkedInHandle,
+          city: "",
+          state: "",
+          country:""
+        // TODO: Add city, state, and country in Profile
+      }
+
+      // Saves the Profile data
+      axios.put(URL, data, config).catch(console.log)
+        // .then(console.log).catch(console.log);
+
       exitEditMode();
     }
   }
@@ -327,12 +360,78 @@ export default function ProfilePage() {
   });
 
   function handlePhoto(e) {
+
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+
     if (editPermission) {
-      alert("Profile picture processing coming soon");
-      // TODO: Uploaded image should be in e.target.files or e.target.files[0]
-      //  Axios Post would go here
-      //  Request to backend with image for cropping and resizing.
+
+      const URL = "./api/user/upload-profile-pic";
+      const config = {
+        headers: { Authorization: `Bearer ${token}`,'content-type': 'multipart/form-data' }
+      };
+
+      // Saves the profile picture
+      axios.post(URL, formData, config)
+        .then( function(response){
+          setPhoto(response.data.URL);
+        })
+        .catch(console.log);
     }
+  }
+
+  function getAndDisplayReviews(){
+
+    // Get token from the local storage
+    const URL = `./api/review/get-reviews/${profileUserID}`;
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Fetches reviews
+    axios.get(URL, config)
+      .then(function(response) {
+        setReviewMessages(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+
+  function getProfileData() {
+
+    const userId = "61887889e62859a35bc0de9c";
+    setProfileUserID("61887889e62859a35bc0de9c");
+    // const userId = "";
+    const URL = `./api/user/profile/${!userId? "" : userId}`;
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Fetches the profile data
+    axios.get(URL, config)
+      .then(function(response) {
+        // Handle success
+        setFirstName(response.data["firstName"]);
+        setLastName(response.data["lastName"]);
+        setAboutMeText(response.data["aboutMe"])
+        setPhoto(response.data["profilePic"]);
+        setInstagram(response.data["instagram"]);
+        setTwitter(response.data["twitter"]);
+        setLinkedIn(response.data["linkedIn"]);
+        // setProfileUserID(response.data._id);
+
+        setLoggedUser({
+          ...loggedUser,
+          firstName: retrieveData('firstName'),
+          lastName: retrieveData('lastName')
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -354,6 +453,8 @@ export default function ProfilePage() {
       setTwitterLink("https://twitter.com/" + twitter);
       setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
 
+      getProfileData();
+      getAndDisplayReviews();
     } catch (e) {
       console.log(e.message);
     }
@@ -368,23 +469,43 @@ export default function ProfilePage() {
   // reviewMessages is an array manually declared at the end of this file.
   const reviewList = reviewMessages.map((reviewElement) =>
     <Reviews
-      avatar={reviewElement.avatar}
-      name={reviewElement.name}
+      key={reviewElement._id}
+      avatar={""}
+      reviewerName={reviewElement.reviewerName}
       rating={reviewElement.rating}
-      location={reviewElement.location}
-      message={reviewElement.message}
+      location={"[Not provided]"}
+      message={reviewElement.content}
       newReview={false}
       // ratingReadOnly={true}
+      // ratingReadOnly={reviewElement.userId === pr}
     />
   );
 
-  // const [count, setCount] = useState(0) // Name it however you wish
+  const [newReviewForm, setNewReviewForm] = useState([]);
+
   const handleCancelWriteReview = () => {
     setDisplayNewReview("none");
   }
 
-  function handleWriteReview() {
+  // function handleWriteReview() {
+  const handleWriteReview = event => {
     setDisplayNewReview("block");
+    setNewReview(true);
+
+    setNewReviewForm(
+      <Reviews
+      // avatar={"https://mui.com/static/images/avatar/6.jpg"}
+      avatar=""
+      userID = {profileUserID}
+      reviewerID={loggedUser.id}
+      reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
+      rating={5}
+      message=""
+      newReview={newReview}
+      // location={loggedUser.location}
+      onClick={() => { handleCancelWriteReview() }}
+    />
+    );
   }
 
 
@@ -435,7 +556,7 @@ export default function ProfilePage() {
                 cursor: mousePointer,
                 opacity: imageOpacity
               }}
-              alt={"user"}
+              alt="user"
               onMouseOver={handleOnMouseOverImage}
               onMouseLeave={handleOnMouseLeaveImage}
             />
@@ -628,7 +749,7 @@ export default function ProfilePage() {
               <Grid container>
 
                 {/***************** Instagram  Icon ****************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <InstagramIcon color={"secondary"}/>
                   </IconButton>
@@ -638,7 +759,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{instagram}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{instagram}
                     </Typography>
                   </Link>
                   <ThemeProvider theme={textFieldTheme}>
@@ -659,7 +780,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/****************** Twitter Icon *******************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <TwitterIcon color={"secondary"}/>
                   </IconButton>
@@ -669,7 +790,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{twitter}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{twitter}
                     </Typography>
                   </Link>
 
@@ -690,7 +811,7 @@ export default function ProfilePage() {
                 </Grid>
 
                 {/******************* LinkedIn Icon *****************/}
-                <Grid item xs={0.6} sx={{display: "flex"}}>
+                <Grid item xs={1} sx={{display: "flex"}}>
                   <IconButton sx={{padding: 0}} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <LinkedInIcon color={"secondary"}/>
                   </IconButton>
@@ -700,7 +821,7 @@ export default function ProfilePage() {
                 <Grid item xs>
                   <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
                     <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText}}>{linkedIn}
+                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{linkedIn}
                     </Typography>
                   </Link>
 
@@ -761,24 +882,19 @@ export default function ProfilePage() {
 
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
-        <Button variant="contained" color="secondary" fullWidth={true} onClick={handleWriteReview}>
-          {/*<Button variant="contained" color="secondary" fullWidth={true} onClick={() => setCount(1)}>*/}
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth={true}
+          onClick={handleWriteReview}
+        >
           Write a review
         </Button>
       </Box>
 
       {/******************* Add a new review *****************/}
       <div style={{display: displayNewReview}}>
-        <Reviews
-          // avatar={"https://mui.com/static/images/avatar/6.jpg"}
-          avatar=""
-          name="[Logged user's name]"
-          rating={5}
-          location="[Logged user's location]"
-          message=""
-          newReview={newReview}
-          onClick={() => { handleCancelWriteReview() }}
-        />
+        {newReviewForm}
       </div>
 
       {/******************* Reviews *****************/}
@@ -787,33 +903,3 @@ export default function ProfilePage() {
     </Box>
   );
 }
-
-const reviewMessages = [
-  {
-    avatar: 'https://mui.com/static/images/avatar/1.jpg',
-    name: 'Charlie A.',
-    rating: 4.5,
-    location: 'United States',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
-      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
-      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
-  },
-  {
-    avatar: 'https://mui.com/static/images/avatar/2.jpg',
-    name: 'David  B.',
-    rating: 4,
-    location: 'Spain',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
-      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
-      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
-  },
-  {
-    avatar: 'https://mui.com/static/images/avatar/3.jpg',
-    name: 'Samantha F.',
-    rating: 5,
-    location: 'U.K.',
-    message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' +
-      'labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris' +
-      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.'
-  },
-];

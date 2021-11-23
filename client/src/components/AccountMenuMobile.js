@@ -12,11 +12,14 @@ import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined';
 import {Link as RouterLink} from "react-router-dom";
 import {logoutUser} from "./Logout";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {retrieveData} from "./DataStorage";
+import axios from 'axios';
 
 export default function AccountMenuMobile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [testUserAvatar, setTestUserAvatar] = useState("https://mui.com/static/images/avatar/1.jpg");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,13 +29,65 @@ export default function AccountMenuMobile() {
     setAnchorEl(null);
   };
 
+  // Sets the color of the User Avatar
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.substr(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  // Sets the initials to be displayed as the user avatar.
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+  }
+
+  useEffect( () => {
+    const token = retrieveData('token');
+    const URL = "./api/user/profile";
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Fetches the profile data
+    axios.get(URL, config)
+      .then(function(response) {
+        // Handle success
+        setFirstName(response.data["firstName"]);
+        setLastName(response.data["lastName"]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  },[]);
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems:'center', textAlign: "right", justifyContent: "right", height:"100%"}}>
         <Typography color="secondary" sx={{ minWidth: 100, display:{xs:"block", sm:"block", md:"block"} }}>My Skills</Typography>
         {/*<Typography color="secondary" sx={{ minWidth: 100, display:{xs:"block", sm:"block", md:"block"} }}>My Skills</Typography>*/}
           <IconButton onClick={handleClick} size="small" sx={{ marginLeft: 2 }}>
-            <Avatar alt="User Pic" src={testUserAvatar}/>
+            {/*<Avatar alt="User Pic" src={testUserAvatar}/>*/}
+            {/*<Avatar {...stringAvatar("Oscar Acuna")} />*/}
+            <Avatar {...stringAvatar(firstName + " " + lastName)} />
           </IconButton>
       </Box>
       <Menu
@@ -70,7 +125,8 @@ export default function AccountMenuMobile() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem component={RouterLink} to="/profile">
-          <Avatar alt="Remy Sharp" src={testUserAvatar}/> Profile
+          <Avatar {...stringAvatar(firstName + " " + lastName)} />
+          Profile
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
@@ -79,12 +135,25 @@ export default function AccountMenuMobile() {
           My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+
+        <MenuItem component={RouterLink} to="/card">
+          <ListItemIcon>
+              <ConstructionOutlinedIcon />
+            </ListItemIcon> My Skills
+        </MenuItem>
+
+        <MenuItem component={RouterLink} to="/cards">
+          <ListItemIcon>
+              <ConstructionOutlinedIcon />
+            </ListItemIcon> Test Add Skills
+        </MenuItem>
+
+        {/* <MenuItem>
           <ListItemIcon>
             <ConstructionOutlinedIcon />
           </ListItemIcon>
           My Skills
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={() => logoutUser()}>
           <ListItemIcon>
             <Logout fontSize="small" />

@@ -5,9 +5,13 @@ const authenticateToken = require("../middleware/auth");
 
 router
   .route("/")
-  .get(skill.search) // Fetch by page (query parameter)
+  .get(skill.search) // Fetch by page (Query parameters: search & page)
   .post(authenticateToken, skill.createSkill); // Add skill
- 
+
+router
+  .route("/user/:userId?")
+  .get(authenticateToken, skill.fetchByUser) // Fetch skills for user (Query parameter: status)
+
 router
   .route("/:skillId")
   .get(skill.fetchOne) // Get single skill

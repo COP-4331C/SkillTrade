@@ -1,6 +1,7 @@
 const Skill = require("../models/skill.model");
 const User = require("../models/user.model");
 const uploadFile = require("../middleware/upload");
+const Review = require("../models/review.model");
 
 exports.createSkill = async (req, res) => {
 
@@ -30,20 +31,71 @@ exports.fetchOne = async (req, res) => {
     });
 };
 
-exports.search = async (req, res) => {
-  const { search, location, page } = req.query;
-  const limit = 15;
-  // TODO: Implement support for location?
+exports.fetchByUser = async (req, res) => {
 
-  Skill.find({ title: { $regex: search } })
-    .skip(limit * page)
-    .limit(limit)
+  let userId = req.params.userId;
+  let status = req.query.status;
+
+  // Defaults to logged in user if no userId is supplied
+  if (!userId) {
+    let user = await User.findOne( { email: req.email } );
+    userId = user._id;
+  }
+
+  var searchFor = { userId: userId }
+
+  if (status)
+    searchFor["status"] = status;
+
+  Skill.find(searchFor)
+    .sort( { updatedAt: -1} )
     .then((data) => {
       res.status(200).json(data);
     })
     .catch((err) => {
       res.status(500).json(err);
     });
+};
+
+exports.search = async (req, res) => {
+  const { search, location, page } = req.query;
+  const limit = 15;
+  // TODO: Implement support for location?
+  const searchQuery = {$regex: search, $options: "i"}
+
+  var listOfSkills = await Skill.find({ $or: [ {title: searchQuery}, {summary: searchQuery}, {description: searchQuery} ] })
+    .skip(limit * page)
+    .limit(limit)
+    .sort( { updatedAt: -1} )
+    .lean()
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+
+  for (var skill of listOfSkills) {
+    var user = await User.findById(skill.userId);
+
+    if (!user)
+      continue;
+
+    skill["userFullName"] = user.profile.firstName + " " + user.profile.lastName;
+    skill["userProfilePic"] = user.profile.profilePic;
+
+    var listOfReviews = await Review.find( { subjectId: skill.userId } );
+
+    if (!listOfReviews)
+      continue;
+
+    var sumRatings = 0;
+
+    for (var review of listOfReviews)
+      sumRatings += review.rating;
+
+    skill["averageRating"] = sumRatings / listOfReviews.length;
+    skill["numReviews"] = listOfReviews.length;
+  }
+
+  res.status(200).json(listOfSkills);
 };
 
 exports.editSkill = async (req, res) => {

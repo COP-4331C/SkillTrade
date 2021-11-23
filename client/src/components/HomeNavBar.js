@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import MainLogo from "./MainLogo";
 import AccountMenuMobile from "./AccountMenuMobile";
-import {Search} from "@mui/icons-material";
+// import {Search} from "@mui/icons-material";
 import {styled, alpha} from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';

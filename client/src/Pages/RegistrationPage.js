@@ -18,8 +18,6 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
 import { Theme } from '../components/Theme';
-import { FormControlLabel } from '@mui/material';
-import { Checkbox } from '@mui/material';
 
 export default function Registration() {
 
@@ -76,7 +74,7 @@ export default function Registration() {
     setValues({ ...values, [prop]: event.target.value });};
 
   // Verification for eveything
-  const verification_length = 8
+  // const verification_length = 8
 
   function valid(){
     if(values.password !== values.confirm)
@@ -115,12 +113,12 @@ export default function Registration() {
     text: ""
   });
 
-  const styles = {
-    helper: {
-      color: 'red',
-      fontSize: '.8em',
-    }
-  }
+  // const styles = {
+  //   helper: {
+  //     color: 'red',
+  //     fontSize: '.8em',
+  //   }
+  // }
 
 //submit handeler
   function handleSubmitButton(event) {
@@ -316,7 +314,7 @@ export default function Registration() {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDown}
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {values.showPassword ? <Visibility />:<VisibilityOff />  }
                   </IconButton>
                 </InputAdornment>
               }
@@ -340,7 +338,7 @@ export default function Registration() {
                     onClick={handleClickShowConfirm}
                     onMouseDown={handleMouseDownConfirm}
                   >
-                    {values.showConfirm ? <VisibilityOff /> : <Visibility />}
+                    {values.showConfirm ? <Visibility />:<VisibilityOff /> }
                   </IconButton>
                 </InputAdornment>
               }
@@ -374,7 +372,7 @@ export default function Registration() {
           /> */}
 
           {/********************* already have an account  *********************/}
-          <Typography fontSize="0.9rem" align="center"paddingTop="20px">Already have an account?{' '}
+          <Typography fontSize="0.9rem" align="center" paddingTop="20px">Already have an account?{' '}
             <Link style={{color: "blue"}} component={RouterLink} to="/Login">Login</Link>
           </Typography>
 

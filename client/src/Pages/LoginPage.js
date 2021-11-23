@@ -19,7 +19,7 @@ import Checkbox from '@mui/material/Checkbox';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
-import {storeToken} from "../components/TokenStorage";
+import {storeData} from "../components/DataStorage";
 import {Theme} from "../components/Theme";
 import AppNavBar from '../components/AppNavBar';
 
@@ -161,7 +161,7 @@ export default function LoginPage() {
       // Sends the login credentials to the backend server
       axios.post(URL, loginPayload)
         .then(function (response) {
-          storeToken(response.data.accessToken);
+          storeData('token', response.data.accessToken);
 
           // Send user to the home page
           window.location.href = '/home';
@@ -177,7 +177,7 @@ export default function LoginPage() {
     }
   }
 
-  // Storage the state (true or false) of the checkbox in the rememberMe variable.
+  // Store the state (true or false) of the checkbox in the rememberMe variable.
   const handleCheckBoxChange = (event) => {
     setRememberMe(event.target.checked);
   }

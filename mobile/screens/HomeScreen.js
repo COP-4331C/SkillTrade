@@ -1,176 +1,165 @@
-import React,{ useEffect }  from 'react';
-import { View, Text, Button, StyleSheet, Image, FlatList, TouchableOpacity , StatusBar,  SafeAreaView} from 'react-native';
-
+import React,{  useEffect }  from 'react';
+import { View, Text, StyleSheet, Image, FlatList, } from 'react-native';
 import moment from "moment";
-import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
-
+import { Entypo,FontAwesome5,FontAwesome } from '@expo/vector-icons'
 import axios from 'axios';
 
 
-// DATA = [
-//   {
-//       _id: "619295150075e9a46db8ddf3",
-//       userId: "6189698db9e8c8287e27ab7a",
-//       reviewerId: "618c175054276ea05b6cd722",
-//       reviewerName: "Victor",
-//       rating: 5,
-//       content:
-//           "ww--Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-//       __v: 0,
-//   },
-//   {
-//       _id: "619b69f9e0478231a2ff5981",
-//       userId: "6189698db9e8c8287e27ab7a",
-//       reviewerId: "61887889e62859a35bc0de9c",
-//       reviewerName: "John",
-//       rating: 4,
-//       content:
-//           "ww--Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-//       __v: 0,
-//   },
-// ];
-
-
 const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
+  <View>
+    <Text>{title}</Text>
   </View>
 );
 
 const HomeScreen = ({navigation}) => {
 
-  const [reviewData, setReviewData] = React.useState([]);
+  const [skillData, setSkillData] = React.useState([]);
 
-  // {
-    // _id: " ",
-    // userId: " ",
-    // reviewerId: " ",
-    // reviewerName: " ",
-    // rating: 0,
-    // content:" ",
-    // __v: 0,
-  // }
-
-  useEffect(async() => {
-    let userId = '6189698db9e8c8287e27ab7a';
-    // try {
-    //     userId = await SecureStore.getItemAsync('userId'); // need to add 'await' 
-    // } catch (e) {
-    //     console.warn(e);
-    // }
-    connectToGetReviewApi(userId)
-  }, [])
-
-  function connectToGetReviewApi(userId){
-    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${userId}`,  {
-            
+  async function connectToGetReviewApi(){
+    axios.get(`https://cop4331c.herokuapp.com/api/skills?search&location&page`,  {
           })
         .then(function(response) {
-            setReviewData(response.data)
-            // console.warn(profileData)
+            // console.warn("get")
+            setSkillData(response.data)
         })
         .catch(function(error) {
             console.warn(error)
         });
   }
 
+  useEffect(async() => { connectToGetReviewApi() }, [])
 
   const renderItem = ({ item }) => (
     <Item title={item.reviewerName} />
   );
 
-  const renderPost = post => { // const???
+  const renderPost = post => { // Image source=...; post.avatar  get user's picture; post.image  get skill picture;  FIXME
       return (
-          <View style={styles.feedItem}>
-              <View style={styles.sectionContainer}>
-                <Text style={[styles.text, {fontWeight: "500"}]}>@{post.reviewerName}: 
-                <Text style={{fontWeight:"400"}}> {post.content}</Text>
-                </Text>
-              <View flexDirection="row" justifyContent='flex-end'>
-                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
-                  <AntDesign name="edit" size={18} color="black" />
-                </TouchableOpacity>
-                <Text>           </Text>
-                <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
-                  <AntDesign name="delete" size={18} color="black" />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.feedItem}> 
+              <Image source={require('../assets/logo.png')} style={styles.avatar} /> 
+              <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <View>
+                          <Text style={styles.name}>{post.userId}</Text>
+                          <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
+                      </View>
+                      <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
+                        <Entypo name="star" size={18} color="black" />
+                        <Entypo name="star" size={18} color="black" />
+                        <Entypo name="star" size={18} color="black" />
+                        <Entypo name="star" size={18} color="black" />
+                        <Entypo name="star" size={18} color="black" />
+                        <Text> (25)</Text>
+                      </View>
+                  </View>
+                  <Text style={styles.titleText}>{post.title}</Text>
+                  <Text style={styles.postText}>{post.summary}</Text>
+                  <Text style={styles.postText}>{post.description}</Text>
+                  <Image source={require('../assets/logo.png')} style={styles.postImage} resizeMode="cover" /> 
+                  <View style={{ flexDirection: "row" , justifyContent: "space-between"}}>
+                      <FontAwesome5 name="comment-dollar" size={24} color="black" style={{ marginRight: 16 }}><Text> {post.price} </Text></FontAwesome5>
+                      <FontAwesome name="circle" size={18} color="black"><Text> {post.status} </Text></FontAwesome>
+                      {/* if (skillData==="Teaching"){
+                        <FontAwesome name="circle" size={18} color="black"><Text> Teach</Text></FontAwesome>
+                                        
+                      }
+                      else if (skillData==="Learning"){
+                        <FontAwesome5 name="square-full" size={18} color="black"> <Text> Teach</Text></FontAwesome5>
+                      } */}
+                  </View>
               </View>
           </View>
+
       );
   };
 
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={reviewData}
-        renderItem={({item}) => renderPost(item)}
-        keyExtractor={item => item._id}
-      />
-    </SafeAreaView>
+      <View style={styles.container}>
+          <View style={styles.header}>
+              <Text style={styles.headerTitle}>Recently posted skill</Text>
+          </View>
+
+          <FlatList
+              style={styles.feed}
+              data={skillData}
+              renderItem={({ item }) => renderPost(item)}
+              keyExtractor={item => item._id}
+              showsVerticalScrollIndicator={false}
+          ></FlatList>
+        </View>
+
   );
 }
-
-
-//   render() {
-//       return (
-//           <View style={styles.container}>
-//               <View style={styles.header}>
-//                   <Text style={styles.headerTitle}>Feed</Text>
-//               </View>
-//               <FlatList
-//                   style={styles.feed}
-//                   data={posts}
-//                   renderItem={({ item }) => this.renderPost(item)}
-//                   keyExtractor={item => item._id}
-//                   showsVerticalScrollIndicator={false}
-//               ></FlatList>
-//           </View>
-//       );
-//   }
-// }
-
-
-
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-
-  sectionTitle: {
-    fontWeight: "700",
-    // color: ,
-    fontSize: 15
-  },
-  sectionContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    // marginBottom: 8,
-    // backgroundColor: 
-  },
-  text: {
-    fontFamily: "HelveticaNeue",
-    color: "#52575D"
-},
-});
 
 export default HomeScreen;
 
 
-
-
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: "#EBECF4"
+  },
+  header: {
+      paddingTop: 18,
+      paddingBottom: 16,
+      backgroundColor: "#FFF",
+      alignItems: "center",
+      justifyContent: "center",
+      borderBottomWidth: 1,
+      borderBottomColor: "#EBECF4",
+      shadowColor: "#454D65",
+      shadowOffset: { height: 5 },
+      shadowRadius: 15,
+      shadowOpacity: 0.2,
+      zIndex: 10
+  },
+  headerTitle: {
+      fontSize: 20,
+      fontWeight: "500"
+  },
+  feed: {
+      marginHorizontal: 16
+  },
+  feedItem: {
+      backgroundColor: "#FFF",
+      borderRadius: 5,
+      padding: 8,
+      flexDirection: "row",
+      marginVertical: 8
+  },
+  avatar: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      marginRight: 16
+  },
+  name: {
+      fontSize: 15,
+      fontWeight: "800",
+      color: "#454D65"
+  },
+  timestamp: {
+      fontSize: 11,
+      color: "#C4C6CE",
+      marginTop: 4
+  },
+  titleText: {
+      marginTop: 16,
+      fontSize: 18,
+      fontWeight:"800",
+      color: "black"
+  },
+  postText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "#838899"
+  },
+  postImage: {
+      width: undefined,
+      height: 150,
+      borderRadius: 5,
+      marginVertical: 16
+  }
+});
 

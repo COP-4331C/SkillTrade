@@ -26,9 +26,6 @@ import AppNavBar from '../components/AppNavBar';
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
 
-// TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
-//      on desktops, when the browser's size is reduced horizontally.
-
 export default function LoginPage() {
 
   //***************************************** //
@@ -285,7 +282,7 @@ export default function LoginPage() {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDown}
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }

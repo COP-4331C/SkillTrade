@@ -69,7 +69,7 @@ export default function ProfilePage() {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
-  const [profileUserID, setProfileUserID] = useState("61887889e62859a35bc0de9c");
+  const [profileUserID, setProfileUserID] = useState("61894e2ab7293c19980829a2");
   const [loggedUser, setLoggedUser] = useState({
     firstName: "",
     lastName: "",
@@ -77,11 +77,10 @@ export default function ProfilePage() {
   });
   const [reviewMessages, setReviewMessages] = useState([]);
   const token = retrieveData('token');
-
-  useEffect( () => {
-    setEditPermission(true);
-  },[]);
-
+  const [mumOfReviews, setNumOfReviews] = useState(0);
+  const [newReviewForm, setNewReviewForm] = useState([]);
+  const [displayNewReview, setDisplayNewReview] = useState("none");
+  console.log("ProfilePage Rendered");
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -392,6 +391,7 @@ export default function ProfilePage() {
     axios.get(URL, config)
       .then(function(response) {
         setReviewMessages(response.data);
+        setNumOfReviews(response.data.length);
       })
       .catch(function (error) {
         console.log(error);
@@ -399,10 +399,11 @@ export default function ProfilePage() {
   }
 
 
+
   function getProfileData() {
 
-    const userId = "61887889e62859a35bc0de9c";
-    setProfileUserID("61887889e62859a35bc0de9c");
+    const userId = "61894e2ab7293c19980829a2";
+    // setProfileUserID("61887889e62859a35bc0de9c");
     // const userId = "";
     const URL = `./api/user/profile/${!userId? "" : userId}`;
 
@@ -458,30 +459,39 @@ export default function ProfilePage() {
     } catch (e) {
       console.log(e.message);
     }
-
   }, []);
 
-  const [displayNewReview, setDisplayNewReview] = useState("none");
+  
+  
+  
+
+
+  // useEffect(() => {
+    // getAndDisplayReviews();
+     // setNewReviewForm(newReviewForm);
+     // console.log("userEffect Reached");
+  // }, []);
 
 
   // Creates a list of reviews. For each review in reviewList
   // Render the Review component with the data passed to it.
   // reviewMessages is an array manually declared at the end of this file.
-  const reviewList = reviewMessages.map((reviewElement) =>
+  const reviewList = reviewMessages.map((fetchedReview) =>
     <Reviews
-      key={reviewElement._id}
-      avatar={""}
-      reviewerName={reviewElement.reviewerName}
-      rating={reviewElement.rating}
+      key={fetchedReview._id}
+      avatar={fetchedReview.authorProfilePic}
+      reviewerName={fetchedReview.authorFullName}
+      rating={fetchedReview.rating}
       location={"[Not provided]"}
-      message={reviewElement.content}
+      message={fetchedReview.content}
       newReview={false}
+      reviewId={fetchedReview._id}
       // ratingReadOnly={true}
       // ratingReadOnly={reviewElement.userId === pr}
     />
   );
 
-  const [newReviewForm, setNewReviewForm] = useState([]);
+
 
   const handleCancelWriteReview = () => {
     setDisplayNewReview("none");
@@ -494,20 +504,19 @@ export default function ProfilePage() {
 
     setNewReviewForm(
       <Reviews
-      // avatar={"https://mui.com/static/images/avatar/6.jpg"}
-      avatar=""
-      userID = {profileUserID}
-      reviewerID={loggedUser.id}
-      reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
-      rating={5}
-      message=""
-      newReview={newReview}
-      // location={loggedUser.location}
-      onClick={() => { handleCancelWriteReview() }}
+        // avatar={"https://mui.com/static/images/avatar/6.jpg"}
+        avatar=""
+        userID = {profileUserID}
+        reviewerID={loggedUser.id}
+        reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
+        rating={5}
+        message=""
+        newReview={newReview}
+        location="[Not provided]"
+        onClick={() => { handleCancelWriteReview() }}
     />
     );
   }
-
 
   return (
     <Box sx={{flex: 1}}>
@@ -894,6 +903,7 @@ export default function ProfilePage() {
 
       {/******************* Add a new review *****************/}
       <div style={{display: displayNewReview}}>
+      {/*<div style={{display: "block"}}>*/}
         {newReviewForm}
       </div>
 

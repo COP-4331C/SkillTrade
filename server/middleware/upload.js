@@ -17,7 +17,7 @@ let storage = multerS3({
   },
   key: function(req, file, next) {
     console.log(file);
-    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp']
+    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.jfif'];
     var fileExtension = "";
 
     for (var ext of validExtensions)

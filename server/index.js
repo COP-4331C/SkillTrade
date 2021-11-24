@@ -12,7 +12,7 @@ app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static(path.resolve("client/build")));
-  app.get("//((?!api).)*/", function (req, res) {
+  app.get(/^\/(?!api).*$/, function (req, res) {
     res.sendFile(path.join(path.resolve("client/build"), "index.html"));
   });
 }

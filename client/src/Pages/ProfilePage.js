@@ -401,7 +401,8 @@ export default function ProfilePage() {
 
   function getProfileData() {
 
-    const userId = "61894e2ab7293c19980829a2";
+    // const userId = "61894e2ab7293c19980829a2";
+    const userId = "";
     // setProfileUserID("61887889e62859a35bc0de9c");
     // const userId = "";
     const URL = `./api/user/profile/${!userId? "" : userId}`;
@@ -503,7 +504,7 @@ export default function ProfilePage() {
     setNewReviewForm(
       <Reviews
         // avatar={"https://mui.com/static/images/avatar/6.jpg"}
-        avatar=""
+        avatar={photo}
         userID = {profileUserID}
         reviewerId={loggedUser.id}
         reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
@@ -519,7 +520,7 @@ export default function ProfilePage() {
 
   return (
     <Box sx={{flex: 1}}>
-      <HomeNavBar/>
+      <HomeNavBar loggedUserAvatar={photo}/>
 
       {/************************* Main Box ***********************/}
       <Box
@@ -902,7 +903,6 @@ export default function ProfilePage() {
 
       {/******************* Add a new review *****************/}
       <div style={{display: displayNewReview}}>
-      {/*<div style={{display: "block"}}>*/}
         {newReviewForm}
       </div>
 

@@ -15,8 +15,9 @@ import {logoutUser} from "./Logout";
 import {useEffect, useState} from "react";
 import {retrieveData} from "./DataStorage";
 import axios from 'axios';
+import ProfileIcon from '@mui/icons-material/AccountBox';
 
-export default function AccountMenuMobile() {
+export default function AccountMenuMobile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -83,11 +84,10 @@ export default function AccountMenuMobile() {
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems:'center', textAlign: "right", justifyContent: "right", height:"100%"}}>
         <Typography color="secondary" sx={{ minWidth: 100, display:{xs:"block", sm:"block", md:"block"} }}>My Skills</Typography>
-        {/*<Typography color="secondary" sx={{ minWidth: 100, display:{xs:"block", sm:"block", md:"block"} }}>My Skills</Typography>*/}
           <IconButton onClick={handleClick} size="small" sx={{ marginLeft: 2 }}>
-            {/*<Avatar alt="User Pic" src={testUserAvatar}/>*/}
-            {/*<Avatar {...stringAvatar("Oscar Acuna")} />*/}
-            <Avatar {...stringAvatar(firstName + " " + lastName)} />
+            <Avatar alt={firstName.charAt(0) + " " + lastName.charAt(0)} src={props.loggedUserAvatar} >
+              {firstName.charAt(0) + " " + lastName.charAt(0)}
+            </Avatar>
           </IconButton>
       </Box>
       <Menu
@@ -125,7 +125,9 @@ export default function AccountMenuMobile() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem component={RouterLink} to="/profile">
-          <Avatar {...stringAvatar(firstName + " " + lastName)} />
+          <ListItemIcon>
+            <ProfileIcon fontSize="medium"/>
+          </ListItemIcon>
           Profile
         </MenuItem>
         <MenuItem>
@@ -139,7 +141,8 @@ export default function AccountMenuMobile() {
         <MenuItem component={RouterLink} to="/card">
           <ListItemIcon>
               <ConstructionOutlinedIcon />
-            </ListItemIcon> My Skills
+            </ListItemIcon>
+          My Skills
         </MenuItem>
 
         <MenuItem component={RouterLink} to="/cards">

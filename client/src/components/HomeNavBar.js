@@ -10,7 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import Grid from "@mui/material/Grid";
 
-export default function HomeNavBar() {
+export default function HomeNavBar(props) {
 
   const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -95,7 +95,7 @@ export default function HomeNavBar() {
 
             {/** ************************** Avatar and My Skills ***************************************/}
             <Grid item xs={6} sm={3} md={3} sx={{justifyContent:"right"}}>
-                <AccountMenuMobile/>
+                <AccountMenuMobile loggedUserAvatar={props.loggedUserAvatar}/>
             </Grid>
             
           </Grid>

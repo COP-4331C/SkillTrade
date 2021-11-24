@@ -165,7 +165,6 @@ export default function Registration() {
 
       axios.post(URL, registerPayload)
         .then(function (response) {
-          alert("Registration successful!" );
           console.log(response);
           window.location.href='/Login';
         })

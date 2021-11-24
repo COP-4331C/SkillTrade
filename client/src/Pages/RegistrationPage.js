@@ -248,7 +248,6 @@ export default function Registration() {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <FormControl required error={confirmName.state}>
-                <item>
                   <TextField
                     required
                     fullWidth
@@ -259,7 +258,6 @@ export default function Registration() {
                     value={firstName}
                     type="text"
                   />
-                </item>
                 <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
               </FormControl>
             </Grid>
@@ -267,9 +265,7 @@ export default function Registration() {
 
             {/********************* LN Text Field *********************/}
             <Grid item xs ={6}>
-              <item>
                 <TextField
-
                   fullWidth
                   label="Last Name"
                   placeholder="Enter Last Name"
@@ -278,8 +274,6 @@ export default function Registration() {
                   value={lastName}
                   type="text"
                 />
-              </item>
-
             </Grid>
           </Grid>
 
@@ -306,6 +300,7 @@ export default function Registration() {
               value={values.password}
               onChange={handleChangePasswordField('password')}
               placeholder="Enter Password"
+              autoComplete="on"
 
               endAdornment={
                 <InputAdornment position="end">
@@ -330,7 +325,7 @@ export default function Registration() {
               type={values.showConfirm ? 'text' : 'password'}
               value={values.confirm}
               onChange={handleChangePasswordField('confirm')}
-
+              autoComplete="on"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -346,6 +341,12 @@ export default function Registration() {
             <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
           </FormControl>
 
+          {/********************* Terms and conditions checkbox *********************/}
+          <div style={{paddingTop:15}}>
+            <input type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
+            <label>I agree to </label><a href="https://www.termsandconditionsgenerator.com/live.php?token=InuuJUo6I4Xz1FPgMfkmmri3Fj6fvJ6e" style={{ textDecoration: 'none', color:"black" }} htmlFor="agree"><b>terms and conditions</b></a>
+          </div>
+
           {/********************* Sign in button *********************/}
           <Button
             disabled={!agree}
@@ -360,10 +361,7 @@ export default function Registration() {
           {/* </Link> */}
 
           {/*********************  Forgot my password *********************/}
-          <div>
-            <input type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
-            <label>I agree to </label><a href="https://www.termsandconditionsgenerator.com/live.php?token=InuuJUo6I4Xz1FPgMfkmmri3Fj6fvJ6e" style={{ textDecoration: 'none', color:"black" }} htmlFor="agree"><b>terms and conditions</b></a>
-          </div>
+
 
           {/* <FormControlLabel
             control={

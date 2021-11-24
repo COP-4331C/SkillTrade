@@ -22,13 +22,16 @@ exports.createSkill = async (req, res) => {
 };
 
 exports.fetchOne = async (req, res) => {
-  Skill.findById(req.params.skillId)
-    .then((data) => {
-      res.status(200).json(data);
-    })
+  var skill = await Skill.findById(req.params.skillId)
+    .lean()
     .catch((err) => {
       res.status(500).json({ error: err });
     });
+
+  // Attaches user info to response (fullName, profilePic, rating, etc)
+  skill = await addUserInfo(skill);
+
+  res.status(200).json(skill);
 };
 
 exports.fetchByUser = async (req, res) => {
@@ -47,14 +50,17 @@ exports.fetchByUser = async (req, res) => {
   if (status)
     searchFor["status"] = status;
 
-  Skill.find(searchFor)
+  var listOfSkills = await Skill.find(searchFor)
     .sort( { updatedAt: -1} )
-    .then((data) => {
-      res.status(200).json(data);
-    })
+    .lean()
     .catch((err) => {
       res.status(500).json(err);
     });
+
+  // Attaches user info to each skill for response (fullName, profilePic, rating, etc)
+  listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
+
+  res.status(200).json(listOfSkills);
 };
 
 exports.search = async (req, res) => {
@@ -72,28 +78,8 @@ exports.search = async (req, res) => {
       res.status(500).json(err);
     });
 
-  for (var skill of listOfSkills) {
-    var user = await User.findById(skill.userId);
-
-    if (!user)
-      continue;
-
-    skill["userFullName"] = user.profile.firstName + " " + user.profile.lastName;
-    skill["userProfilePic"] = user.profile.profilePic;
-
-    var listOfReviews = await Review.find( { subjectId: skill.userId } );
-
-    if (!listOfReviews)
-      continue;
-
-    var sumRatings = 0;
-
-    for (var review of listOfReviews)
-      sumRatings += review.rating;
-
-    skill["averageRating"] = sumRatings / listOfReviews.length;
-    skill["numReviews"] = listOfReviews.length;
-  }
+  // Adds user info to each skill for response (fullName, profilePic, rating, etc)
+  listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
   res.status(200).json(listOfSkills);
 };
@@ -200,3 +186,38 @@ exports.uploadSkillPic = async (req, res) => {
     });
   }
 };
+
+async function addUserInfo(skill) {
+  var user = await User.findById(skill.userId);
+
+  if (!user)
+    return;
+
+  skill["userFullName"] = user.profile.firstName + " " + user.profile.lastName;
+  skill["userProfilePic"] = user.profile.profilePic;
+
+  var listOfReviews = await Review.find( { subjectId: skill.userId } );
+
+  if (!listOfReviews)
+    return;
+
+  var sumRatings = 0;
+
+  for (var review of listOfReviews)
+    sumRatings += review.rating;
+
+  skill["averageRating"] = sumRatings / listOfReviews.length;
+  skill["numReviews"] = listOfReviews.length;
+
+  console.log(skill);
+
+  return skill;
+}
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    array[index] = await callback(array[index]);
+  }
+
+  return array;
+}

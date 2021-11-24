@@ -36,11 +36,11 @@ const HomeScreen = ({navigation}) => {
   const renderPost = post => { // Image source=...; post.avatar  get user's picture; post.image  get skill picture;  FIXME
       return (
           <View style={styles.feedItem}> 
-              <Image source={require('../assets/logo.png')} style={styles.avatar} /> 
+              <Image source={{uri:post.userProfilePic}} style={styles.avatar} /> 
               <View style={{ flex: 1 }}>
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       <View>
-                          <Text style={styles.name}>{post.userId}</Text>
+                          <Text style={styles.name}>{post.userFullName}</Text>
                           <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
                       </View>
                       <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
@@ -55,17 +55,11 @@ const HomeScreen = ({navigation}) => {
                   <Text style={styles.titleText}>{post.title}</Text>
                   <Text style={styles.postText}>{post.summary}</Text>
                   <Text style={styles.postText}>{post.description}</Text>
-                  <Image source={require('../assets/logo.png')} style={styles.postImage} resizeMode="cover" /> 
+                  <Image source={{uri:post.imageURL}} style={styles.postImage} resizeMode="cover" /> 
                   <View style={{ flexDirection: "row" , justifyContent: "space-between"}}>
                       <FontAwesome5 name="comment-dollar" size={24} color="black" style={{ marginRight: 16 }}><Text> {post.price} </Text></FontAwesome5>
+                      <FontAwesome name="wechat" size={24} color="black" />
                       <FontAwesome name="circle" size={18} color="black"><Text> {post.status} </Text></FontAwesome>
-                      {/* if (skillData==="Teaching"){
-                        <FontAwesome name="circle" size={18} color="black"><Text> Teach</Text></FontAwesome>
-                                        
-                      }
-                      else if (skillData==="Learning"){
-                        <FontAwesome5 name="square-full" size={18} color="black"> <Text> Teach</Text></FontAwesome5>
-                      } */}
                   </View>
               </View>
           </View>

@@ -1,12 +1,13 @@
 import React, { Component, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, FlatList, StatusBar } from 'react-native';
-import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
+import { Entypo, Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import AddSkillScreen from './AddSkillScreen';
 import moment from "moment";
+import { render } from 'react-dom';
 // import { DirectConnect } from 'aws-sdk';
 
 const Item = ({ title }) => (
@@ -99,13 +100,16 @@ const ProfileScreen = ({navigation}) => {
     <Item title={item.reviewerName} />
   );
 
-  const renderPost = post => { // const???
+  const renderPost = post => { 
     return (
         <View>
             <View style={styles.reviewContainer}>
-              <Text style={[styles.text, {fontWeight: "500"}]}>@{post.reviewerName}: 
-              <Text style={{fontWeight:"400"}}> {post.content}</Text>
-              </Text>
+              <View flexDirection="row" style={{paddingRight:40}}>
+                <Image source={{uri:post.authorProfilePic}} style={styles.avatar} /> 
+                <Text style={[styles.text, {fontWeight: "500"}]}>@{post.authorFullName}: 
+                <Text style={{fontWeight:"400"}}> {post.content}</Text>
+                </Text>
+              </View>
               <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
                 <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
                   <AntDesign name="edit" size={18} color="black" />
@@ -120,10 +124,9 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
-  return (
-    
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+  const renderHeader = () => {
+    return (
+      <SafeAreaView style={styles.container}>
 
         <View style={styles.titleBar}>
           <Ionicons name="location-sharp" size={24} color="black">
@@ -137,12 +140,13 @@ const ProfileScreen = ({navigation}) => {
           <View style={styles.profileImage}>
             <Image source={{url:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
           </View>
-          <View style={styles.dm}>
-            <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-          </View> 
           <View style={styles.active}></View>
+          <View style={styles.dm}>
+            <MaterialCommunityIcons name="heart-plus" size={38} color="black" />
+          </View> 
+          
           <View style={styles.add}>
-            <Ionicons name="ios-add" size={48} color="#DFD8c8" style={{marginTop: 6, marginLeft: 2}}></Ionicons>
+            <AntDesign name="message1" size={38} color="black" style={{marginTop: 6, marginLeft: 2}}/>
           </View>
         </View>
 
@@ -193,7 +197,7 @@ const ProfileScreen = ({navigation}) => {
           <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
             <Text style={styles.sectionTitle}> MY SKILLS </Text>
             <TouchableOpacity onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
-             <Entypo name="add-to-list" size={24} color="black" />
+            <Entypo name="add-to-list" size={24} color="black" />
             </TouchableOpacity>
           </View>
 
@@ -256,7 +260,6 @@ const ProfileScreen = ({navigation}) => {
           </View>
         </View>
 
-
         <View style={styles.sectionContainer}>
 
           <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
@@ -266,18 +269,34 @@ const ProfileScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          <SafeAreaView style={{flex: 1}}> 
-            <FlatList //VirtualizedLists should never be nested inside plain ScrollViews with the same orientation: error FIXME
-              data={reviewData}
-              renderItem={({item}) => renderPost(item)}
-              keyExtractor={item => item._id}
-            />
-          </SafeAreaView>
-
         </View>
 
-      </ScrollView>
+      </SafeAreaView>
+    );
+
+  }
+
+
+  return (
+
+    <SafeAreaView style={{flex: 1}}> 
+      <FlatList 
+        
+        data={reviewData}
+        renderItem={({item}) => renderPost(item)}
+        keyExtractor={item => item._id}
+        ListHeaderComponent={
+          renderHeader()
+        }
+        // ListFooterComponent={
+        //   <Text>This is the ListFooterComponent!!</Text>
+        // }
+
+      />
     </SafeAreaView>
+
+
+    
 
   );
 };
@@ -317,9 +336,10 @@ const styles = StyleSheet.create({
       overflow: "hidden"
   },
   dm: {
-      backgroundColor: "#41444B",
+      backgroundColor: "white", // "#41444B"
       position: "absolute",
-      top: 20,
+
+      bottom: 8,
       width: 40,
       height: 40,
       borderRadius: 20,
@@ -329,7 +349,7 @@ const styles = StyleSheet.create({
   active: {
       backgroundColor: "#34FFB9",
       position: "absolute",
-      bottom: 28,
+      top: 20,
       left: 10,
       padding: 4,
       height: 20,
@@ -337,7 +357,7 @@ const styles = StyleSheet.create({
       borderRadius: 10
   },
   add: {
-      backgroundColor: "#41444B",
+      backgroundColor: "white", // "#41444B"
       position: "absolute",
       bottom: 0,
       right: -10,
@@ -423,7 +443,8 @@ const styles = StyleSheet.create({
   },
   reviewContainer: {
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 40,
+    backgroundColor: "#FFF"
     // marginBottom: 8,
     // backgroundColor: 
   },
@@ -438,6 +459,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', // 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'
     // marginTop: 0,
     // marginHorizontal: 0
-}
+},
+avatar: {
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+  marginRight: 16
+},
   
 });

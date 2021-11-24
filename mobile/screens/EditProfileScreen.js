@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,6 +26,7 @@ import * as SecureStore from 'expo-secure-store';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 const EditProfileScreen = ({navigation}) => {
+
   const [data, setData] = React.useState({
     firstName: '',
     lastName: '',
@@ -103,6 +105,7 @@ const EditProfileScreen = ({navigation}) => {
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
+  const [loading, setLoading] = useState(true);
   // const [TwitterUrlPath, setTwitterUrlPath] = useState("Twitter");
   // setPickedImagePath(profileData.profilePic);
   // connect to api and retive info
@@ -136,6 +139,7 @@ const EditProfileScreen = ({navigation}) => {
           setCountry(response.data["country"]);
           setState(response.data["state"]);
           setCity(response.data["city"]);
+          setLoading(false);
           // handleFirstNameChange(response.data["firstName"]);
           // console.warn("the firstname is " + data.firstName)
           // handleLastNameChange(response.data["lastName"]);
@@ -388,7 +392,13 @@ const handleCountryChange = (val) => {
 
 
 
-
+  if( loading ){
+    return(
+      <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+        <ActivityIndicator size='large'/>
+      </View>
+    );
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
@@ -441,10 +451,9 @@ const handleCountryChange = (val) => {
 
             </View>
           </TouchableOpacity>
-          <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>Jhon Doe</Text>
+          <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>{firstName} {lastName}</Text>
         </View>
         
-        <Text>Your name is {firstName}</Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
@@ -452,6 +461,7 @@ const handleCountryChange = (val) => {
             placeholderTextColor="#666666"
             // onChangeText={(val) => firstNameInputChange(val)} 
             onChangeText={(val) => setFirstName(val)} 
+            value = {firstName}
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -463,13 +473,13 @@ const handleCountryChange = (val) => {
             ]}
             />
         </View>
-        <Text>Your name is {firstName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="Last Name"
             onChangeText={(val) => setLastName(val)} 
+            value = {lastName}
             placeholderTextColor="#666666"
             // onChangeText = "Hello"
             autoCorrect={false}
@@ -483,13 +493,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>Your name is {lastName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="About Me"
-            onChangeText={(val) => setAboutMe(val)} 
+            onChangeText={(val) => setAboutMe(val)}
+            value = {aboutMe} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             multiline={true}
@@ -503,12 +513,12 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {aboutMe}</Text>
         <View style={styles.action}>
           <Feather name="twitter" size={20} />
           <TextInput 
             placeholder="Twitter Url"
             onChangeText={(val) => setTwitter(val)} 
+            value = {twitter}
             // onChangeText={(val) => setTwitterUrlPath(val)}
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -522,7 +532,6 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {twitter}</Text>
 
 
         <View style={styles.action}>
@@ -530,6 +539,7 @@ const handleCountryChange = (val) => {
           <TextInput 
             placeholder="Instagram Url"
             onChangeText={(val) => setInstagram(val)} 
+            value = {instagram}
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -542,13 +552,12 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {instagram}</Text>
-
         <View style={styles.action}>
           <Feather name="linkedin" size={20} />
           <TextInput 
             placeholder="LinkedIn Url"
             onChangeText={(val) => setLinkedIn(val)} 
+            value = {linkedIn}
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -561,13 +570,12 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {linkedIn}</Text>
-
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="Country"
             onChangeText={(val) => setCountry(val)} 
+            value = {country}
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -580,13 +588,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {country}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="State"
             onChangeText={(val) => setState(val)} 
+            value = {state}
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -599,14 +607,14 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {state}</Text>
 
 
         <View style={styles.action}>
           <Icon name="map-marker-outline" size={20} />
           <TextInput 
             placeholder="City"
-            onChangeText={(val) => setCity(val)} 
+            onChangeText={(val) => setCity(val)}
+            value = {city} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -619,7 +627,6 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {city}</Text>
 
         <TouchableOpacity style={styles.commandButton} onPress={async() => {
           let userToken = null;

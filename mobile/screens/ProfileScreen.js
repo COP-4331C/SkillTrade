@@ -31,7 +31,27 @@ const ProfileScreen = ({navigation}) => {
     country: '',
     state: '',
   });
-  useEffect(async() => {
+
+  React.useEffect(async() => {
+    let userToken = null;
+            try {
+                userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+            } catch (e) {
+                console.warn('SecureStore error');
+            }
+            connectToProfileApi(userToken)
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+            // navigation.addListener("focus", () =>  connectToProfileApi(userToken));
+            connectToProfileApi(userToken)
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
+  /*useEffect(async() => {
         let userToken = null;
             try {
                 userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
@@ -41,7 +61,7 @@ const ProfileScreen = ({navigation}) => {
             // navigation.addListener("focus", () =>  connectToProfileApi(userToken));
             connectToProfileApi(userToken)
           
-  }, [navigation]);
+  }, [navigation]);*/
 
   function connectToProfileApi(userToken){
     axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {

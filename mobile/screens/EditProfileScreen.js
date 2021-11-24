@@ -94,9 +94,19 @@ const EditProfileScreen = ({navigation}) => {
 
   //let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
   const [pickedImagePath, setPickedImagePath] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [aboutMe, setAboutMe] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [linkedIn, setLinkedIn] = useState('');
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
   // const [TwitterUrlPath, setTwitterUrlPath] = useState("Twitter");
   // setPickedImagePath(profileData.profilePic);
-  /*useEffect(async() => {
+  // connect to api and retive info
+  useEffect(async() => {
     let userToken = null;
     try {
         userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
@@ -115,22 +125,33 @@ const EditProfileScreen = ({navigation}) => {
         .then(function(response) {
             //setProfileData(response.data)
             // console.warn(profileData)
-          // handlePicChange(response.data["profilePic"]);
-          handleFirstNameChange(response.data["firstName"]);
-          handleLastNameChange(response.data["lastName"]);
-          handleAboutMeChange(response.data["aboutMe"]);
-          handleTwitterChange(response.data["twitter"]);
-          handleInstagramChange(response.data["instagram"]);
-          handleLinkedInChange(response.data["linkedIn"]);
-          handleCountryChange(response.data["country"]);
-          handleStateChange(response.data["state"]);
-          handleCityChange(response.data["city"]);
+          //handlePicChange(response.data["profilePic"]);
+          setPickedImagePath(response.data["profilePic"]);
+          setFirstName(response.data["firstName"]);
+          setLastName(response.data["lastName"]);
+          setAboutMe(response.data["aboutMe"]);
+          setTwitter(response.data["twitter"]);
+          setInstagram(response.data["instagram"]);
+          setLinkedIn(response.data["linkedIn"]);
+          setCountry(response.data["country"]);
+          setState(response.data["state"]);
+          setCity(response.data["city"]);
+          // handleFirstNameChange(response.data["firstName"]);
+          // console.warn("the firstname is " + data.firstName)
+          // handleLastNameChange(response.data["lastName"]);
+          // handleAboutMeChange(response.data["aboutMe"]);
+          // handleTwitterChange(response.data["twitter"]);
+          // handleInstagramChange(response.data["instagram"]);
+          // handleLinkedInChange(response.data["linkedIn"]);
+          // handleCountryChange(response.data["country"]);
+          // handleStateChange(response.data["state"]);
+          //handleCityChange(response.data["city"]);
           console.warn("Connetcted to profile!")
         })
         .catch(function(error) {
             console.warn("Fail to connetcted to profile!")
         });
-  }/*
+  }
 
   /*useEffect(() => {
     connectToProfileApi()
@@ -173,7 +194,8 @@ const EditProfileScreen = ({navigation}) => {
             console.warn("Fail to connetcted to profile!")
         });
   }*/
-  /*function connectToEditProfileApi(userToken, firstname, lastname, aboutme, instagram, twitter, linkedin, country, state, city, Pic){
+  // connect to edit-profile api
+  function connectToEditProfileApi(userToken, firstname, lastname, aboutme, instagram, twitter, linkedin, country, state, city, pickedImagePath){
     axios.put('https://cop4331c.herokuapp.com/api/user/edit-profile', { 
                   firstName: firstname,
                   lastName: lastname,
@@ -184,7 +206,7 @@ const EditProfileScreen = ({navigation}) => {
                   country: country,
                   state: state,
                   city: city,
-                  profilePic: Pic
+                  profilePic: pickedImagePath
             }, {
                 headers: {
                   'Authorization': `Bearer ${userToken}`  
@@ -199,7 +221,7 @@ const EditProfileScreen = ({navigation}) => {
                     { text: "OK", onPress: () => console.log("OK Pressed") }
                 )
                 navigation.goBack()
-                // navigation.navigate('ProfileStackScreen')
+                // navigation.navigate('ProfileScreen')
             })
             .catch(function(error) {
                 console.warn("profile not changed")
@@ -210,7 +232,7 @@ const EditProfileScreen = ({navigation}) => {
                 )
 
             });
-  }*/
+  }
 
   // This function is triggered when the "Select an image" button pressed
   const showImagePicker = async () => {
@@ -421,14 +443,15 @@ const handleCountryChange = (val) => {
           </TouchableOpacity>
           <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>Jhon Doe</Text>
         </View>
-
+        
+        <Text>Your name is {firstName}</Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="First Name"
             placeholderTextColor="#666666"
             // onChangeText={(val) => firstNameInputChange(val)} 
-            onChangeText={(val) => handleFirstNameChange(val)} 
+            onChangeText={(val) => setFirstName(val)} 
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -440,13 +463,13 @@ const handleCountryChange = (val) => {
             ]}
             />
         </View>
-        <Text>Your name is {data.firstName}</Text>
+        <Text>Your name is {firstName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="Last Name"
-            onChangeText={(val) => handleLastNameChange(val)} 
+            onChangeText={(val) => setLastName(val)} 
             placeholderTextColor="#666666"
             // onChangeText = "Hello"
             autoCorrect={false}
@@ -460,13 +483,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>Your name is {data.lastName}</Text>
+        <Text>Your name is {lastName}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
           <TextInput 
             placeholder="About Me"
-            onChangeText={(val) => handleAboutMeChange(val)} 
+            onChangeText={(val) => setAboutMe(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             multiline={true}
@@ -480,12 +503,12 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.aboutMe}</Text>
+        <Text>About Me {aboutMe}</Text>
         <View style={styles.action}>
           <Feather name="twitter" size={20} />
           <TextInput 
             placeholder="Twitter Url"
-            onChangeText={(val) => handleTwitterChange(val)} 
+            onChangeText={(val) => setTwitter(val)} 
             // onChangeText={(val) => setTwitterUrlPath(val)}
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -499,14 +522,14 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.twitter}</Text>
+        <Text>About Me {twitter}</Text>
 
 
         <View style={styles.action}>
           <Feather name="instagram" size={20} />
           <TextInput 
             placeholder="Instagram Url"
-            onChangeText={(val) => handleInstagramChange(val)} 
+            onChangeText={(val) => setInstagram(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -519,13 +542,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.instagram}</Text>
+        <Text>About Me {instagram}</Text>
 
         <View style={styles.action}>
           <Feather name="linkedin" size={20} />
           <TextInput 
             placeholder="LinkedIn Url"
-            onChangeText={(val) => handleLinkedInChange(val)} 
+            onChangeText={(val) => setLinkedIn(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -538,13 +561,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.linkedIn}</Text>
+        <Text>About Me {linkedIn}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="Country"
-            onChangeText={(val) => handleCountryChange(val)} 
+            onChangeText={(val) => setCountry(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -557,13 +580,13 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.country}</Text>
+        <Text>About Me {country}</Text>
 
         <View style={styles.action}>
           <FontAwesome name="globe" size={20} />
           <TextInput 
             placeholder="State"
-            onChangeText={(val) => handleStateChange(val)} 
+            onChangeText={(val) => setState(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -576,14 +599,14 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.state}</Text>
+        <Text>About Me {state}</Text>
 
 
         <View style={styles.action}>
           <Icon name="map-marker-outline" size={20} />
           <TextInput 
             placeholder="City"
-            onChangeText={(val) => handleCityChange(val)} 
+            onChangeText={(val) => setCity(val)} 
             placeholderTextColor="#666666"
             autoCorrect={false}
             // Some dark theme stuff here
@@ -596,16 +619,16 @@ const handleCountryChange = (val) => {
             ]}
           />
         </View>
-        <Text>About Me {data.city}</Text>
+        <Text>About Me {city}</Text>
 
         <TouchableOpacity style={styles.commandButton} onPress={async() => {
-          // let userToken = null;
-          // try {
-          //    userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-          // } catch (e) {
-          //    console.warn('SecureStore error');
-          // }
-          //  connectToEditProfileApi(userToken, data.firstName, data.lastName, data.aboutMe, data.instagram, data.twitter, data.linkedIn, data.country, data.state, data.city, pickedImagePath)
+          let userToken = null;
+           try {
+              userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+           } catch (e) {
+              console.warn('SecureStore error');
+           }
+            connectToEditProfileApi(userToken, firstName, lastName, aboutMe, instagram, twitter, linkedIn, country, state, city, pickedImagePath)
         }}>
           <Text style={styles.panelButtonTitle}>Submit</Text>
         </TouchableOpacity>

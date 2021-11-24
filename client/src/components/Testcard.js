@@ -22,9 +22,9 @@ import axios from 'axios';
 export default function Testcard(props) {
 
 //skills to be learnt 
-const [aboutMeText, setAboutMeText] = useState(""); 
+const [aboutMeText, setAboutMeText] = useState(props.skillname); 
 //explanation of skill
-const [aboutMeText2, setAboutMeText2] = useState(" We will teach you basics of JavaScript, CSS, HTML and how to utilize MERN Stack! ");   
+const [aboutMeText2, setAboutMeText2] = useState(props.skilldescription);   
 
 //display cosmetics
 const [fade, setFade] = useState(false);
@@ -35,45 +35,36 @@ const [inEditMode, setEditMode] = useState(false);
 const [displayEditFields, setDisplayEditFields] = useState("none");
 
 //first & last name
-const [firstName, setFirstName] = useState("Benjamin");
-const [lastName, setLastName] = useState("Harrion");
+const [firstName, setFirstName] = useState(props.firstName);
+const [lastName, setLastName] = useState(props.lastName);
 
 //City and State
-const [cityAdd, setCityAdd] = useState("Oralndo");
-const [stateAdd, setStateAdd] = useState("Florida");
+const [cityAdd, setCityAdd] = useState(props.cityAdd);
+const [stateAdd, setStateAdd] = useState(props.stateAdd);
 
 //Skills explanation display/edit mode variable
 const [displayAboutMeText2, setDisplayAboutMeText2] = useState("block")
-const [aboutMeText2Temp, setAboutMeText2Temp] = useState("");
+const [aboutMeText2Temp, setAboutMeText2Temp] = useState(props.aboutMeText2Temp);
 
 //Show/Hide the icons
 const [displayContainer, setDisplayContainer] = useState("block")
 
 //Skills name display/edit mode variable
 const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
-const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
+const [aboutMeTextTemp, setAboutMeTextTemp] = useState(props.aboutMeTextTemp);
 
 // const [firstNameTemp, setFirstNameTemp] = useState("");
 // const [lastNameTemp, setLastNameTemp] = useState("");
 
 //
-const [cityAddTemp, setcityAddTemp] = useState("");
-const [stateAddTemp, setstateAddTemp] = useState("");
+const [cityAddTemp, setcityAddTemp] = useState(props.cityAddTemp);
+const [stateAddTemp, setstateAddTemp] = useState(props.stateAddTemp);
 
 // const [imageOpacity, setImageOpacity] = useState(1);
 // const [photo, setPhoto] = useState(profileImage)
 const [editPermission, setEditPermission] = useState(true);
 const [mousePointer, setMousePointer] = useState('');
 const [disableImageUpload, setDisableImageUpload] = useState(true)
-
-// const [firstNameError, setFirstNameError] = useState({
-//   state: false,
-//   text: ""
-// });
-// const [lastNameError, setLastNameError] = useState({
-//   state: false,
-//   text: ""
-// });
 
 //Not Implemented
 const [stateError, setstateError] = useState({
@@ -96,80 +87,6 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   state: false,
   text: ""
 })
-
-useEffect(() => {
-  fetchSkills();
-  // editSkills();
-});
-
-function fetchSkills(){
-
-  const userId = props.match.params.userId;
-  const token = localStorage.getItem('token_data');
-
-  axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
-    // axios.get(`./api/skills/?search=example&page=0`, {
-      headers: { 'Authorization': `Bearer ${token}`}
-  })
-  .then((res) => {
-    if(res.data.length == 0) return;
-    let firstSkill = res.data[1];
-    console.log(firstSkill);
-    setAboutMeText2(res.data[0]["description"]);
-    setAboutMeText(res.data[0]["summary"]);
-    //add locations
-    //add Price
-    
-  })
-  .catch((err) => {
-    console.log("error");
-  })
-}
-
-// function editSkills(){
-
-//   const userId = props.match.params.userId;
-//   const token = localStorage.getItem('token_data');
-
-//   //value to commit to Backend changable_fields
-//   const payload = {
-//     summary: aboutMeTextTemp, 
-//     title:    aboutMeTextTemp,
-//     description: aboutMeTextTemp,
-//     price: 50,
-//     status: "Teaching"
-//   };
-
-//   // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
-//     console.log(token);
-//     axios.put(`/api/skills/6196faaa0f949a7477b0d998`, payload,{
-//       headers: { 'Authorization': `Bearer ${token}`}
-//   })
-//   .then((res) => {
-//     console.log("success")
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   })
-// }
-
-// function fetchSkills(){
-
-//   const userId = props.match.params.userId;
-//   const token = localStorage.getItem('token_data');
-
-//   axios.get(`./api/skills/?search=example&page=0`, {
-//     headers: { 'Authorization': `Bearer ${token}`}
-//   })
-//   .then((res) => {
-//     if(res.data.length == 0) return;
-//     let firstSkill = res.data[0];
-//     console.log(firstSkill);
-//   })
-//   .catch((err) => {
-
-//   })
-// }
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -206,6 +123,7 @@ function exitEditMode() {
   setFade(false);                     // Tells the button to fade out
 }
 
+// const[idskill, setidskill]=useState(props.skillid);
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
@@ -232,8 +150,8 @@ function handleSave() {
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
 
-    const userId = props.match.params.skillId;
-    const token = localStorage.getItem('token_data');
+    // const userId = props.match.params.skillId;
+    const token = localStorage.getItem('token');
   
     //value to commit to Backend changable_fields
     const payload = {
@@ -246,7 +164,7 @@ function handleSave() {
   
     // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
       console.log(token);
-      axios.put(`/api/skills/6196f8740f949a7477b0d985`, payload,{
+      axios.put(`/api/skills/${props.skillid}`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
@@ -268,11 +186,11 @@ function handleCancelButton() {
 
 function handleDeleteButton(){
 
-  const userId = props.match.params.skillId;
-  const token = localStorage.getItem('token_data');
+  // const userId = props.match.params.skillId;
+  const token = localStorage.getItem('token');
 
   console.log(token);
-  axios.delete(`/api/skills/619c2acaae801d9248e1e887`,{
+  axios.delete(`/api/skills/${props.skillid}`,{
     headers: { 'Authorization': `Bearer ${token}`}
 })
 .then((res) => {

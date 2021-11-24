@@ -23,10 +23,13 @@ import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
 import Paper from "@mui/material/Paper";
 import {retrieveData} from "../components/DataStorage";
+import Testcard from '../components/Testcard';
 import axios from "axios";
 
+//added props
+export default function ProfilePage(props) {
+  // export default function ProfilePage() {
 
-export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -80,7 +83,7 @@ export default function ProfilePage() {
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
-  console.log("ProfilePage Rendered");
+  // console.log("ProfilePage Rendered");
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -402,7 +405,7 @@ export default function ProfilePage() {
 
   function getProfileData() {
 
-    const userId = "61894e2ab7293c19980829a2";
+    const userId = "";
     // setProfileUserID("61887889e62859a35bc0de9c");
     // const userId = "";
     const URL = `./api/user/profile/${!userId? "" : userId}`;
@@ -435,6 +438,30 @@ export default function ProfilePage() {
       });
   }
 
+  //ridwan test
+
+  const [skillposts, setSkillPosts]=useState([]);
+
+  function fetchSkills(){
+
+     const userId = props.match.params.userId;
+    const token = localStorage.getItem('token');
+    // console.log(userId);
+
+    axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+      // axios.get(`./api/skills/?search=example&page=0`, {
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    .then((res) => {
+      
+      setSkillPosts(res.data);
+      
+    })
+    .catch((err) => {
+      console.log("error");
+    })
+  }
+
   useEffect(() => {
     try {
       // TODO: Add code to setEditPermission = true if the logged user is
@@ -456,15 +483,11 @@ export default function ProfilePage() {
 
       getProfileData();
       getAndDisplayReviews();
+      fetchSkills();
     } catch (e) {
       console.log(e.message);
     }
   }, []);
-
-  
-  
-  
-
 
   // useEffect(() => {
     // getAndDisplayReviews();
@@ -488,6 +511,33 @@ export default function ProfilePage() {
       reviewId={fetchedReview._id}
       // ratingReadOnly={true}
       // ratingReadOnly={reviewElement.userId === pr}
+    />
+  );
+
+  //Ridwan testing
+
+  const skilllist = skillposts.map((fetchedskill) =>
+    <Testcard
+      // key={fetchedReview._id}
+      // avatar={fetchedReview.authorProfilePic}
+      // reviewerName={fetchedReview.authorFullName}
+      // rating={fetchedReview.rating}
+      // location={"[Not provided]"}
+      // message={fetchedReview.content}
+      // newReview={false}
+      // reviewId={fetchedReview._id}
+      // // ratingReadOnly={true}
+      // // ratingReadOnly={reviewElement.userId === pr}
+      key={fetchedskill._id}
+      skillid={fetchedskill._id}
+      skillname = {fetchedskill.summary}
+      titlename = {fetchedskill.title}
+      skilldescription = {fetchedskill.description}
+      skillcity = {fetchedskill.city}
+      skillstate = {fetchedskill.city}
+      //add more
+
+
     />
   );
 
@@ -856,7 +906,8 @@ export default function ProfilePage() {
       </Box>
 
       {/******************************* Skill Listings *******************************/}
-      <Paper
+      {skilllist}
+      {/* <Paper
         sx={{
           p: 2,
           margin: 'auto',
@@ -886,7 +937,7 @@ export default function ProfilePage() {
           </Grid>
         </Grid>
 
-      </Paper>
+      </Paper> */}
 
 
       {/******************************* Write a Review Button *******************************/}
@@ -909,6 +960,7 @@ export default function ProfilePage() {
 
       {/******************* Reviews *****************/}
       {reviewList}
+      
 
     </Box>
   );

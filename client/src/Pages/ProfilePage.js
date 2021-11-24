@@ -80,7 +80,7 @@ export default function ProfilePage() {
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
-  console.log("ProfilePage Rendered");
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -399,7 +399,6 @@ export default function ProfilePage() {
   }
 
 
-
   function getProfileData() {
 
     const userId = "61894e2ab7293c19980829a2";
@@ -461,37 +460,36 @@ export default function ProfilePage() {
     }
   }, []);
 
-  
-  
-  
-
-
-  // useEffect(() => {
-    // getAndDisplayReviews();
-     // setNewReviewForm(newReviewForm);
-     // console.log("userEffect Reached");
-  // }, []);
-
 
   // Creates a list of reviews. For each review in reviewList
   // Render the Review component with the data passed to it.
   // reviewMessages is an array manually declared at the end of this file.
   const reviewList = reviewMessages.map((fetchedReview) =>
-    <Reviews
-      key={fetchedReview._id}
-      avatar={fetchedReview.authorProfilePic}
-      reviewerName={fetchedReview.authorFullName}
-      rating={fetchedReview.rating}
-      location={"[Not provided]"}
-      message={fetchedReview.content}
-      newReview={false}
-      reviewId={fetchedReview._id}
-      // ratingReadOnly={true}
-      // ratingReadOnly={reviewElement.userId === pr}
-    />
+
+    <div key={fetchedReview._id} id={fetchedReview._id}>
+      <Reviews
+        // key={fetchedReview._id}
+        avatar={fetchedReview.authorProfilePic}
+        reviewerName={fetchedReview.authorFullName}
+        rating={fetchedReview.rating}
+        location={"[Not provided]"}
+        message={fetchedReview.content}
+        newReview={false}
+        reviewId={fetchedReview._id}
+        // ratingReadOnly={true}
+        // ratingReadOnly={reviewElement.userId === pr}
+        onClick={(reviewIdToDelete) => { handleDeleteReview(reviewIdToDelete) }}
+      />
+    </div>
   );
 
-
+  // Removes the review from the DOM (At this point, the review has
+  // been deleted from the backend already; it was done inside the
+  // <Review /> component
+  const handleDeleteReview = (reviewIdToDelete) => {
+    const elem = document.getElementById(reviewIdToDelete);
+    elem.parentNode.removeChild(elem);
+  }
 
   const handleCancelWriteReview = () => {
     setDisplayNewReview("none");
@@ -507,7 +505,7 @@ export default function ProfilePage() {
         // avatar={"https://mui.com/static/images/avatar/6.jpg"}
         avatar=""
         userID = {profileUserID}
-        reviewerID={loggedUser.id}
+        reviewerId={loggedUser.id}
         reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
         rating={5}
         message=""
@@ -517,6 +515,7 @@ export default function ProfilePage() {
     />
     );
   }
+
 
   return (
     <Box sx={{flex: 1}}>

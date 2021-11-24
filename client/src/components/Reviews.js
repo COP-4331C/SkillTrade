@@ -36,7 +36,6 @@ export default function Reviews(props) {
     message: props.message,
     newReview: props.newReview,
     reviewerID: props.reviewerID
-    // ratingReadOnly: props.ratingReadOnly
   });
 
   const [reviewMessage, setReviewMessage] = useState(props.message);
@@ -117,26 +116,8 @@ export default function Reviews(props) {
     }
   }
 
-  function handleDeleteButton() {
-    // TODO: handle the delete review event.
-    //  Send a request to the backend, then
-    //  request a new set of reviews.
-  }
-
-
   // Handles the onClick event of the Save button
   function handleSave() {
-    // TODO: when a newReview is saved, it cannot longer be a newReview; it
-    //  has to be added to the other reviews (inserted in the reviewList somehow like
-    //  sending it to the backend, and requesting a new set of reviews that would
-    //  include the new review).
-    //  Otherwise, if the user wants to edit it, and press cancel, the review
-    //  disappears (because it is still a newReview).
-    // TODO: Save button does not remember the new Rating when the save button is clicked.
-    //  This will probably be fixed once we send the new review to the backend for storage,
-    //  then, request a new set of reviews.
-    // TODO: after the reviews is stored in the backend, then the hidden editable review
-    //  components needs to be clear of text and the starts reset to a default value of 5.
 
     setReviewMessage(reviewMessageTemp);
     setRating(reviewRatingTemp);
@@ -238,6 +219,20 @@ export default function Reviews(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleDeleteReview = () => {
+    const URL = `./api/review/delete-review/${props.reviewId}`;
+    const config = {headers: {Authorization: `Bearer ${token}`}};
+
+    // Saves the review
+    // axios.post(URL, data, config).then(console.log).catch(console.log);
+    axios.delete(URL, config).then(console.log).catch(console.log);
+
+    setOpen(false);
+    exitEditMode();
+    // console.log("Review.js - handleDeleteReview: " + props.reviewId);
+    props.onClick(props.reviewId);
+  }
 
   return (
     <Paper
@@ -403,7 +398,7 @@ export default function Reviews(props) {
           open={open}
           onClose={handleClose}
           aria-labelledby="alert-dialog-Delete-Review?"
-          aria-describedby="alert-dialog-This-cannot-be- undone"
+          aria-describedby="alert-dialog-this-cannot-be- undone"
         >
           <DialogTitle>Delete Review?</DialogTitle>
           <DialogContent>
@@ -416,7 +411,7 @@ export default function Reviews(props) {
             {/***** Yes, Delete - Button **/}
             <Button
               variant="contained"
-              onClick={handleClose}
+              onClick={() => handleDeleteReview()}
               color="error"
             >
               Yes, Delete

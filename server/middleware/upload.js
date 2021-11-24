@@ -21,7 +21,7 @@ let storage = multerS3({
     var fileExtension = "";
 
     for (var ext of validExtensions)
-      if (file.originalname.endsWith(ext))
+      if (file.originalname.toLowerCase().endsWith(ext))
         fileExtension = ext;
 
     if (fileExtension.length == 0)

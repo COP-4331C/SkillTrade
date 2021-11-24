@@ -20,19 +20,19 @@ const ProfileSchema = mongoose.Schema({
   },
   profilePic: { // Contains URL to the hosted image
     type: String,
-    default: "https://picsum.photos/200/200"
+    default: "https://picsum.photos/300/450"
   },
   instagram: {
     type: String,
-    default: "https://www.instagram.com/"
+    default: "Instagram"
   },
   twitter: {
     type: String,
-    default: "https://www.twitter.com/"
+    default: "Twitter"
   },
   linkedIn: {
     type: String,
-    default: "https://www.linkedin.com/"
+    default: "LinkedIn"
   },
   city: {
     type: String,

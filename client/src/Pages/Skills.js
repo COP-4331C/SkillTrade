@@ -1,64 +1,73 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Grid } from '@mui/material';
-import how from '../how.jpeg';
-import { styled } from '@material-ui/styles';
-import FormControl from "@mui/material/FormControl";
-import { TextField } from '@mui/material';
-import { Theme } from '../components/Theme';
-import { pipelinePrimaryTopicReference } from '@babel/types';
+import React, {useEffect, useState} from 'react';
+import Grid from '@mui/material/Grid'
+import Box from "@mui/material/Box";
+import HomeNavBar from "../components/HomeNavBar";
+import Testcard from '../components/Testcard';
+import axios from "axios";
+import Addskills from '../components/Addskills';
+//added props
+export default function Skills(props) {
 
+  const [skillposts, setSkillPosts]=useState([]);
 
-export default function Skills() {
+  function fetchSkills(){
+    const token = localStorage.getItem('token');
+    const userId="";
+    axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    .then((res) => {
+      setSkillPosts(res.data); 
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log("error");
+    })
+  }
 
-  
-  return (
-    <Grid container justifyContent="center">
-      <Card sx={{ maxWidth: 345 }}>
-      <div  style={{ 
-                backgroundSize: 300,
-                background: "url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png)",
-                width:300,
-                height:150,
-                border: "1px solid", 
-                borderColor: 'black' }} 
-                />
-      <CardContent style={{padding: 0}}>
-        <Typography  variant="body2" >
-          I can teach you...
-        </Typography>
-        <Typography gutterBottom variant="h5"  style={{ backgroundColor: '#3f51b5', color: "black" }} component="div">
-          How to speak in chinese
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          CHinese langage is awesome
-        </Typography>
-      </CardContent>
-      <Grid container spacing={2}>
-        <Grid item xs={3} justifyContent="left">
-          <img  style={{ 
-                  marginTop: 0, 
-                  width: 70, 
-                  height: 70, 
-                  borderRadius: 200 / 2,
-                  border: "1px solid", 
-                  borderColor: 'black' }} 
-                  src={how}/>
+  useEffect(() => {
+    try {
+
+      fetchSkills();
+    } catch (e) {
+      console.log(e.message);
+    }
+  }, []);
+
+  const skilllist = () => {
+    let content = skillposts.map((fetchedskill, index) => {
+      return(
+        <Grid item xs={3} key={index}>
+          <Testcard
+            key={fetchedskill._id}
+            skillid={fetchedskill._id}
+            skillname = {fetchedskill.summary}
+            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.description}
+            skillcity = {fetchedskill.city}
+            skillstate = {fetchedskill.state}
+            skillimage = {fetchedskill.imageURL}
+            //add more
+          />
         </Grid>
+      )
+    })
+    return (
+      <Grid container rowSpacing={3}>
+        { content }
       </Grid>
+    )
+  }
 
+  return (
+    <Box sx={{flex: 1}}>
+      <HomeNavBar/>
+
+      <Grid container>
+        <Addskills/>
+      </Grid>
       
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
-    </Grid>
-    
+      {skilllist()}
+    </Box>
   );
 }

@@ -21,12 +21,14 @@ import TextField from '@mui/material/TextField';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
-import Paper from "@mui/material/Paper";
 import {retrieveData} from "../components/DataStorage";
+import Testcard from '../components/Testcard';
 import axios from "axios";
+import Addskills from '../components/Addskills';
+//added props
+export default function ProfilePage(props) {
+  // export default function ProfilePage() {
 
-
-export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -80,7 +82,6 @@ export default function ProfilePage() {
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
-
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -435,6 +436,25 @@ export default function ProfilePage() {
       });
   }
 
+  //ridwan test
+
+  const [skillposts, setSkillPosts]=useState([]);
+
+  function fetchSkills(){
+    const token = localStorage.getItem('token');
+    const userId="";
+    axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+        headers: { 'Authorization': `Bearer ${token}`}
+    })
+    .then((res) => {
+      setSkillPosts(res.data); 
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log("error");
+    })
+  }
+
   useEffect(() => {
     try {
       // TODO: Add code to setEditPermission = true if the logged user is
@@ -456,6 +476,7 @@ export default function ProfilePage() {
 
       getProfileData();
       getAndDisplayReviews();
+      fetchSkills();
     } catch (e) {
       console.log(e.message);
     }
@@ -483,6 +504,48 @@ export default function ProfilePage() {
       />
     </div>
   );
+  //Ridwan testing
+
+  // const skilllist = skillposts.map((fetchedskill) =>
+  //   <Testcard
+  //     key={fetchedskill._id}
+  //     skillid={fetchedskill._id}
+  //     skillname = {fetchedskill.summary}
+  //     titlename = {fetchedskill.title}
+  //     skilldescription = {fetchedskill.description}
+  //     skillcity = {fetchedskill.city}
+  //     skillstate = {fetchedskill.state}
+  //     skillimage = {fetchedskill.imageURL}
+  //     //add more
+  //   />
+  // );
+
+  const skilllist = () => {
+    let content = skillposts.map((fetchedskill, index) => {
+      return(
+        <Grid item xs={3} key={index}>
+          <Testcard
+            key={fetchedskill._id}
+            skillid={fetchedskill._id}
+            skillname = {fetchedskill.summary}
+            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.description}
+            skillcity = {fetchedskill.city}
+            skillstate = {fetchedskill.state}
+            skillimage = {fetchedskill.imageURL}
+            //add more
+          />
+        </Grid>
+      )
+    })
+    return (
+      <Grid container rowSpacing={3}>
+        { content }
+      </Grid>
+    )
+  }
+
+
 
   // Removes the review from the DOM (At this point, the review has
   // been deleted from the backend already; it was done inside the
@@ -856,7 +919,12 @@ export default function ProfilePage() {
       </Box>
 
       {/******************************* Skill Listings *******************************/}
-      <Paper
+      <Grid container>
+        <Addskills/>
+      </Grid>
+      
+      {skilllist()}
+      {/* <Paper
         sx={{
           p: 2,
           margin: 'auto',
@@ -886,7 +954,7 @@ export default function ProfilePage() {
           </Grid>
         </Grid>
 
-      </Paper>
+      </Paper> */}
 
 
       {/******************************* Write a Review Button *******************************/}
@@ -908,6 +976,7 @@ export default function ProfilePage() {
 
       {/******************* Reviews *****************/}
       {reviewList}
+      
 
     </Box>
   );

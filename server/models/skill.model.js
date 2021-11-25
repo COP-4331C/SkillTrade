@@ -19,7 +19,8 @@ const SkillSchema = mongoose.Schema(
       required: true
     },
     imageURL: {
-      type: String
+      type: String,
+      default: "https://picsum.photos/200/200"
     },
     status: {
       type: String,

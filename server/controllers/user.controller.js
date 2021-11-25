@@ -15,26 +15,36 @@ exports.create = async (req, res) => {
     .save()
     .then(() => {
       var transport = nodemailer.createTransport({
-        service: 'hotmail',
+        service: "hotmail",
         auth: {
-          user: 'datherp5671@hotmail.com',
-          pass: process.env.PASSWORD
-        }
+          user: "datherp5671@hotmail.com",
+          pass: process.env.PASSWORD,
+        },
       });
-    
+
       var URL = "https://cop4331c.herokuapp.com";
-      var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
-    
+      var randomVerificationLink =
+        URL +
+        "/api/user/verify/?userId=" +
+        user._id +
+        "&verificationCode=" +
+        user.verificationCode;
+
       var message = {
         from: "datherp5671@hotmail.com",
         to: user.email,
         subject: "Email Verification - Skill Trade",
         text: "Email Verification - Skill Trade",
-        html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
+        html:
+          "<h>Hello, " +
+          firstName +
+          '!\n\tClick this <a href="' +
+          randomVerificationLink +
+          '">link</a> to verify your e-mail.</h>',
       };
-    
-      transport.sendMail(message, function(error, info) {
-          return res.status(200).json({ message : "Verification email sent!" });
+
+      transport.sendMail(message, function (error, info) {
+        return res.status(200).json({ message: "Verification email sent!" });
       });
     })
     .catch((err) => {
@@ -43,7 +53,6 @@ exports.create = async (req, res) => {
 
       return res.status(400).json({ error: err });
     });
-
 };
 
 exports.getProfile = async (req, res) => {
@@ -133,32 +142,28 @@ exports.changePassword = async (req, res) => {
       console.log(err);
       return res.status(400).json({ error: err });
     });
-}
+};
 
-exports.verifyEmail = async(req, res) => {
-  const {userId, verificationCode} = req.query;
+exports.verifyEmail = async (req, res) => {
+  const { userId, verificationCode } = req.query;
 
-  User
-    .findById(userId)
+  User.findById(userId)
     .then(async (data) => {
       const user = await User.findById(userId);
-      if(user.emailVerified || user.verificationCode == "")
-      {
-        return res.status(405).json({error: "Email is already verified"});
-      }
-      else if(user.verificationCode != verificationCode)
-      {
-        console.log("userV:" + user.verificationCode + " - emailV:" + verificationCode);
-        return res.status(401).json({error: "Invalid verification code."});
-      }
-      else
-      {
+      if (user.emailVerified || user.verificationCode == "") {
+        return res.status(405).json({ error: "Email is already verified" });
+      } else if (user.verificationCode != verificationCode) {
+        console.log(
+          "userV:" + user.verificationCode + " - emailV:" + verificationCode
+        );
+        return res.status(401).json({ error: "Invalid verification code." });
+      } else {
         user.emailVerified = true;
         user.verificationCode = "";
         user
           .save()
           .then(() => {
-            res.writeHead(301, { Location: 'https://cop4331c.herokuapp.com/' });
+            res.writeHead(301, { Location: "https://cop4331c.herokuapp.com/" });
             return res.end();
           })
           .catch((err) => {
@@ -169,9 +174,9 @@ exports.verifyEmail = async(req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({error : "Failed to retrieve user info."});
-    }); 
-}
+      res.status(500).json({ error: "Failed to retrieve user info." });
+    });
+};
 
 exports.uploadProfilePic = async (req, res) => {
   try {
@@ -193,10 +198,6 @@ exports.uploadProfilePic = async (req, res) => {
         message: "File size cannot be larger than 2MB!",
       });
     }
-
-    res.status(500).send({
-      message: err
-    });
   }
 };
 
@@ -204,12 +205,18 @@ exports.search = async (req, res) => {
   const { search, location, page } = req.query;
   const limit = 15;
   // TODO: Implement support for location?
-  const searchQuery = {$regex: search, $options: "i"}
+  const searchQuery = { $regex: search, $options: "i" };
 
-  User.find({ $or: [ {"profile.firstName": searchQuery}, {"profile.lastName": searchQuery}, {"profile.aboutMe": searchQuery}] })
+  User.find({
+    $or: [
+      { "profile.firstName": searchQuery },
+      { "profile.lastName": searchQuery },
+      { "profile.aboutMe": searchQuery },
+    ],
+  })
     .skip(limit * page)
     .limit(limit)
-    .sort( { updatedAt: -1} )
+    .sort({ updatedAt: -1 })
     .then((data) => {
       res.status(200).json(data);
     })

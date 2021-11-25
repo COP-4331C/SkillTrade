@@ -111,6 +111,17 @@ export default function AppNavBar() {
                 Sign up for free
               </Button>
 
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/Resetpassword"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                ResetPage
+              </Button>
+
             </Stack>
 
           </Box>

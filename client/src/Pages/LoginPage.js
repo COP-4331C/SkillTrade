@@ -159,6 +159,7 @@ export default function LoginPage() {
       axios.post(URL, loginPayload)
         .then(function (response) {
           storeData('token', response.data.accessToken);
+          // flash('success message ...');
 
           // Send user to the home page
           window.location.href = '/home';
@@ -216,6 +217,7 @@ export default function LoginPage() {
     .then(function(res) {
       console.log("success");
       console.log(res);
+      
   })
   .catch((err) => {
     console.log(err);

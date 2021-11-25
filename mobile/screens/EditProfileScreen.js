@@ -129,7 +129,7 @@ const EditProfileScreen = ({navigation}) => {
             //setProfileData(response.data)
             // console.warn(profileData)
           //handlePicChange(response.data["profilePic"]);
-          setPickedImagePath(response.data["profilePic"]);
+          setPickedImagePath({uri: response.data["profilePic"]});
           setFirstName(response.data["firstName"]);
           setLastName(response.data["lastName"]);
           setAboutMe(response.data["aboutMe"]);
@@ -199,7 +199,7 @@ const EditProfileScreen = ({navigation}) => {
         });
   }*/
   // connect to edit-profile api
-  function connectToEditProfileApi(userToken, firstname, lastname, aboutme, instagram, twitter, linkedin, country, state, city, pickedImagePath){
+  function connectToEditProfileApi(userToken, firstname, lastname, aboutme, instagram, twitter, linkedin, country, state, city){
     axios.put('https://cop4331c.herokuapp.com/api/user/edit-profile', { 
                   firstName: firstname,
                   lastName: lastname,
@@ -210,20 +210,25 @@ const EditProfileScreen = ({navigation}) => {
                   country: country,
                   state: state,
                   city: city,
-                  profilePic: pickedImagePath
+                  // profilePic: pickedImagePath
             }, {
                 headers: {
-                  'Authorization': `Bearer ${userToken}`  
+                  'Authorization': `Bearer ${userToken}`,
+                  // 'content-type': 'multipart/form-data'  
                 }
               })
             .then(function(response) {
                 console.warn("profile changed")
                 // navigation.goBack()
-                Alert.alert(
+                /*Alert.alert(
                     "Profile Changed!", // Alert Title
                     " ", // My Alert Msg
                     { text: "OK", onPress: () => console.log("OK Pressed") }
-                )
+                )*/
+                Alert.alert('', 'Profile Changed!', [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                  ],
+                  { cancelable: true });
                 navigation.goBack()
                 // navigation.navigate('ProfileScreen')
             })
@@ -236,6 +241,52 @@ const EditProfileScreen = ({navigation}) => {
                 )
 
             });
+  }
+  const createFileFormData = (image) => {
+    const data = new FormData();
+  
+    data.append('file', {
+      name: image.fileName,
+      type: "image/jpg",
+      uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri,
+    });
+  
+  
+    return data;
+  };
+  // endpoint for uploading a picture
+  function uploadProfilePic(userToken, image){
+    const data = createFileFormData(image)
+    console.log(image)
+    console.log(data)
+      axios.post('https://cop4331c.herokuapp.com/api/user/upload-profile-pic', { 
+      file: data
+    }, {
+      headers: {
+        'Authorization': `Bearer ${userToken}`,
+         'content-type': 'multipart/form-data'  
+      }
+    })
+  .then(function(response) {
+      console.warn("profile picture is changed")
+      // navigation.goBack()
+      /*Alert.alert(
+          "Profile Changed!", // Alert Title
+          " ", // My Alert Msg
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+      )*/
+      Alert.alert('', 'Profile Picture is Changed!', [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: true });
+      // navigation.goBack()
+      // navigation.navigate('ProfileScreen')
+  })
+  .catch(function(error) {
+      console.log(error.message)
+      console.warn("profile picture is not changed")
+
+  });
   }
 
   // This function is triggered when the "Select an image" button pressed
@@ -256,6 +307,7 @@ const EditProfileScreen = ({navigation}) => {
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
       console.log(result.uri);
+      // console.log(pickedImagePath)
     }
   }
 
@@ -270,12 +322,14 @@ const EditProfileScreen = ({navigation}) => {
     }
 
     const result = await ImagePicker.launchCameraAsync();
-
+    //let localUri = result.uri;
+    //let filename = localUri.split('/').pop();
+    // setPickedImagePath(result.uri);
     // Explore the result
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.uri);
+      setPickedImagePath(result);
       console.log(result.uri);
     }
   }
@@ -426,7 +480,7 @@ const handleCountryChange = (val) => {
               <ImageBackground
               resizeMode='cover' 
               source={{
-                uri: pickedImagePath,
+                uri: pickedImagePath.uri,
               }}
 
               style={{height:100, width: 100}}
@@ -453,6 +507,8 @@ const handleCountryChange = (val) => {
           </TouchableOpacity>
           <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>{firstName} {lastName}</Text>
         </View>
+
+          <Text>{pickedImagePath.uri}</Text>
         
         <View style={styles.action}>
           <FontAwesome name="user-o" size={20} />
@@ -635,7 +691,8 @@ const handleCountryChange = (val) => {
            } catch (e) {
               console.warn('SecureStore error');
            }
-            connectToEditProfileApi(userToken, firstName, lastName, aboutMe, instagram, twitter, linkedIn, country, state, city, pickedImagePath)
+            uploadProfilePic(userToken, pickedImagePath)
+            connectToEditProfileApi(userToken, firstName, lastName, aboutMe, instagram, twitter, linkedIn, country, state, city)
         }}>
           <Text style={styles.panelButtonTitle}>Submit</Text>
         </TouchableOpacity>

@@ -18,6 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
 import { Theme } from '../components/Theme';
+// import URLSea
 
 export default function Resetpassword() {
 
@@ -156,16 +157,29 @@ export default function Resetpassword() {
 
     if (valid()&&isOk ) {
 
-      const URL = './api/user/register';
+      const query = new URLSearchParams(this.props.location.search);
+      const userId = query.get('userId');
+      const resetCode = query.get('resetCode');
 
-      const registerPayload = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: values.password
+      console.log(userId);
+      console.log(resetCode);
+
+      const URL = './api/user/reset-password';
+
+      const resetPayload = {
+        // firstName: firstName,
+        // lastName: lastName,
+        // email: email,
+        // password: values.password,
+
+        //parse and put the UserID
+        //paese and put the reset code
+        userId : userId,
+        newPassword: values.password,
+        resetCode: resetCode
       };
 
-      axios.post(URL, registerPayload)
+      axios.post(URL, resetPayload)
         .then(function (response) {
           console.log(response);
           window.location.href='/Login';
@@ -210,6 +224,8 @@ export default function Resetpassword() {
 
     }
   }
+  
+
 
 /////////////////Interface/////////////////
 

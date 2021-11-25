@@ -57,7 +57,7 @@ export default function Reviews(props) {
   const [reviewRatingTemp, setReviewRatingTemp] = useState(5);
   const [displayRating, setDisplayRating] = useState("inline-flex");
   const [displayEditableRating, setDisplayEditableRating] = useState("none");
-
+  const [displayDeleteButton, setDisplayDeleteButton] = useState("none");
 
   // Allows custom rating starts
   const StyledRating = styled(Rating)({
@@ -80,6 +80,11 @@ export default function Reviews(props) {
     setDisplayRating("none");                 // Hides the Star Rating
     setDisplayEditableMessage("inline-flex"); // Displays the editable multiline text fields (the new review text)
     setDisplayButtons("inline-flex");         // Displays the save and cancel button
+    if(!newReview){
+      setDisplayDeleteButton("inline-flex");
+    } else {
+      setDisplayDeleteButton("none");
+    }
     setDisplayEditableRating("inline-flex");  // Displays the start Editable Rating
     setFadeIn(true);                          // Tells the buttons to fade in
     setReviewMessageTemp(reviewMessage);            // Saves the current text in a temp variable
@@ -95,10 +100,12 @@ export default function Reviews(props) {
     setInEditMode(false);                     // Turn edit mode off
     setDisplayEditButton("inline-flex");      // Displays the edit button
     setDisplayButtons("none");                // Hides the Cancel and Save buttons
+    setDisplayDeleteButton("none");           // Hides the Delete button
     setDisplayEditableMessage("none");        // Hides the Editable multiline review text Message
     setDisplayEditableRating("none");         // Hides the start Editable Rating
     setDisplayReviewMessage("block");         // Displays the uneditable review text message
     setDisplayRating("inline-flex");          // Displays the Star Rating
+
     setFadeIn(false);                         // Tells the button to fade out
     setReview({
       ...review,  // Leaves the rest of the variables unchanged
@@ -226,7 +233,7 @@ export default function Reviews(props) {
 
     // Saves the review
     // axios.post(URL, data, config).then(console.log).catch(console.log);
-    axios.delete(URL, config).then(console.log).catch(console.log);
+    axios.delete(URL, config).catch(console.log);
 
     setOpen(false);
     exitEditMode();
@@ -356,7 +363,8 @@ export default function Reviews(props) {
                     color="error"
                     // onClick={handleDeleteButton}
                     onClick={handleClickOpen}
-                    sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
+                    // sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
+                    sx={{marginTop:2, padding: "6px 35px", display: displayDeleteButton}}
                   > Delete Review
                   </Button>
                 </Fade>

@@ -8,7 +8,7 @@ router.post("/create-review", authenticateToken, reviews.createReview);
 
 // Get Review(s)
 //router.get("/get-reviews", reviews.getReviews);
-router.get("/get-reviews/:userId", reviews.getReviews);
+router.route("/get-reviews/").get(reviews.getReviews);
 
 // Edit Review 
 router.patch("/edit-review", authenticateToken, reviews.editReview);

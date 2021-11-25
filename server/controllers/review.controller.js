@@ -41,6 +41,7 @@ exports.getReviews = async (req, res) => {
     .sort( { updatedAt: -1} )
     .lean()
     .catch((err) => {
+        console.log(err);
       res.status(500).json(err);
     });
 

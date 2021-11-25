@@ -15,8 +15,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Paper } from '@mui/material';
+import { Avatar } from '@mui/material';
 import axios from 'axios';
 
 export default function Testcard(props) {
@@ -24,7 +26,12 @@ export default function Testcard(props) {
 //skills to be learnt 
 const [aboutMeText, setAboutMeText] = useState(props.skillname); 
 //explanation of skill
-const [aboutMeText2, setAboutMeText2] = useState(props.skilldescription);   
+const [aboutMeText2, setAboutMeText2] = useState(props.skilldescription);
+
+//Price stuff
+const [price, setPrice] = useState(props.skillprice);
+const [displayPrice, setdisplayPrice] = useState("block")
+const [priceTemp, setpriceTemp] = useState("");
 
 //display cosmetics
 const [fade, setFade] = useState(false);
@@ -33,10 +40,6 @@ const [displayButton, setDisplayButton] = useState("none");
 const [displayEditButton, setDisplayEditButton] = useState("none");
 const [inEditMode, setEditMode] = useState(false);
 const [displayEditFields, setDisplayEditFields] = useState("none");
-
-//first & last name
-const [firstName, setFirstName] = useState("");
-const [lastName, setLastName] = useState("");
 
 //City and State
 const [cityAdd, setCityAdd] = useState(props.skillcity);
@@ -52,9 +55,6 @@ const [displayContainer, setDisplayContainer] = useState("block")
 //Skills name display/edit mode variable
 const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
 const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
-
-// const [firstNameTemp, setFirstNameTemp] = useState("");
-// const [lastNameTemp, setLastNameTemp] = useState("");
 
 //
 const [cityAddTemp, setcityAddTemp] = useState("");
@@ -86,23 +86,27 @@ function enterEditMode() {
   setDisplayAboutMeText2("none");         // Hides the Skills Description text
   setDisplayContainer("none");            //Hides Icons
 
+  setdisplayPrice("none"); 
+
   setDisplayEditButton("none");           // Hides the edit button
   setDisplayEditFields("inline-flex");    // Displays the edit text fields
   setDisplayButton("inline-flex");        // Displays the save and cancel button
 
   setcityAddTemp(cityAdd);                  // Copies city name to editable text fields
   setstateAddTemp(stateAdd);                // Copies state name to editable text fields
-
+  
+  setpriceTemp(price);
 
   setAboutMeTextTemp(aboutMeText);              // Copies Skills text to editable text field
   setAboutMeText2Temp(aboutMeText2);            // Copies Skills Description text to editable text field
+
 
   setFade(true);                          // Tells the buttons to fade in
 }
 
 function exitEditMode() {
   setEditMode(false);                          // Turn off edit mode
-  
+  setdisplayPrice("inline-flex"); 
   setDisplayAddress("inline-flex");          // Displays the city and state names
   setDisplayAboutMeText("block")            // Displays the Skills text
   setDisplayAboutMeText2("block")          // Displays the Skills Description text
@@ -111,17 +115,42 @@ function exitEditMode() {
   setDisplayEditFields("none")          // Hides edit text fields
   setDisplayButton("none");            // Hides the Cancel and Save buttons
   setFade(false);                     // Tells the button to fade out
+  
+}
+
+function validateTextMinLength(text, min) {
+  if (text.length >= min) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
 
+  if (!validateTextMinLength(aboutMeTextTemp, 1)) {
+    okToSaveData = false;
+    setAboutMeTextError({
+      state: true,
+      text: "Can't be empty"
+    });
+  }
+
   if(!validateTextMaxLength(aboutMeTextTemp, 50)) {
     okToSaveData = false
     setAboutMeTextError({
       state: true,
       text: "Must be less than 15 characters (There are " + aboutMeTextTemp.length + ")"
+    });
+  }
+
+  if (!validateTextMinLength(aboutMeText2Temp, 1)) {
+    okToSaveData = false;
+    setAboutMeText2Error({
+      state: true,
+      text: "Can't be empty"
     });
   }
 
@@ -138,6 +167,7 @@ function handleSave() {
     setStateAdd(stateAddTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
+    setPrice(priceTemp);
 
     const token = localStorage.getItem('token');  
     //value to commit to Backend changable_fields
@@ -145,7 +175,7 @@ function handleSave() {
       summary: aboutMeTextTemp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
-      price: 50,
+      price: priceTemp,
       status: "Teaching",
       city: cityAddTemp,
       state: stateAddTemp
@@ -174,7 +204,6 @@ function handleCancelButton() {
 
 function handleDeleteButton(){
 
-  // const userId = props.match.params.skillId;
   const token = localStorage.getItem('token');
 
   console.log(token);
@@ -189,6 +218,7 @@ function handleDeleteButton(){
 })
 
 exitEditMode();
+refreshPage() ;
 }
 
 function validateTextMaxLength(text, max) {
@@ -211,9 +241,13 @@ function clearTextValidationErrorMessages() {
 }
 
 function handleOnMouseOver() {
-  if (!inEditMode && editPermission) {
+  if (!inEditMode && window.location.href.toLowerCase().includes("skillpage")) {
     setDisplayEditButton("inline-block");
   }
+}
+
+function refreshPage() {
+  window.location.reload(false);
 }
 
 function handleOnMouseLeave() {
@@ -232,6 +266,10 @@ function handleOnChangeAboutMeText2(e) {
 
 function handleOnChangeCityAddress(e) {
   setcityAddTemp(e.target.value);
+}
+
+function handleOnChangePrice(e) {
+  setpriceTemp(e.target.value);
 }
 
 function handleOnChangeStateAddress(e) {
@@ -279,12 +317,9 @@ useEffect(() => {
 }, []);
   
   return (
-    <Grid container justifyContent="center">
-            {/* <form onSubmit={editSkills}> */}
-
-
+    <Grid container sx={{display:"flex"}} justifyContent="center">
       {/* //start of card// */}
-      <Card  sx={{ maxWidth: 345,border: 4, borderRadius:5, borderColor:"black", width: "300px"}}>
+      <Card  sx={{ border: 4, borderRadius:5, borderColor:"black", width: "350px"}}>
       
       {/* //start of the image-header// */}
       <Box position="relative">
@@ -303,9 +338,9 @@ useEffect(() => {
               src={photo}
               style={{
                 // background: {photo},
-                backgroundSize: "300px",
-                width: 300,
-                height: 150,
+                // backgroundSize: "300px",
+                width: 350,
+                height: 200,
                 borderRadius: "4px 0 0 4px",
                 display: "block",
                 cursor: mousePointer,
@@ -317,7 +352,7 @@ useEffect(() => {
       </Box>
           
 
-      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0}}>
+      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0, marginBottom:0, paddingBottom:5}}>
 
         <Box padding sx={{backgroundColor: "white", alignContent: "center" }}>
           <Typography  variant="body5" color="black" style={{paddingTop:1}}>
@@ -404,7 +439,7 @@ useEffect(() => {
                   }} 
                   variant="body5"
                   sx={{
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: 600,
                     display: displayAboutMeText2,
                     flexWrap:"wrap",
@@ -536,7 +571,69 @@ useEffect(() => {
               // error={aboutMeText2Error.state}
             />
             </Grid>
+          </Grid>
 
+              {/*************************** Price Stuff ************************************/}
+          <div sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }} style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
+        <Paper 
+            variant="outlined" 
+            square 
+            style={{ position: "relative", borderWidth:"0px"}}
+            sx={{height:"auto", display: displayContainer}}>
+
+            <Grid container sx={{mb:0}} >
+
+            {/* //icon// */}
+              <Grid item xs={2} >
+                <IconButton 
+                  color="secondary" 
+                  aria-label="edit" 
+                  sx={{display: displayContainer}}>
+                    <MonetizationOnTwoToneIcon/>
+                </IconButton>
+              </Grid>
+
+                {/* //City// */}
+              <Grid item xs={3} >
+                <Typography padding="8px"
+                  style={{
+                    alignItems:"center", 
+                    // position: "absolute",
+                    textAlign: "left", 
+                    width: "100%", 
+                    left:"50%", 
+                    top:"50%", 
+                    // transform:"translate(-50%,-50%)"
+                  }} 
+                  variant="body4"
+                  sx={{
+                    fontWeight: 600,
+                    display: displayPrice,
+                    flexWrap:"wrap",
+                    alignContent: "center"}}>
+                  {price}
+                </Typography>
+              </Grid>
+            </Grid>
+            </Paper>
+            </div>
+
+                    {/*************************** Price Stuff (Edit Mode) ************************************/}
+
+          <Grid container>
+            <Grid item xs={6}>
+              <TextField
+                label="Price"
+                variant="filled"
+                rows={1}
+                value={priceTemp}
+                fullWidth
+                onChange={handleOnChangePrice}
+                sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
           </Grid>
 
          {/******************** Cancel+SAVE Button *********************/}
@@ -546,14 +643,14 @@ useEffect(() => {
               alignItems: 'safe center',
               flexWrap: "wrap-reverse"
             }}>
-              <Grid container justifyContent="center" style={{paddingTop: "10px"}}>
+              <Grid container justifyContent="center" >
                 
 
-              <Grid item xs={3}>
+              <Grid item xs={3} sx={{paddingBottom: 0, paddingTop:0}} style={{paddingBottom:0, paddingTop:0}}>
                   <Fade in={fade}>
                     <Button
-                      variant="contained"
-                      // color="alert"
+                      variant="outlined"
+                      style={{backgroundColor: Theme.palette.third.notmain}} 
                       onClick={handleDeleteButton}
                       sx={{display: displayButton}}
                     > <DeleteForeverIcon/>
@@ -592,7 +689,7 @@ useEffect(() => {
               
               {/******************** Cancel+SAVE Button DONE *********************/}
               
-            </Box>
+        </Box>
       </CardContent>
 
       {/********************Bottom Part of the Card*********************/}
@@ -602,34 +699,7 @@ useEffect(() => {
       <Grid container spacing={2} padding onMouseOver={handleOnMouseOver} onMouseLeave={handleOnMouseLeave}>
 
         <Grid item xs={3} justifyContent="left">
-
-          {/* <label htmlFor="icon-button-file">
-
-            <Input
-              accept=".png, .jpg, .jpeg"
-              id="icon-button-file"
-              type="file"
-              name="photo"
-              onChange={handlePhoto}
-              disabled={disableImageUpload}
-            /> */}
-
-            {/** **************************** Profile Image ********************** **/}
-            {/* <div style={{
-                background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
-                backgroundSize: "100px",
-                width: 70,
-                height: 70,
-                borderRadius: 200 / 2,
-                // display: "block",
-                cursor: mousePointer,
-              }}
-
-              alt={"user"}
-              // onMouseOver={handleOnMouseOverImage}
-              // onMouseLeave={handleOnMouseLeaveImage}
-            />
-            </label> */}
+          <Avatar alt="User Pic" src={props.skilluserpic}/>
         </Grid>
 
         <Grid item xs={6} justifyContent="left">
@@ -642,21 +712,7 @@ useEffect(() => {
                 fontWeight: 600
               }}
             >
-              {firstName+" "}
-          </Typography>
-
-          <Typography
-            style={{paddingLeft:0, marginLeft:0}}
-            variant={"body5"}
-            sx={{
-              textAlign: "left",
-              color: "black",
-              marginLeft: "20px",
-              marginTop: "20px",
-              fontWeight: 600
-            }}
-          >
-            {lastName}
+              {props.skilluserid}
           </Typography>
         </Grid>
 

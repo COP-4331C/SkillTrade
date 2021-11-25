@@ -35,47 +35,35 @@ const [inEditMode, setEditMode] = useState(false);
 const [displayEditFields, setDisplayEditFields] = useState("none");
 
 //first & last name
-const [firstName, setFirstName] = useState(props.firstName);
-const [lastName, setLastName] = useState(props.lastName);
+const [firstName, setFirstName] = useState("");
+const [lastName, setLastName] = useState("");
 
 //City and State
-const [cityAdd, setCityAdd] = useState(props.cityAdd);
-const [stateAdd, setStateAdd] = useState(props.stateAdd);
+const [cityAdd, setCityAdd] = useState(props.skillcity);
+const [stateAdd, setStateAdd] = useState(props.skillstate);
 
 //Skills explanation display/edit mode variable
 const [displayAboutMeText2, setDisplayAboutMeText2] = useState("block")
-const [aboutMeText2Temp, setAboutMeText2Temp] = useState(props.aboutMeText2Temp);
+const [aboutMeText2Temp, setAboutMeText2Temp] = useState("");
 
 //Show/Hide the icons
 const [displayContainer, setDisplayContainer] = useState("block")
 
 //Skills name display/edit mode variable
 const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
-const [aboutMeTextTemp, setAboutMeTextTemp] = useState(props.aboutMeTextTemp);
+const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
 
 // const [firstNameTemp, setFirstNameTemp] = useState("");
 // const [lastNameTemp, setLastNameTemp] = useState("");
 
 //
-const [cityAddTemp, setcityAddTemp] = useState(props.cityAddTemp);
-const [stateAddTemp, setstateAddTemp] = useState(props.stateAddTemp);
+const [cityAddTemp, setcityAddTemp] = useState("");
+const [stateAddTemp, setstateAddTemp] = useState("");
 
-// const [imageOpacity, setImageOpacity] = useState(1);
-// const [photo, setPhoto] = useState(profileImage)
 const [editPermission, setEditPermission] = useState(true);
 const [mousePointer, setMousePointer] = useState('');
 const [disableImageUpload, setDisableImageUpload] = useState(true)
 
-//Not Implemented
-const [stateError, setstateError] = useState({
-  state: false,
-  text: ""
-});
-const [cityError, setcityError] = useState({
-  state: false,
-  text: ""
-});
-//
 
 //If the user goes over the designated Character Space for either Skills or its explanation
 const [aboutMeTextError, setAboutMeTextError] = useState({
@@ -87,6 +75,8 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   state: false,
   text: ""
 })
+
+const [photo, setPhoto] = useState(props.skillimage);
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -123,7 +113,6 @@ function exitEditMode() {
   setFade(false);                     // Tells the button to fade out
 }
 
-// const[idskill, setidskill]=useState(props.skillid);
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
@@ -136,11 +125,11 @@ function handleSave() {
     });
   }
 
-  if(!validateTextMaxLength(aboutMeText2Temp, 100)) {
+  if(!validateTextMaxLength(aboutMeText2Temp, 250)) {
     okToSaveData = false
     setAboutMeText2Error({
       state: true,
-      text: "Must be less than 30 characters (There are " + aboutMeText2Temp.length + ")"
+      text: "Must be less than 250 characters (There are " + aboutMeText2Temp.length + ")"
     });
   }
 
@@ -150,19 +139,18 @@ function handleSave() {
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
 
-    // const userId = props.match.params.skillId;
-    const token = localStorage.getItem('token');
-  
+    const token = localStorage.getItem('token');  
     //value to commit to Backend changable_fields
     const payload = {
       summary: aboutMeTextTemp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
       price: 50,
-      status: "Teaching"
+      status: "Teaching",
+      city: cityAddTemp,
+      state: stateAddTemp
     };
-  
-    // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+
       console.log(token);
       axios.put(`/api/skills/${props.skillid}`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
@@ -203,14 +191,6 @@ function handleDeleteButton(){
 exitEditMode();
 }
 
-// function validateTextMinLength(text, min) {
-//   if(text.length >= min) {
-//     return 1;
-//   } else {
-//     return 0;
-//   }
-// }
-
 function validateTextMaxLength(text, max) {
   if(text.length <= max) {
     return 1;
@@ -250,15 +230,6 @@ function handleOnChangeAboutMeText2(e) {
   setAboutMeText2Temp(e.target.value);
 }
 
-// function handleOnChangeFirstName(e) {
-//   setFirstNameTemp(e.target.value);
-// }
-
-// function handleOnChangeLastName(e) {
-//   setLastNameTemp(e.target.value);
-// }
-
-//
 function handleOnChangeCityAddress(e) {
   setcityAddTemp(e.target.value);
 }
@@ -272,21 +243,26 @@ const Input = styled('input')({
   display: 'none',
 });
 
-function handlePhoto(e) {
-  if (editPermission) {
-    alert("Profile picture processing coming soon");
-    // Uploaded image should be in e.target.files or e.target.files[0]
-    // Axios Post will go here
-    // Request to backend with image for cropping and resizing.
-  }
+function handleskillpic(e) {
+
+  const formData = new FormData();
+  formData.append("file", e.target.files[0]);
+
+  const token = localStorage.getItem('token');
+
+    axios.post(`/api/skills/${props.skillid}`, formData,{
+      headers: { Authorization: `Bearer ${token}`,'content-type': 'multipart/form-data' }
+  })
+    // axios.post(URL, formData, config)
+      .then( function(response){
+        setPhoto(response.data.URL);
+      })
+      .catch("error"+console.log);
+  // }
 }
 
 useEffect(() => {
   try {
-    // TODO: Add code to setEditPermission = true if the logged user is
-    //  the owner of the profile page. For now, we'll keep the
-    //  setEditPermission = true below. (Note: we can't set editPermission,
-    //  to then read its state immediately; it does not work.
 
     if (editPermission) {
       setDisableImageUpload(false);
@@ -312,29 +288,31 @@ useEffect(() => {
       
       {/* //start of the image-header// */}
       <Box position="relative">
-        <label htmlFor="icon-button-file">
+
+        <label htmlFor="icon-button-file-2">
           <Input
             accept=".png, .jpg, .jpeg"
-            id="icon-button-file"
+            id="icon-button-file-2"
             type="file"
             name="photo"
-            // onChange={handlePhoto}
-            // disabled={disableImageUpload}
+            onChange={handleskillpic}
+            disabled={disableImageUpload}
           />
           {/** **************************** Image ********************** **/}
-          <div style={{
-              background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
-              backgroundSize: "300px",
-              width: 300,
-              height: 150,
-              display: "block",
-              cursor: mousePointer,
-            }}
-
-            alt={"user"}
-            // onMouseOver={handleOnMouseOverImage}
-            // onMouseLeave={handleOnMouseLeaveImage}
-          />
+          <img
+              src={photo}
+              style={{
+                // background: {photo},
+                backgroundSize: "300px",
+                width: 300,
+                height: 150,
+                borderRadius: "4px 0 0 4px",
+                display: "block",
+                cursor: mousePointer,
+                // opacity: imageOpacity
+              }}
+              alt="user"
+            />
           </label>  
       </Box>
           
@@ -345,13 +323,9 @@ useEffect(() => {
           <Typography  variant="body5" color="black" style={{paddingTop:1}}>
             I can teach you...
           </Typography>
-
         </Box>
-        
-
       {/*************************** What Skills can be taught ************************************/}
       <div
-
         sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }}
         style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
           <Paper 
@@ -359,7 +333,6 @@ useEffect(() => {
             square 
             style={{backgroundColor: Theme.palette.primary.contrastText, position: "relative", borderWidth:"0px"}}
             sx={{height:"72px", display: displayContainer}}>
-
             <Typography padding
               style={{
                 alignItems:"center", 
@@ -369,6 +342,7 @@ useEffect(() => {
                 left:"50%", 
                 top:"50%", 
                 transform:"translate(-50%,-50%)"}}  
+
               sx={{
                 fontWeight: 300,
                 fontSize: "1.2rem",              
@@ -376,6 +350,7 @@ useEffect(() => {
                 flexWrap:"wrap",
                 alignContent: "center"}}>
                 {"How to "+aboutMeText}
+
             </Typography>
           </Paper>
         </div>
@@ -395,20 +370,18 @@ useEffect(() => {
 
         {/*************************** What Skills can be taught DONE ************************************/}
 
-        {/* **********************************************************************************************/}
         {/*************************** Explanation on what can be taught ************************************/}
-        {/* <Grid container > */}
         <div
-
           sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }}
           style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
+        
         <Paper 
             variant="outlined" 
             square 
             style={{ position: "relative", borderWidth:"0px"}}
-            sx={{height:"72px", display: displayContainer}}>
-            <Grid container >
+            sx={{height:"108px", display: displayContainer}}>
 
+            <Grid container >
               <Grid item xs={2} >
                 <IconButton 
                   color="secondary" 
@@ -502,7 +475,7 @@ useEffect(() => {
                     display: displayAddress,
                     flexWrap:"wrap",
                     alignContent: "center"}}>
-                  {cityAdd + " ,"}
+                  {cityAdd + " "}
                 </Typography>
               </Grid>
 
@@ -565,11 +538,6 @@ useEffect(() => {
             </Grid>
 
           </Grid>
-            
-
-            
-
-              
 
          {/******************** Cancel+SAVE Button *********************/}
         <Box sx={{
@@ -635,7 +603,7 @@ useEffect(() => {
 
         <Grid item xs={3} justifyContent="left">
 
-          <label htmlFor="icon-button-file">
+          {/* <label htmlFor="icon-button-file">
 
             <Input
               accept=".png, .jpg, .jpeg"
@@ -644,10 +612,10 @@ useEffect(() => {
               name="photo"
               onChange={handlePhoto}
               disabled={disableImageUpload}
-            />
+            /> */}
 
             {/** **************************** Profile Image ********************** **/}
-            <div style={{
+            {/* <div style={{
                 background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
                 backgroundSize: "100px",
                 width: 70,
@@ -661,7 +629,7 @@ useEffect(() => {
               // onMouseOver={handleOnMouseOverImage}
               // onMouseLeave={handleOnMouseLeaveImage}
             />
-            </label>
+            </label> */}
         </Grid>
 
         <Grid item xs={6} justifyContent="left">

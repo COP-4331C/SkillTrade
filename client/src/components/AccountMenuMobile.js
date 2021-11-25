@@ -142,7 +142,7 @@ export default function AccountMenuMobile() {
             </ListItemIcon> My Skills
         </MenuItem>
 
-        <MenuItem component={RouterLink} to="/cards">
+        <MenuItem component={RouterLink} to="/skillpage">
           <ListItemIcon>
               <ConstructionOutlinedIcon />
             </ListItemIcon> Test Add Skills

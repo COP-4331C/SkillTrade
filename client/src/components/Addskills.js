@@ -57,6 +57,9 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   text: ""
 })
 
+function refreshPage() {
+  window.location.reload(false);
+}
 
 // Handles the onClick event of the Save button
 function handleSave() {
@@ -70,11 +73,11 @@ function handleSave() {
     });
   }
 
-  if(!validateTextMaxLength(aboutMeText2Temp, 100)) {
+  if(!validateTextMaxLength(aboutMeText2Temp, 250)) {
     okToSaveData = false
     setAboutMeText2Error({
       state: true,
-      text: "Must be less than 30 characters (There are " + aboutMeText2Temp.length + ")"
+      text: "Must be less than 250 characters (There are " + aboutMeText2Temp.length + ")"
     });
   }
 
@@ -84,8 +87,8 @@ function handleSave() {
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
 
-    const userId = props.match.params.userId;
-    const token = localStorage.getItem('token_data');
+    const userId = "";
+    const token = localStorage.getItem('token');
   
     //value to commit to Backend changable_fields
     const payload = {
@@ -111,8 +114,9 @@ function handleSave() {
       console.log(err);
     })
 
-handleClose();  }
-}
+handleClose();  
+refreshPage();
+}}
 
 
 function handleCancelButton() {
@@ -302,11 +306,6 @@ useEffect(() => {
             </Grid>
 
           </Grid>
-            
-
-            
-
-              
 
          {/******************** Cancel+SAVE Button *********************/}
         <Box sx={{
@@ -343,7 +342,6 @@ useEffect(() => {
 
                   {/* </Fade> */}
                 </Grid>
-
               </Grid>
               
               {/******************** Cancel+SAVE Button DONE *********************/}

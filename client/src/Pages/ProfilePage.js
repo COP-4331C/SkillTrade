@@ -21,11 +21,10 @@ import TextField from '@mui/material/TextField';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
-import Paper from "@mui/material/Paper";
 import {retrieveData} from "../components/DataStorage";
 import Testcard from '../components/Testcard';
 import axios from "axios";
-
+import Addskills from '../components/Addskills';
 //added props
 export default function ProfilePage(props) {
   // export default function ProfilePage() {
@@ -443,19 +442,14 @@ export default function ProfilePage(props) {
   const [skillposts, setSkillPosts]=useState([]);
 
   function fetchSkills(){
-
-     const userId = props.match.params.userId;
     const token = localStorage.getItem('token');
-    // console.log(userId);
-
+    const userId="";
     axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
-      // axios.get(`./api/skills/?search=example&page=0`, {
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
-      
-      setSkillPosts(res.data);
-      
+      setSkillPosts(res.data); 
+      console.log(res.data);
     })
     .catch((err) => {
       console.log("error");
@@ -516,30 +510,45 @@ export default function ProfilePage(props) {
 
   //Ridwan testing
 
-  const skilllist = skillposts.map((fetchedskill) =>
-    <Testcard
-      // key={fetchedReview._id}
-      // avatar={fetchedReview.authorProfilePic}
-      // reviewerName={fetchedReview.authorFullName}
-      // rating={fetchedReview.rating}
-      // location={"[Not provided]"}
-      // message={fetchedReview.content}
-      // newReview={false}
-      // reviewId={fetchedReview._id}
-      // // ratingReadOnly={true}
-      // // ratingReadOnly={reviewElement.userId === pr}
-      key={fetchedskill._id}
-      skillid={fetchedskill._id}
-      skillname = {fetchedskill.summary}
-      titlename = {fetchedskill.title}
-      skilldescription = {fetchedskill.description}
-      skillcity = {fetchedskill.city}
-      skillstate = {fetchedskill.city}
-      //add more
+  // const skilllist = skillposts.map((fetchedskill) =>
+  //   <Testcard
+  //     key={fetchedskill._id}
+  //     skillid={fetchedskill._id}
+  //     skillname = {fetchedskill.summary}
+  //     titlename = {fetchedskill.title}
+  //     skilldescription = {fetchedskill.description}
+  //     skillcity = {fetchedskill.city}
+  //     skillstate = {fetchedskill.state}
+  //     skillimage = {fetchedskill.imageURL}
+  //     //add more
+  //   />
+  // );
 
+  const skilllist = () => {
+    let content = skillposts.map((fetchedskill, index) => {
+      return(
+        <Grid item xs={3} key={index}>
+          <Testcard
+            key={fetchedskill._id}
+            skillid={fetchedskill._id}
+            skillname = {fetchedskill.summary}
+            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.description}
+            skillcity = {fetchedskill.city}
+            skillstate = {fetchedskill.state}
+            skillimage = {fetchedskill.imageURL}
+            //add more
+          />
+        </Grid>
+      )
+    })
+    return (
+      <Grid container rowSpacing={3}>
+        { content }
+      </Grid>
+    )
+  }
 
-    />
-  );
 
 
 
@@ -906,7 +915,11 @@ export default function ProfilePage(props) {
       </Box>
 
       {/******************************* Skill Listings *******************************/}
-      {skilllist}
+      <Grid container>
+        <Addskills/>
+      </Grid>
+      
+      {skilllist()}
       {/* <Paper
         sx={{
           p: 2,

@@ -9,6 +9,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import LoginPage from './Pages/LoginPage';
 import Testcard from './components/Testcard';
 import Addskills from './components/Addskills';
+import Resetpassword from './Pages/Resetpassword';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
             <Route path="/profile" component={ProfilePage} />
             <Route path="/card/:userId?" component={Testcard}/>
             <Route path="/cards/:userId?" component={Addskills}/>
+            <Route path="/skillpage/:userId?" component={Skills}/>
+            <Route path="/Resetpassword" component={Resetpassword}/>
             
             {/* <Route path="/card/:userId?" component={Testcard}/> */}
 

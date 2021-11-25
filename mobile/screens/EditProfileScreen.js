@@ -748,8 +748,8 @@ const styles = StyleSheet.create({
   commandButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: "#FF6347",
-    alignItems: "center",
+    backgroundColor: '#694fad', //  '#FF6347'
+    alignItems: 'center',
     marginTop: 10,
   },
   panel: {

@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import {Link as RouterLink} from "react-router-dom";
 import LoginIcon from '@mui/icons-material/Login';
 import RegisterIcon from '@mui/icons-material/AssignmentOutlined';
+import {Theme} from "./Theme";
 
 export default function AppNavBar() {
 
@@ -81,7 +82,7 @@ export default function AppNavBar() {
   return (
     <Box sx={{flexGrow: 1}}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{backgroundColor: Theme.palette.primary.dark}}>
           <MainLogo/>
           <Box sx={{flexGrow: 1}}/>
           <Box sx={{display: {xs: 'none', sm: 'flex', md: 'flex'}}}>
@@ -108,6 +109,17 @@ export default function AppNavBar() {
                 sx={{whiteSpace: 'nowrap'}}
               >
                 Sign up for free
+              </Button>
+
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                component={RouterLink}
+                to="/Resetpassword"
+                sx={{whiteSpace: 'nowrap'}}
+              >
+                ResetPage
               </Button>
 
             </Stack>

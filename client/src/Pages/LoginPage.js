@@ -26,9 +26,6 @@ import AppNavBar from '../components/AppNavBar';
 // TODO Improvement: The wrong credentials message and the minimum password length message
 //      pushes components out of the way (Pushes them down). Try to avoid it.
 
-// TODO BUG: Buttons become enlarged and distorted in the browser of mobile devices and
-//      on desktops, when the browser's size is reduced horizontally.
-
 export default function LoginPage() {
 
   //***************************************** //
@@ -162,6 +159,7 @@ export default function LoginPage() {
       axios.post(URL, loginPayload)
         .then(function (response) {
           storeData('token', response.data.accessToken);
+          // flash('success message ...');
 
           // Send user to the home page
           window.location.href = '/home';
@@ -209,6 +207,25 @@ export default function LoginPage() {
 
   }, []);
 
+  function handleFrogot(){
+
+    const payload ={
+      email : email
+    };
+
+    axios.post(`/api/user/forgot-password`,payload)
+    .then(function(res) {
+      console.log("success");
+      console.log(res);
+      
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  
+  // exitEditMode();
+  // refreshPage() ;
+  }
   // **************************************** //
   //                  GUI
   // **************************************** //
@@ -285,7 +302,7 @@ export default function LoginPage() {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDown}
                   >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }
@@ -312,7 +329,8 @@ export default function LoginPage() {
           </Button>
 
           {/*********************  Forgot my password *********************/}
-          <Typography align="center">
+          
+          {/* <Typography align="center">
             <Link
               href='#'
               underline='hover'
@@ -322,7 +340,9 @@ export default function LoginPage() {
             >
               Forgot my password
             </Link>
-          </Typography>
+          </Typography> */}
+
+          <Button onClick={handleFrogot}> Forgot Password </Button>
 
           {/********************* No Account? Create one! *********************/}
           <Typography fontSize="0.9rem" align="center">No account?{' '}

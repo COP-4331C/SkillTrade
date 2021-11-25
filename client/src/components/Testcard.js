@@ -15,16 +15,23 @@ import EditIcon from '@mui/icons-material/Edit';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Paper } from '@mui/material';
+import { Avatar } from '@mui/material';
 import axios from 'axios';
 
 export default function Testcard(props) {
 
 //skills to be learnt 
-const [aboutMeText, setAboutMeText] = useState(""); 
+const [aboutMeText, setAboutMeText] = useState(props.skillname); 
 //explanation of skill
-const [aboutMeText2, setAboutMeText2] = useState(" We will teach you basics of JavaScript, CSS, HTML and how to utilize MERN Stack! ");   
+const [aboutMeText2, setAboutMeText2] = useState(props.skilldescription);
+
+//Price stuff
+const [price, setPrice] = useState(props.skillprice);
+const [displayPrice, setdisplayPrice] = useState("block")
+const [priceTemp, setpriceTemp] = useState("");
 
 //display cosmetics
 const [fade, setFade] = useState(false);
@@ -34,13 +41,9 @@ const [displayEditButton, setDisplayEditButton] = useState("none");
 const [inEditMode, setEditMode] = useState(false);
 const [displayEditFields, setDisplayEditFields] = useState("none");
 
-//first & last name
-const [firstName, setFirstName] = useState("Benjamin");
-const [lastName, setLastName] = useState("Harrion");
-
 //City and State
-const [cityAdd, setCityAdd] = useState("Oralndo");
-const [stateAdd, setStateAdd] = useState("Florida");
+const [cityAdd, setCityAdd] = useState(props.skillcity);
+const [stateAdd, setStateAdd] = useState(props.skillstate);
 
 //Skills explanation display/edit mode variable
 const [displayAboutMeText2, setDisplayAboutMeText2] = useState("block")
@@ -53,38 +56,14 @@ const [displayContainer, setDisplayContainer] = useState("block")
 const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
 const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
 
-// const [firstNameTemp, setFirstNameTemp] = useState("");
-// const [lastNameTemp, setLastNameTemp] = useState("");
-
 //
 const [cityAddTemp, setcityAddTemp] = useState("");
 const [stateAddTemp, setstateAddTemp] = useState("");
 
-// const [imageOpacity, setImageOpacity] = useState(1);
-// const [photo, setPhoto] = useState(profileImage)
 const [editPermission, setEditPermission] = useState(true);
 const [mousePointer, setMousePointer] = useState('');
 const [disableImageUpload, setDisableImageUpload] = useState(true)
 
-// const [firstNameError, setFirstNameError] = useState({
-//   state: false,
-//   text: ""
-// });
-// const [lastNameError, setLastNameError] = useState({
-//   state: false,
-//   text: ""
-// });
-
-//Not Implemented
-const [stateError, setstateError] = useState({
-  state: false,
-  text: ""
-});
-const [cityError, setcityError] = useState({
-  state: false,
-  text: ""
-});
-//
 
 //If the user goes over the designated Character Space for either Skills or its explanation
 const [aboutMeTextError, setAboutMeTextError] = useState({
@@ -97,79 +76,7 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   text: ""
 })
 
-useEffect(() => {
-  fetchSkills();
-  // editSkills();
-});
-
-function fetchSkills(){
-
-  const userId = props.match.params.userId;
-  const token = localStorage.getItem('token_data');
-
-  axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
-    // axios.get(`./api/skills/?search=example&page=0`, {
-      headers: { 'Authorization': `Bearer ${token}`}
-  })
-  .then((res) => {
-    if(res.data.length == 0) return;
-    let firstSkill = res.data[1];
-    console.log(firstSkill);
-    setAboutMeText2(res.data[0]["description"]);
-    setAboutMeText(res.data[0]["summary"]);
-    //add locations
-    //add Price
-    
-  })
-  .catch((err) => {
-    console.log("error");
-  })
-}
-
-// function editSkills(){
-
-//   const userId = props.match.params.userId;
-//   const token = localStorage.getItem('token_data');
-
-//   //value to commit to Backend changable_fields
-//   const payload = {
-//     summary: aboutMeTextTemp, 
-//     title:    aboutMeTextTemp,
-//     description: aboutMeTextTemp,
-//     price: 50,
-//     status: "Teaching"
-//   };
-
-//   // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
-//     console.log(token);
-//     axios.put(`/api/skills/6196faaa0f949a7477b0d998`, payload,{
-//       headers: { 'Authorization': `Bearer ${token}`}
-//   })
-//   .then((res) => {
-//     console.log("success")
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   })
-// }
-
-// function fetchSkills(){
-
-//   const userId = props.match.params.userId;
-//   const token = localStorage.getItem('token_data');
-
-//   axios.get(`./api/skills/?search=example&page=0`, {
-//     headers: { 'Authorization': `Bearer ${token}`}
-//   })
-//   .then((res) => {
-//     if(res.data.length == 0) return;
-//     let firstSkill = res.data[0];
-//     console.log(firstSkill);
-//   })
-//   .catch((err) => {
-
-//   })
-// }
+const [photo, setPhoto] = useState(props.skillimage);
 
 function enterEditMode() {
   setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -179,23 +86,27 @@ function enterEditMode() {
   setDisplayAboutMeText2("none");         // Hides the Skills Description text
   setDisplayContainer("none");            //Hides Icons
 
+  setdisplayPrice("none"); 
+
   setDisplayEditButton("none");           // Hides the edit button
   setDisplayEditFields("inline-flex");    // Displays the edit text fields
   setDisplayButton("inline-flex");        // Displays the save and cancel button
 
   setcityAddTemp(cityAdd);                  // Copies city name to editable text fields
   setstateAddTemp(stateAdd);                // Copies state name to editable text fields
-
+  
+  setpriceTemp(price);
 
   setAboutMeTextTemp(aboutMeText);              // Copies Skills text to editable text field
   setAboutMeText2Temp(aboutMeText2);            // Copies Skills Description text to editable text field
+
 
   setFade(true);                          // Tells the buttons to fade in
 }
 
 function exitEditMode() {
   setEditMode(false);                          // Turn off edit mode
-  
+  setdisplayPrice("inline-flex"); 
   setDisplayAddress("inline-flex");          // Displays the city and state names
   setDisplayAboutMeText("block")            // Displays the Skills text
   setDisplayAboutMeText2("block")          // Displays the Skills Description text
@@ -204,11 +115,28 @@ function exitEditMode() {
   setDisplayEditFields("none")          // Hides edit text fields
   setDisplayButton("none");            // Hides the Cancel and Save buttons
   setFade(false);                     // Tells the button to fade out
+  
+}
+
+function validateTextMinLength(text, min) {
+  if (text.length >= min) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
+
+  if (!validateTextMinLength(aboutMeTextTemp, 1)) {
+    okToSaveData = false;
+    setAboutMeTextError({
+      state: true,
+      text: "Can't be empty"
+    });
+  }
 
   if(!validateTextMaxLength(aboutMeTextTemp, 50)) {
     okToSaveData = false
@@ -218,11 +146,19 @@ function handleSave() {
     });
   }
 
-  if(!validateTextMaxLength(aboutMeText2Temp, 100)) {
+  if (!validateTextMinLength(aboutMeText2Temp, 1)) {
+    okToSaveData = false;
+    setAboutMeText2Error({
+      state: true,
+      text: "Can't be empty"
+    });
+  }
+
+  if(!validateTextMaxLength(aboutMeText2Temp, 250)) {
     okToSaveData = false
     setAboutMeText2Error({
       state: true,
-      text: "Must be less than 30 characters (There are " + aboutMeText2Temp.length + ")"
+      text: "Must be less than 250 characters (There are " + aboutMeText2Temp.length + ")"
     });
   }
 
@@ -231,22 +167,22 @@ function handleSave() {
     setStateAdd(stateAddTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
+    setPrice(priceTemp);
 
-    const userId = props.match.params.skillId;
-    const token = localStorage.getItem('token_data');
-  
+    const token = localStorage.getItem('token');  
     //value to commit to Backend changable_fields
     const payload = {
       summary: aboutMeTextTemp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
-      price: 50,
-      status: "Teaching"
+      price: priceTemp,
+      status: "Teaching",
+      city: cityAddTemp,
+      state: stateAddTemp
     };
-  
-    // axios.get(`./api/skills/user/${!userId ? "" : userId}`, {
+
       console.log(token);
-      axios.put(`/api/skills/6196f8740f949a7477b0d985`, payload,{
+      axios.put(`/api/skills/${props.skillid}`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
@@ -268,11 +204,10 @@ function handleCancelButton() {
 
 function handleDeleteButton(){
 
-  const userId = props.match.params.skillId;
-  const token = localStorage.getItem('token_data');
+  const token = localStorage.getItem('token');
 
   console.log(token);
-  axios.delete(`/api/skills/619c2acaae801d9248e1e887`,{
+  axios.delete(`/api/skills/${props.skillid}`,{
     headers: { 'Authorization': `Bearer ${token}`}
 })
 .then((res) => {
@@ -283,15 +218,8 @@ function handleDeleteButton(){
 })
 
 exitEditMode();
+refreshPage() ;
 }
-
-// function validateTextMinLength(text, min) {
-//   if(text.length >= min) {
-//     return 1;
-//   } else {
-//     return 0;
-//   }
-// }
 
 function validateTextMaxLength(text, max) {
   if(text.length <= max) {
@@ -313,9 +241,13 @@ function clearTextValidationErrorMessages() {
 }
 
 function handleOnMouseOver() {
-  if (!inEditMode && editPermission) {
+  if (!inEditMode && window.location.href.toLowerCase().includes("skillpage")) {
     setDisplayEditButton("inline-block");
   }
+}
+
+function refreshPage() {
+  window.location.reload(false);
 }
 
 function handleOnMouseLeave() {
@@ -332,17 +264,12 @@ function handleOnChangeAboutMeText2(e) {
   setAboutMeText2Temp(e.target.value);
 }
 
-// function handleOnChangeFirstName(e) {
-//   setFirstNameTemp(e.target.value);
-// }
-
-// function handleOnChangeLastName(e) {
-//   setLastNameTemp(e.target.value);
-// }
-
-//
 function handleOnChangeCityAddress(e) {
   setcityAddTemp(e.target.value);
+}
+
+function handleOnChangePrice(e) {
+  setpriceTemp(e.target.value);
 }
 
 function handleOnChangeStateAddress(e) {
@@ -354,21 +281,26 @@ const Input = styled('input')({
   display: 'none',
 });
 
-function handlePhoto(e) {
-  if (editPermission) {
-    alert("Profile picture processing coming soon");
-    // Uploaded image should be in e.target.files or e.target.files[0]
-    // Axios Post will go here
-    // Request to backend with image for cropping and resizing.
-  }
+function handleskillpic(e) {
+
+  const formData = new FormData();
+  formData.append("file", e.target.files[0]);
+
+  const token = localStorage.getItem('token');
+
+    axios.post(`/api/skills/${props.skillid}`, formData,{
+      headers: { Authorization: `Bearer ${token}`,'content-type': 'multipart/form-data' }
+  })
+    // axios.post(URL, formData, config)
+      .then( function(response){
+        setPhoto(response.data.URL);
+      })
+      .catch("error"+console.log);
+  // }
 }
 
 useEffect(() => {
   try {
-    // TODO: Add code to setEditPermission = true if the logged user is
-    //  the owner of the profile page. For now, we'll keep the
-    //  setEditPermission = true below. (Note: we can't set editPermission,
-    //  to then read its state immediately; it does not work.
 
     if (editPermission) {
       setDisableImageUpload(false);
@@ -385,55 +317,50 @@ useEffect(() => {
 }, []);
   
   return (
-    <Grid container justifyContent="center">
-            {/* <form onSubmit={editSkills}> */}
-
-
+    <Grid container sx={{display:"flex"}} justifyContent="center">
       {/* //start of card// */}
-      <Card  sx={{ maxWidth: 345,border: 4, borderRadius:5, borderColor:"black", width: "300px"}}>
+      <Card  sx={{ border: 4, borderRadius:5, borderColor:"black", width: "350px"}}>
       
       {/* //start of the image-header// */}
       <Box position="relative">
-        <label htmlFor="icon-button-file">
+
+        <label htmlFor="icon-button-file-2">
           <Input
             accept=".png, .jpg, .jpeg"
-            id="icon-button-file"
+            id="icon-button-file-2"
             type="file"
             name="photo"
-            // onChange={handlePhoto}
-            // disabled={disableImageUpload}
+            onChange={handleskillpic}
+            disabled={disableImageUpload}
           />
           {/** **************************** Image ********************** **/}
-          <div style={{
-              background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
-              backgroundSize: "300px",
-              width: 300,
-              height: 150,
-              display: "block",
-              cursor: mousePointer,
-            }}
-
-            alt={"user"}
-            // onMouseOver={handleOnMouseOverImage}
-            // onMouseLeave={handleOnMouseLeaveImage}
-          />
+          <img
+              src={photo}
+              style={{
+                // background: {photo},
+                // backgroundSize: "300px",
+                width: 350,
+                height: 200,
+                borderRadius: "4px 0 0 4px",
+                display: "block",
+                cursor: mousePointer,
+                // opacity: imageOpacity
+              }}
+              alt="user"
+            />
           </label>  
       </Box>
           
 
-      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0}}>
+      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0, marginBottom:0, paddingBottom:5}}>
 
         <Box padding sx={{backgroundColor: "white", alignContent: "center" }}>
           <Typography  variant="body5" color="black" style={{paddingTop:1}}>
             I can teach you...
           </Typography>
-
         </Box>
-        
-
       {/*************************** What Skills can be taught ************************************/}
       <div
-
         sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }}
         style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
           <Paper 
@@ -441,7 +368,6 @@ useEffect(() => {
             square 
             style={{backgroundColor: Theme.palette.primary.contrastText, position: "relative", borderWidth:"0px"}}
             sx={{height:"72px", display: displayContainer}}>
-
             <Typography padding
               style={{
                 alignItems:"center", 
@@ -451,6 +377,7 @@ useEffect(() => {
                 left:"50%", 
                 top:"50%", 
                 transform:"translate(-50%,-50%)"}}  
+
               sx={{
                 fontWeight: 300,
                 fontSize: "1.2rem",              
@@ -458,6 +385,7 @@ useEffect(() => {
                 flexWrap:"wrap",
                 alignContent: "center"}}>
                 {"How to "+aboutMeText}
+
             </Typography>
           </Paper>
         </div>
@@ -477,20 +405,18 @@ useEffect(() => {
 
         {/*************************** What Skills can be taught DONE ************************************/}
 
-        {/* **********************************************************************************************/}
         {/*************************** Explanation on what can be taught ************************************/}
-        {/* <Grid container > */}
         <div
-
           sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }}
           style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
+        
         <Paper 
             variant="outlined" 
             square 
             style={{ position: "relative", borderWidth:"0px"}}
-            sx={{height:"72px", display: displayContainer}}>
-            <Grid container >
+            sx={{height:"108px", display: displayContainer}}>
 
+            <Grid container >
               <Grid item xs={2} >
                 <IconButton 
                   color="secondary" 
@@ -513,7 +439,7 @@ useEffect(() => {
                   }} 
                   variant="body5"
                   sx={{
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: 600,
                     display: displayAboutMeText2,
                     flexWrap:"wrap",
@@ -584,7 +510,7 @@ useEffect(() => {
                     display: displayAddress,
                     flexWrap:"wrap",
                     alignContent: "center"}}>
-                  {cityAdd + " ,"}
+                  {cityAdd + " "}
                 </Typography>
               </Grid>
 
@@ -645,13 +571,70 @@ useEffect(() => {
               // error={aboutMeText2Error.state}
             />
             </Grid>
-
           </Grid>
-            
 
-            
+              {/*************************** Price Stuff ************************************/}
+          <div sx={{backgroundColor: Theme.palette.primary.main, alignContent: "center" }} style={{overflow: "hidden", textOverflow: "ellipsis", alignItems:"center"}}>
+        <Paper 
+            variant="outlined" 
+            square 
+            style={{ position: "relative", borderWidth:"0px"}}
+            sx={{height:"auto", display: displayContainer}}>
 
-              
+            <Grid container sx={{mb:0}} >
+
+            {/* //icon// */}
+              <Grid item xs={2} >
+                <IconButton 
+                  color="secondary" 
+                  aria-label="edit" 
+                  sx={{display: displayContainer}}>
+                    <MonetizationOnTwoToneIcon/>
+                </IconButton>
+              </Grid>
+
+                {/* //City// */}
+              <Grid item xs={3} >
+                <Typography padding="8px"
+                  style={{
+                    alignItems:"center", 
+                    // position: "absolute",
+                    textAlign: "left", 
+                    width: "100%", 
+                    left:"50%", 
+                    top:"50%", 
+                    // transform:"translate(-50%,-50%)"
+                  }} 
+                  variant="body4"
+                  sx={{
+                    fontWeight: 600,
+                    display: displayPrice,
+                    flexWrap:"wrap",
+                    alignContent: "center"}}>
+                  {price}
+                </Typography>
+              </Grid>
+            </Grid>
+            </Paper>
+            </div>
+
+                    {/*************************** Price Stuff (Edit Mode) ************************************/}
+
+          <Grid container>
+            <Grid item xs={6}>
+              <TextField
+                label="Price"
+                variant="filled"
+                rows={1}
+                value={priceTemp}
+                fullWidth
+                onChange={handleOnChangePrice}
+                sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+          </Grid>
 
          {/******************** Cancel+SAVE Button *********************/}
         <Box sx={{
@@ -660,14 +643,14 @@ useEffect(() => {
               alignItems: 'safe center',
               flexWrap: "wrap-reverse"
             }}>
-              <Grid container justifyContent="center" style={{paddingTop: "10px"}}>
+              <Grid container justifyContent="center" >
                 
 
-              <Grid item xs={3}>
+              <Grid item xs={3} sx={{paddingBottom: 0, paddingTop:0}} style={{paddingBottom:0, paddingTop:0}}>
                   <Fade in={fade}>
                     <Button
-                      variant="contained"
-                      // color="alert"
+                      variant="outlined"
+                      style={{backgroundColor: Theme.palette.third.notmain}} 
                       onClick={handleDeleteButton}
                       sx={{display: displayButton}}
                     > <DeleteForeverIcon/>
@@ -706,7 +689,7 @@ useEffect(() => {
               
               {/******************** Cancel+SAVE Button DONE *********************/}
               
-            </Box>
+        </Box>
       </CardContent>
 
       {/********************Bottom Part of the Card*********************/}
@@ -716,34 +699,7 @@ useEffect(() => {
       <Grid container spacing={2} padding onMouseOver={handleOnMouseOver} onMouseLeave={handleOnMouseLeave}>
 
         <Grid item xs={3} justifyContent="left">
-
-          <label htmlFor="icon-button-file">
-
-            <Input
-              accept=".png, .jpg, .jpeg"
-              id="icon-button-file"
-              type="file"
-              name="photo"
-              onChange={handlePhoto}
-              disabled={disableImageUpload}
-            />
-
-            {/** **************************** Profile Image ********************** **/}
-            <div style={{
-                background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
-                backgroundSize: "100px",
-                width: 70,
-                height: 70,
-                borderRadius: 200 / 2,
-                // display: "block",
-                cursor: mousePointer,
-              }}
-
-              alt={"user"}
-              // onMouseOver={handleOnMouseOverImage}
-              // onMouseLeave={handleOnMouseLeaveImage}
-            />
-            </label>
+          <Avatar alt="User Pic" src={props.skilluserpic}/>
         </Grid>
 
         <Grid item xs={6} justifyContent="left">
@@ -756,21 +712,7 @@ useEffect(() => {
                 fontWeight: 600
               }}
             >
-              {firstName+" "}
-          </Typography>
-
-          <Typography
-            style={{paddingLeft:0, marginLeft:0}}
-            variant={"body5"}
-            sx={{
-              textAlign: "left",
-              color: "black",
-              marginLeft: "20px",
-              marginTop: "20px",
-              fontWeight: 600
-            }}
-          >
-            {lastName}
+              {props.skilluserid}
           </Typography>
         </Grid>
 

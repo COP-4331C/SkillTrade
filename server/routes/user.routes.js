@@ -15,6 +15,12 @@ router.put("/edit-profile", authenticateToken, users.editProfile);
 // Change Password
 router.patch("/change-password", authenticateToken, users.changePassword);
 
+// Forgot Password (Initial Email)
+router.post("/forgot-password", users.forgotPassword);
+
+    // Reset Password (Final Step)
+    router.patch("/reset-password", users.resetPassword);
+
 // Verify Email
 router.route("/verify/").get(users.verifyEmail);
 

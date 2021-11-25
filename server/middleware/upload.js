@@ -17,11 +17,11 @@ let storage = multerS3({
   },
   key: function(req, file, next) {
     console.log(file);
-    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp']
+    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.jfif'];
     var fileExtension = "";
 
     for (var ext of validExtensions)
-      if (file.originalname.endsWith(ext))
+      if (file.originalname.toLowerCase().endsWith(ext))
         fileExtension = ext;
 
     if (fileExtension.length == 0)

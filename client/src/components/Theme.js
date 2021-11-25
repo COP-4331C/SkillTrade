@@ -30,6 +30,14 @@ export const Theme = createTheme({
       dark: '#B27F06',
       contrastText: '#181818'
     },
+    third: {
+      // main: '#FFCE00',
+      // main: '#f44336',
+      notmain: '#FF0000',
+      light: '#FFC43A',
+      dark: '#B27F06',
+      contrastText: '#181818'
+    },
   },
   // typography: {
   //   fontFamily: [

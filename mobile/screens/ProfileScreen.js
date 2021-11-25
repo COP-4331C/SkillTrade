@@ -1,13 +1,20 @@
 import React, { Component, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, Alert } from 'react-native';
-import { Entypo, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons'
+import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { Entypo, Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import AddSkillScreen from './AddSkillScreen';
+import moment from "moment";
+import { render } from 'react-dom';
 // import { DirectConnect } from 'aws-sdk';
 
+const Item = ({ title }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+  </View>
+);
 
 
 const ProfileScreen = ({navigation}) => {
@@ -32,36 +39,26 @@ const ProfileScreen = ({navigation}) => {
     state: '',
   });
 
-  React.useEffect(async() => {
+  const [reviewData, setReviewData] = React.useState([]);
+
+  
+  useEffect(async() => {
     let userToken = null;
-            try {
-                userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-            } catch (e) {
-                console.warn('SecureStore error');
-            }
-            connectToProfileApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action
-            // navigation.addListener("focus", () =>  connectToProfileApi(userToken));
-            connectToProfileApi(userToken)
-    });
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
-
-  /*useEffect(async() => {
-        let userToken = null;
-            try {
-                userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-            } catch (e) {
-                console.warn('SecureStore error');
-            }
-            // navigation.addListener("focus", () =>  connectToProfileApi(userToken));
-            connectToProfileApi(userToken)
-          
-  }, [navigation]);*/
+    let userId = '6189698db9e8c8287e27ab7a'; //should be null; 
+    // try {
+    //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
+    // } catch (e) {
+    //     console.warn(e);
+    // }
+    connectToGetReviewApi(userId)
+  }, [])
 
   function connectToProfileApi(userToken){
     axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
@@ -74,35 +71,89 @@ const ProfileScreen = ({navigation}) => {
             console.warn("connected")
         })
         .catch(function(error) {
-            console.warn("Fail to connetcted to profile!")
+            console.warn(error)
         });
   }
 
+  function connectToGetReviewApi(userId){
+    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${userId}`,  {
+            
+          })
+        .then(function(response) {
+            setReviewData(response.data)
+            // console.warn(profileData)
+        })
+        .catch(function(error) {
+            console.warn(error)
+        });
+  }
 
+  let userId = profileData._id
+  try {
+    SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
+  } catch (e) {
+    console.log(e);
+  }
 
-  return (
+  const deleteSkillHandler = () => {
+    navigation.navigate('EditSkillScreen') // FIXME: connect to delete skill API and delete record
+  }
 
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+  const deleteReviewHandler = () => {
+    navigation.navigate('EditReviewScreen') // FIXME: connect to delete review API and delete record
+  }
+
+  const renderItem = ({ item }) => (
+    <Item title={item.reviewerName} />
+  );
+
+  const renderPost = post => { 
+    return (
+        <View>
+            <View style={styles.reviewContainer}>
+              <View flexDirection="row" style={{paddingRight:40}}>
+                <Image source={{uri:post.authorProfilePic}} style={styles.avatar} /> 
+                <Text style={[styles.text, {fontWeight: "500"}]}>@{post.authorFullName}: 
+                <Text style={{fontWeight:"400"}}> {post.content}</Text>
+                </Text>
+              </View>
+              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
+                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
+                  <AntDesign name="edit" size={18} color="black" />
+                </TouchableOpacity>
+                <Text>           </Text>
+                <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
+                  <AntDesign name="delete" size={18} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+        </View>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <SafeAreaView style={styles.container}>
 
         <View style={styles.titleBar}>
-          <AntDesign name="adduser" size={32} color="black"></AntDesign>
           <Ionicons name="location-sharp" size={24} color="black">
-            <Text style={{fontSize:24}}> {profileData.city}.{profileData.state}.{profileData.country}</Text>
+            <Text style={{fontSize:24}}>{profileData.city}</Text>
           </Ionicons>
-          <Entypo name="dots-three-vertical" size={24} color="black"></Entypo>
+          <Text style={{fontSize:24}}>{profileData.state}</Text>
+          <Text style={{fontSize:24}}>{profileData.country}</Text>
         </View>
 
         <View style={{alignSelf:"center"}}>
           <View style={styles.profileImage}>
-            <Image source={{uri:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
+            <Image source={{url:profileData.profilePic}} style={styles.image} resizeMode="center"></Image>
           </View>
-          <View style={styles.dm}>
-            <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-          </View> 
           <View style={styles.active}></View>
+          <View style={styles.dm}>
+            <MaterialCommunityIcons name="heart-plus" size={38} color="black" />
+          </View> 
+          
           <View style={styles.add}>
-            <Ionicons name="ios-add" size={48} color="#DFD8c8" style={{marginTop: 6, marginLeft: 2}}></Ionicons>
+            <AntDesign name="message1" size={38} color="black" style={{marginTop: 6, marginLeft: 2}}/>
           </View>
         </View>
 
@@ -153,7 +204,7 @@ const ProfileScreen = ({navigation}) => {
           <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
             <Text style={styles.sectionTitle}> MY SKILLS </Text>
             <TouchableOpacity onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
-             <Entypo name="add-to-list" size={24} color="black" />
+            <Entypo name="add-to-list" size={24} color="black" />
             </TouchableOpacity>
           </View>
 
@@ -161,10 +212,10 @@ const ProfileScreen = ({navigation}) => {
             <View style={styles.skillBar}>
               <Text style={[styles.about, {fontWeight:"600"}]}>Cooking chinese food</Text>
               <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-                <AntDesign name="edit" size={24} color="black" />
+                <AntDesign name="edit" size={18} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteSkillScreen')}} > 
-                <AntDesign name="delete" size={24} color="black" />
+              <TouchableOpacity onPress={()=>{ deleteSkillHandler() }} > 
+                <AntDesign name="delete" size={18} color="black" />
               </TouchableOpacity>
 
             </View>
@@ -216,7 +267,6 @@ const ProfileScreen = ({navigation}) => {
           </View>
         </View>
 
-
         <View style={styles.sectionContainer}>
 
           <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
@@ -225,23 +275,35 @@ const ProfileScreen = ({navigation}) => {
               <Entypo name="add-to-list" size={24} color="black" />
             </TouchableOpacity>
           </View>
-            <Text style={[styles.text, {fontWeight: "500"}]}>@Selina: 
-            <Text style={{fontWeight:"400"}}> Wu is a great chef, my cat love his food!!!</Text>
-            </Text>
-          <View flexDirection="row" justifyContent='flex-end'>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
-              <AntDesign name="edit" size={18} color="black" />
-            </TouchableOpacity>
-            <Text>        </Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('DeleteReviewScreen')}} >                 
-              <AntDesign name="delete" size={18} color="black" />
-            </TouchableOpacity>
-          </View>
 
         </View>
 
-      </ScrollView>
+      </SafeAreaView>
+    );
+
+  }
+
+
+  return (
+
+    <SafeAreaView style={{flex: 1}}> 
+      <FlatList 
+        
+        data={reviewData}
+        renderItem={({item}) => renderPost(item)}
+        keyExtractor={item => item._id}
+        ListHeaderComponent={
+          renderHeader()
+        }
+        // ListFooterComponent={
+        //   <Text>This is the ListFooterComponent!!</Text>
+        // }
+
+      />
     </SafeAreaView>
+
+
+    
 
   );
 };
@@ -281,9 +343,10 @@ const styles = StyleSheet.create({
       overflow: "hidden"
   },
   dm: {
-      backgroundColor: "#41444B",
+      backgroundColor: "white", // "#41444B"
       position: "absolute",
-      top: 20,
+
+      bottom: 8,
       width: 40,
       height: 40,
       borderRadius: 20,
@@ -293,7 +356,7 @@ const styles = StyleSheet.create({
   active: {
       backgroundColor: "#34FFB9",
       position: "absolute",
-      bottom: 28,
+      top: 20,
       left: 10,
       padding: 4,
       height: 20,
@@ -301,7 +364,7 @@ const styles = StyleSheet.create({
       borderRadius: 10
   },
   add: {
-      backgroundColor: "#41444B",
+      backgroundColor: "white", // "#41444B"
       position: "absolute",
       bottom: 0,
       right: -10,
@@ -385,6 +448,13 @@ const styles = StyleSheet.create({
     // marginBottom: 8,
     // backgroundColor: 
   },
+  reviewContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 40,
+    backgroundColor: "#FFF"
+    // marginBottom: 8,
+    // backgroundColor: 
+  },
   skillContainer: {
     paddingVertical: 12,
     paddingLeft: 10,
@@ -396,6 +466,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', // 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'
     // marginTop: 0,
     // marginHorizontal: 0
-}
+},
+avatar: {
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+  marginRight: 16
+},
   
 });

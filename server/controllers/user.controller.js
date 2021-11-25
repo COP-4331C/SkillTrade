@@ -154,7 +154,7 @@ exports.forgotPassword = async (req, res) => {
   if(!user.emailVerified)
     return res.status(400).json({error: "User needs to verify email account first."});
 
-  user.verificationCode = crypto.randomUUID();//"reset" + resetCode;
+  user.verificationCode = crypto.randomUUID();
 
   user
     .save()
@@ -169,7 +169,7 @@ exports.forgotPassword = async (req, res) => {
 
       var URL = "https://cop4331c.herokuapp.com";
       var randomVerificationLink = URL
-                                   + "/reset-password/?userId="
+                                   + "/Resetpassword/?userId="
                                    + user._id
                                    + "&resetCode="
                                    + user.verificationCode;
@@ -186,7 +186,7 @@ exports.forgotPassword = async (req, res) => {
       };
 
       transport.sendMail(message, function(error, info) {
-          return res.status(200).json({ message : "Verification email sent!" });
+          return res.status(200).json({ message : "Forgot password email sent!" });
       });
     })
     .catch((err) => {

@@ -26,7 +26,8 @@ import Testcard from '../components/Testcard';
 import axios from "axios";
 import Addskills from '../components/Addskills';
 import Skeleton from '@mui/material/Skeleton';
-
+import { Paper } from '@mui/material';
+//added props
 export default function ProfilePage(props) {
 
   const [aboutMeText, setAboutMeText] = useState("");
@@ -568,21 +569,6 @@ export default function ProfilePage(props) {
     </div>
   );
   //Ridwan testing
-
-  // const skilllist = skillposts.map((fetchedskill) =>
-  //   <Testcard
-  //     key={fetchedskill._id}
-  //     skillid={fetchedskill._id}
-  //     skillname = {fetchedskill.summary}
-  //     titlename = {fetchedskill.title}
-  //     skilldescription = {fetchedskill.description}
-  //     skillcity = {fetchedskill.city}
-  //     skillstate = {fetchedskill.state}
-  //     skillimage = {fetchedskill.imageURL}
-  //     //add more
-  //   />
-  // );
-
   const skilllist = () => {
     let content = skillposts.map((fetchedskill, index) => {
       return (
@@ -590,20 +576,24 @@ export default function ProfilePage(props) {
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
-            skillname={fetchedskill.summary}
-            titlename={fetchedskill.title}
-            skilldescription={fetchedskill.description}
-            skillcity={fetchedskill.city}
-            skillstate={fetchedskill.state}
-            skillimage={fetchedskill.imageURL}
-          //add more
+            skillname = {fetchedskill.summary}
+            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.description}
+            skillcity = {fetchedskill.city}
+            skillstate = {fetchedskill.state}
+            skillimage = {fetchedskill.imageURL}
+            skilluserid = {fetchedskill.userFullName}
+            skilluserdirectid = {fetchedskill.userId}
+            // avatar={fetchedReview.price}
+            skilluserpic = {fetchedskill.userProfilePic}
+            skillprice = {fetchedskill.price}
           />
         </Grid>
       )
     })
     return (
-      <Grid container rowSpacing={3}>
-        {content}
+      <Grid container rowSpacing={3} columnSpacing={5}>
+        { content }
       </Grid>
     )
   }
@@ -1125,44 +1115,16 @@ export default function ProfilePage(props) {
       </Box>
 
       {/******************************* Skill Listings *******************************/}
-      <Grid container>
-        <Addskills />
-      </Grid>
-
-      {skilllist()}
-      {/* <Paper
-        sx={{
-          p: 2,
-          margin: 'auto',
-          marginTop: 1,
-          maxWidth: 948,
-          flexGrow: 1,
-          border: "0.5px solid",
-          borderColor: "primary.light",
-          height: 450
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-        </Grid>
-
-      </Paper> */}
-
-
+    
+      <Paper 
+            variant="outlined" 
+            square 
+            style={{backgroundColor: Theme.palette.primary.main, position: "relative",borderWidth:"0px"}}
+            sx={{ p: 10, mt:5 }}
+            >
+        {skilllist()};
+      </Paper>
+     
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto" }}>
         <Button

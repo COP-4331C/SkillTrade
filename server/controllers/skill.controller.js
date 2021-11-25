@@ -24,13 +24,13 @@ exports.fetchOne = async (req, res) => {
   var skill = await Skill.findById(req.params.skillId)
     .lean()
     .catch((err) => {
-      res.status(500).json({ error: err });
+      return res.status(403).json({ error: err });
     });
 
   // Attaches user info to response (fullName, profilePic, rating, etc)
   skill = await addUserInfo(skill);
 
-  res.status(200).json(skill);
+  return res.status(200).json(skill);
 };
 
 exports.fetchByUser = async (req, res) => {
@@ -47,17 +47,14 @@ exports.fetchByUser = async (req, res) => {
 
   if (status) searchFor["status"] = status;
 
-  var listOfSkills = await Skill.find(searchFor)
-    .sort({ updatedAt: -1 })
-    .lean()
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+  var listOfSkills = await Skill.find(searchFor).sort({ updatedAt: -1 }).lean();
+
+  if (!listOfSkills) return res.status(500).json(err);
 
   // Attaches user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  res.status(200).json(listOfSkills);
+  return res.status(200).json(listOfSkills);
 };
 
 exports.search = async (req, res) => {
@@ -78,13 +75,13 @@ exports.search = async (req, res) => {
     .sort({ updatedAt: -1 })
     .lean()
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 
   // Adds user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  res.status(200).json(listOfSkills);
+  return res.status(200).json(listOfSkills);
 };
 
 exports.editSkill = async (req, res) => {
@@ -144,10 +141,10 @@ exports.deleteSkill = async (req, res) => {
   // Once we ensure the user is deleting their own skill, then delete it
   Skill.deleteOne({ _id: skillId })
     .then((data) => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };
 
@@ -182,10 +179,6 @@ exports.uploadSkillPic = async (req, res) => {
         message: "File size cannot be larger than 2MB!",
       });
     }
-
-    res.status(500).send({
-      message: err,
-    });
   }
 };
 
@@ -207,8 +200,6 @@ async function addUserInfo(skill) {
 
   skill["averageRating"] = sumRatings / listOfReviews.length;
   skill["numReviews"] = listOfReviews.length;
-
-  console.log(skill);
 
   return skill;
 }

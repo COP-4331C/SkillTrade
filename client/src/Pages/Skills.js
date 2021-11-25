@@ -4,7 +4,10 @@ import Box from "@mui/material/Box";
 import HomeNavBar from "../components/HomeNavBar";
 import Testcard from '../components/Testcard';
 import axios from "axios";
+import { Paper, Typography } from '@mui/material';
+import { Theme } from '../components/Theme';
 import Addskills from '../components/Addskills';
+// import { Typography } from '@mui/material';
 //added props
 export default function Skills(props) {
 
@@ -47,13 +50,18 @@ export default function Skills(props) {
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
             skillimage = {fetchedskill.imageURL}
+            skilluserid = {fetchedskill.userFullName}
+            skilluserdirectid = {fetchedskill.userId}
+            // avatar={fetchedReview.authorProfilePic}
+            skillprice = {fetchedskill.price}
+            skilluserpic = {fetchedskill.userProfilePic}
             //add more
           />
         </Grid>
       )
     })
     return (
-      <Grid container rowSpacing={3}>
+      <Grid container rowSpacing={3} columnSpacing={5}>
         { content }
       </Grid>
     )
@@ -63,11 +71,26 @@ export default function Skills(props) {
     <Box sx={{flex: 1}}>
       <HomeNavBar/>
 
-      <Grid container>
+      <Grid container justifyContent="center">
+        
+          <h1> All Skills </h1>
+        
+      </Grid>
+
+      <Grid container justifyContent="center">
         <Addskills/>
       </Grid>
+      <Grid container>
+      <Paper 
+            // variant="outlined" 
+            square 
+            style={{backgroundColor: Theme.palette.primary.main, position: "relative", width:"100vw", borderWidth:"0px"}}
+            sx={{ p: 10, mt:5 }}
+            >
+        {skilllist()};
+      </Paper>
+      </Grid>
       
-      {skilllist()}
     </Box>
   );
 }

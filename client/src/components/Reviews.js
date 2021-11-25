@@ -26,6 +26,7 @@ import axios from "axios";
 
 export default function Reviews(props) {
 
+  const token = retrieveData('token');
   const [review, setReview] = useState({
     avatar: props.avatar,
     userID: props.userID,
@@ -35,8 +36,11 @@ export default function Reviews(props) {
     message: props.message,
     newReview: props.newReview,
     reviewerID: props.reviewerID
-    // ratingReadOnly: props.ratingReadOnly
   });
+
+  const [reviewMessage, setReviewMessage] = useState(props.message);
+  const [rating, setRating] = useState(props.rating);
+  const [newReview, setNewReview] = useState(props.newReview);
 
   // Variable for displaying the multiline Text field to edit a review message (use display: inline-flex to display it)
   const [displayEditableMessage, setDisplayEditableMessage] = useState("none");
@@ -53,7 +57,7 @@ export default function Reviews(props) {
   const [reviewRatingTemp, setReviewRatingTemp] = useState(5);
   const [displayRating, setDisplayRating] = useState("inline-flex");
   const [displayEditableRating, setDisplayEditableRating] = useState("none");
-
+  const [displayDeleteButton, setDisplayDeleteButton] = useState("none");
 
   // Allows custom rating starts
   const StyledRating = styled(Rating)({
@@ -76,14 +80,19 @@ export default function Reviews(props) {
     setDisplayRating("none");                 // Hides the Star Rating
     setDisplayEditableMessage("inline-flex"); // Displays the editable multiline text fields (the new review text)
     setDisplayButtons("inline-flex");         // Displays the save and cancel button
+    if(!newReview){
+      setDisplayDeleteButton("inline-flex");
+    } else {
+      setDisplayDeleteButton("none");
+    }
     setDisplayEditableRating("inline-flex");  // Displays the start Editable Rating
     setFadeIn(true);                          // Tells the buttons to fade in
-    setReviewMessageTemp(review.message);           // Saves the current text in a temp variable
+    setReviewMessageTemp(reviewMessage);            // Saves the current text in a temp variable
     setReview({
       ...review,  // Leaves the rest of the variables unchanged
-      ratingReadOnly: false                               // Sets the star rating to be editable
+      ratingReadOnly: false                         // Sets the star rating to be editable
     });
-    setReviewRatingTemp(review.rating);             // Saves the current rating in a temp variable
+    setReviewRatingTemp(rating);                    // Saves the current rating in a temp variable
 
   }
 
@@ -91,10 +100,12 @@ export default function Reviews(props) {
     setInEditMode(false);                     // Turn edit mode off
     setDisplayEditButton("inline-flex");      // Displays the edit button
     setDisplayButtons("none");                // Hides the Cancel and Save buttons
+    setDisplayDeleteButton("none");           // Hides the Delete button
     setDisplayEditableMessage("none");        // Hides the Editable multiline review text Message
     setDisplayEditableRating("none");         // Hides the start Editable Rating
     setDisplayReviewMessage("block");         // Displays the uneditable review text message
     setDisplayRating("inline-flex");          // Displays the Star Rating
+
     setFadeIn(false);                         // Tells the button to fade out
     setReview({
       ...review,  // Leaves the rest of the variables unchanged
@@ -105,55 +116,52 @@ export default function Reviews(props) {
 
   function handleCancelButton() {
     // Close the new "Write a review" section
-    if(review.newReview) {
+    if(newReview) {
         props.onClick() // Passes the onClick event to the parent (parent will close it)
     } else {
       exitEditMode();
     }
   }
 
-  function handleDeleteButton() {
-    // TODO: handle the delete review event.
-    //  Send a request to the backend, then
-    //  request a new set of reviews.
-  }
-
-
   // Handles the onClick event of the Save button
   function handleSave() {
-    // TODO: when a newReview is saved, it cannot longer be a newReview; it
-    //  has to be added to the other reviews (inserted in the reviewList somehow like
-    //  sending it to the backend, and requesting a new set of reviews that would
-    //  include the new review).
-    //  Otherwise, if the user wants to edit it, and press cancel, the review
-    //  disappears (because it is still a newReview).
-    // TODO: Save button does not remember the new Rating when the save button is clicked.
-    //  This will probably be fixed once we send the new review to the backend for storage,
-    //  then, request a new set of reviews.
-    // TODO: after the reviews is stored in the backend, then the hidden editable review
-    //  components needs to be clear of text and the starts reset to a default value of 5.
-    setReview({
-      ...review,  // Leaves the rest of the variables unchanged
-      message: reviewMessageTemp,
-      newReview: false,
-      rating: reviewRatingTemp
-    });
 
-    const URL = "./api/review/create-review";
-    // const token = retrieveToken();
-    const token = retrieveData('token');
-    const config = {
-      headers: { Authorization: `Bearer ${token}`}
-    };
+    setReviewMessage(reviewMessageTemp);
+    setRating(reviewRatingTemp);
 
-    const data = {
-      userId: props.userID,
-      rating: reviewRatingTemp,
-      content: reviewMessageTemp,
+    if(newReview) {
+
+      // Set this review as an NOT a new Review.
+      setNewReview(false);
+
+      const URL = "./api/review/create-review";
+      const config = {headers: {Authorization: `Bearer ${token}`}};
+
+      const data = {
+        subjectId: props.userID,
+        rating: reviewRatingTemp,
+        content: reviewMessageTemp,
+      }
+
+      // Saves the review
+      // axios.post(URL, data, config).then(console.log).catch(console.log);
+      axios.post(URL, data, config).catch(console.log);
     }
+    // If the review is an existing review, then send a edit request
+    else {
+      const URL = "./api/review/edit-review";
+      const config = {headers: {Authorization: `Bearer ${token}`}};
 
-    // Saves the review
-    axios.post(URL, data, config).then(console.log).catch(console.log);
+      const data = {
+        reviewId: props.reviewId,
+        newRating: reviewRatingTemp,
+        newContent: reviewMessageTemp,
+      }
+
+      // Saves the review
+      // axios.patch(URL, data, config).then(console.log).catch(console.log);
+      axios.patch(URL, data, config).catch(console.log);
+    }
 
     exitEditMode();
     // props.onClick();
@@ -173,7 +181,6 @@ export default function Reviews(props) {
 
   function handleOnChangeMessage(e) {
     setReviewMessageTemp(e.target.value);
-
   }
 
   // function handleOnClickRating(e) {
@@ -185,7 +192,6 @@ export default function Reviews(props) {
   //     rating: e.target.value
   //   });
   // }
-
 
   useEffect(() => {
 
@@ -202,11 +208,9 @@ export default function Reviews(props) {
     //   setMousePointer("");
     // }
 
-    if(review.newReview) {
+    if(newReview) {
       enterEditMode()
     }
-
-    // setReviewRatingTemp(review.rating);
 
   }, []);
 
@@ -222,6 +226,20 @@ export default function Reviews(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleDeleteReview = () => {
+    const URL = `./api/review/delete-review/${props.reviewId}`;
+    const config = {headers: {Authorization: `Bearer ${token}`}};
+
+    // Saves the review
+    // axios.post(URL, data, config).then(console.log).catch(console.log);
+    axios.delete(URL, config).catch(console.log);
+
+    setOpen(false);
+    exitEditMode();
+    // console.log("Review.js - handleDeleteReview: " + props.reviewId);
+    props.onClick(props.reviewId);
+  }
 
   return (
     <Paper
@@ -262,8 +280,9 @@ export default function Reviews(props) {
                 <Box sx={{marginTop: 5, justifyContent: "center", display: displayRating}} >
                   <StyledRating
                     // defaultValue={review.rating}
-                    value={review.rating}
-                    precision={0.5}
+                    // value={review.rating}
+                    value={rating}
+                    precision={1}
                     icon={<StarIcon fontSize="inherit"/>}
                     emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
                     // readOnly={review.ratingReadOnly}
@@ -278,7 +297,7 @@ export default function Reviews(props) {
                   <StyledRating
                     // defaultValue={review.rating}
                     value={reviewRatingTemp}
-                    precision={0.5}
+                    precision={1}
                     icon={<StarIcon fontSize="inherit"/>}
                     emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
                     // readOnly={review.readOnly}
@@ -312,7 +331,8 @@ export default function Reviews(props) {
               {/*********************************** Message  ************************************/}
               <Typography variant="body2" color="text.secondary" sx={{textAlign: "left", display:displayReviewMessage}}>
                 {/*{props.message}*/}
-                {review.message}
+                {/*{review.message}*/}
+                {reviewMessage}
               </Typography>
 
               {/*********************************** Edit Message  ************************************/}
@@ -343,7 +363,8 @@ export default function Reviews(props) {
                     color="error"
                     // onClick={handleDeleteButton}
                     onClick={handleClickOpen}
-                    sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
+                    // sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
+                    sx={{marginTop:2, padding: "6px 35px", display: displayDeleteButton}}
                   > Delete Review
                   </Button>
                 </Fade>
@@ -365,7 +386,8 @@ export default function Reviews(props) {
                     color="secondary"
                     startIcon={<SaveIcon/>}
                     variant="contained"
-                    onClick={handleSave}
+                    // onClick={handleSave}
+                    onClick={() => handleSave()}
                     sx={{marginTop:2, padding: "6px 64px", display: displayButtons}}
                   >
                     Save
@@ -384,7 +406,7 @@ export default function Reviews(props) {
           open={open}
           onClose={handleClose}
           aria-labelledby="alert-dialog-Delete-Review?"
-          aria-describedby="alert-dialog-This-cannot-be- undone"
+          aria-describedby="alert-dialog-this-cannot-be- undone"
         >
           <DialogTitle>Delete Review?</DialogTitle>
           <DialogContent>
@@ -397,7 +419,7 @@ export default function Reviews(props) {
             {/***** Yes, Delete - Button **/}
             <Button
               variant="contained"
-              onClick={handleClose}
+              onClick={() => handleDeleteReview()}
               color="error"
             >
               Yes, Delete

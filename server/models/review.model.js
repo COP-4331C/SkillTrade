@@ -10,10 +10,6 @@ const ReviewSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    authorFullName: {
-      type: String,
-      required: true
-    },
     rating: {
       type: Number,
       required: true,
@@ -22,7 +18,8 @@ const ReviewSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-  }
+  },
+  { timestamps: true }
 );
 
 const Review = mongoose.model("Review", ReviewSchema);

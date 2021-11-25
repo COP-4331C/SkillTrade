@@ -22,6 +22,7 @@ function App() {
             <Route path="/profile" component={ProfilePage} />
             <Route path="/card/:userId?" component={Testcard}/>
             <Route path="/cards/:userId?" component={Addskills}/>
+            <Route path="/skillpage/:userId?" component={Skills}/>
             
             {/* <Route path="/card/:userId?" component={Testcard}/> */}
 

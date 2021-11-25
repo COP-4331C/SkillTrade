@@ -13,17 +13,18 @@ exports.createReview = async (req, res) => {
 
     // Grab objectId value from reviewer (should be available and valid via authenticationToken)
     const author = await User.findOne({ email: req.email });
-    if(!author)
+    if (!author)
         return res.status(400).json({ error: "Could not obtain reviewer's information." });
 
     // Make sure rating is a valid number between 1 and 5
-    if(!Number.isInteger(rating) || rating < 1 || rating > 5)
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5)
         return res.status(400).json({ error: "Invalid Rating; Must be an Integer from 1-5." });
 
     // Add reviewer ObjectId to request body, then create and add new review to database.
     req.body.authorId = author._id;
-    req.body.authorFullName = author.profile['firstName'] + " " + author.profile['lastName'];
+
     const review = new Review(req.body);
+
     review.save()
         .then(() => {
         return res.status(200).json({ message: "Successfully created review!" });
@@ -36,17 +37,25 @@ exports.createReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-    const {page, subjectId} = req.query;
-    Review.find({subjectId : subjectId})
-    .skip(5 * (page - 1) )
-    .limit(5)
-    .then((data) => {
-      res.status(200).json(data);
-    })
+    var listOfReviews = await Review.find({subjectId : req.params.userId})
+    .sort( { updatedAt: -1} )
+    .lean()
     .catch((err) => {
         console.log(err);
       res.status(500).json(err);
     });
+
+    for (var review of listOfReviews) {
+        var author = await User.findById(review.authorId);
+
+        if (!author)
+            continue;
+
+        review["authorFullName"] = author.profile.firstName + " " + author.profile.lastName;
+        review["authorProfilePic"] = author.profile.profilePic;
+    }
+
+    res.status(200).json(listOfReviews);
 }
 
 exports.editReview = async (req, res) => {

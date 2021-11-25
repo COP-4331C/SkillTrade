@@ -24,7 +24,7 @@ const SkillSchema = mongoose.Schema(
     status: {
       type: String,
       default: "Teaching",
-      required: true
+      // required: true
     },
     price: {
       type: Number,

@@ -7,7 +7,7 @@ import {alpha, styled} from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import {Theme} from "../components/Theme";
 import Grid from "@mui/material/Grid";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {retrieveData, storeData} from "../components/DataStorage";
 
@@ -56,6 +56,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }));
 
 const HomePage = () => {
+  const[loggedUserAvatar, setLoggedUserAvatar] = useState("");
 
   const token = retrieveData('token');
   const URL = "./api/user/profile";
@@ -68,8 +69,10 @@ const HomePage = () => {
     // Fetches the profile data
     axios.get(URL, config)
       .then(function(response) {
-        storeData('firstName', response.data["firstName"]);
-        storeData('lastName', response.data["lastName"]);
+        // storeData('firstName', response.data["firstName"]);
+        // storeData('lastName', response.data["lastName"]);
+        // storeData('avatar', response.data["profilePic"]);
+        setLoggedUserAvatar(response.data["profilePic"]);
       })
       .catch(function (error) {
         console.log(error);
@@ -80,7 +83,7 @@ const HomePage = () => {
 
   return (
     <>
-      <HomeNavBar/>
+      <HomeNavBar loggedUserAvatar={loggedUserAvatar}/>
       <Grid container sx={{alignItems:"center", height:"60px", backgroundColor: Theme.palette.primary.light, display: {sx:"block", sm:"none"}}}>
         <Grid item xs sx={{marginLeft:"20px", marginRight:"20px"}}>
           <Search>

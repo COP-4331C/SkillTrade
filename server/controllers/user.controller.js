@@ -15,13 +15,13 @@ exports.create = async (req, res) => {
     .save()
     .then(() => {
       var transport = nodemailer.createTransport({
-        service: 'hotmail',
+        service: "hotmail",
         auth: {
-          user: 'datherp5671@hotmail.com',
-          pass: process.env.PASSWORD
-        }
+          user: "datherp5671@hotmail.com",
+          pass: process.env.PASSWORD,
+        },
       });
-    
+
       var URL = "https://cop4331c.herokuapp.com";
       var randomVerificationLink = URL 
                                    + "/api/user/verify/?userId=" 
@@ -40,9 +40,9 @@ exports.create = async (req, res) => {
               + randomVerificationLink 
               + "\">link</a> to verify your e-mail.</p></body>" 
       };
-    
-      transport.sendMail(message, function(error, info) {
-          return res.status(200).json({ message : "Verification email sent!" });
+
+      transport.sendMail(message, function (error, info) {
+        return res.status(200).json({ message: "Verification email sent!" });
       });
     })
     .catch((err) => {
@@ -51,7 +51,6 @@ exports.create = async (req, res) => {
 
       return res.status(400).json({ error: err });
     });
-
 };
 
 exports.getProfile = async (req, res) => {
@@ -141,7 +140,7 @@ exports.changePassword = async (req, res) => {
       console.log(err);
       return res.status(400).json({ error: err });
     });
-}
+};
 
 
 exports.forgotPassword = async (req, res) => {
@@ -248,8 +247,7 @@ exports.resetPassword = async(req, res) => {
 exports.verifyEmail = async(req, res) => {
   const {userId, verificationCode} = req.query;
 
-  User
-    .findById(userId)
+  User.findById(userId)
     .then(async (data) => {
       const user = await User.findById(userId);
       if(user.emailVerified || user.verificationCode == "")
@@ -278,9 +276,9 @@ exports.verifyEmail = async(req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({error : "Failed to retrieve user info."});
-    }); 
-}
+      res.status(500).json({ error: "Failed to retrieve user info." });
+    });
+};
 
 exports.uploadProfilePic = async (req, res) => {
   try {
@@ -302,11 +300,6 @@ exports.uploadProfilePic = async (req, res) => {
         message: "File size cannot be larger than 2MB!",
       });
     }
-
-    res.status(500).send({
-      // message: `Could not upload the file: ${req.file.originalname}. ${err}`,
-      message: err
-    });
   }
 };
 
@@ -314,14 +307,18 @@ exports.search = async (req, res) => {
   const { search, location, page } = req.query;
   const limit = 15;
   // TODO: Implement support for location?
-  const searchQuery = {$regex: search, $options: "i"}
+  const searchQuery = { $regex: search, $options: "i" };
 
-  User.find({ $or: [ {"profile.firstName": searchQuery}, 
-                     {"profile.lastName": searchQuery}, 
-                     {"profile.aboutMe": searchQuery}] })
+  User.find({
+    $or: [
+      { "profile.firstName": searchQuery },
+      { "profile.lastName": searchQuery },
+      { "profile.aboutMe": searchQuery },
+    ],
+  })
     .skip(limit * page)
     .limit(limit)
-    .sort( { updatedAt: -1} )
+    .sort({ updatedAt: -1 })
     .then((data) => {
       res.status(200).json(data);
     })

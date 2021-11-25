@@ -12,6 +12,7 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import axios from 'axios';
 import { Modal } from '@mui/material';
 import { Paper } from '@mui/material';
+import { Theme } from './Theme';
 
 export default function Addskills(props){
 
@@ -203,7 +204,7 @@ useEffect(() => {
             variant="outlined" 
             square 
             style={{backgroundColor: Theme.palette.primary.contrastText, position: "relative", borderWidth:"0px"}}
-            sx={{height:"72px", display: displayContainer}}>
+            >
 
             <Button onClick={handleOpen}>Open modal</Button>
       </Paper>

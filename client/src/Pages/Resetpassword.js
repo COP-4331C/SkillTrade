@@ -214,15 +214,15 @@ export default function Resetpassword() {
       });
     }
 
-    else if (validFirstName()!==1){
-      // alert("Registration 3!" );
-      setConfirmName({
-        state: true,
-        text: "Please Enter valid First Name"
-      });
+    // else if (validFirstName()!==1){
+    //   // alert("Registration 3!" );
+    //   setConfirmName({
+    //     state: true,
+    //     text: "Please Enter valid First Name"
+    //   });
 
 
-    }
+    // }
   }
   
 
@@ -290,7 +290,7 @@ export default function Resetpassword() {
           
 
           {/********************* email Text Field *********************/}
-          <TextField
+          {/* <TextField
             required
             fullWidth
             label="Email"
@@ -310,7 +310,7 @@ export default function Resetpassword() {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             type="text"
-          />
+          /> */}
 
           
 

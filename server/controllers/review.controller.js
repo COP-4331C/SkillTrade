@@ -36,11 +36,15 @@ exports.createReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-    Review.find({subjectId : req.params.userId})
+    const {page, subjectId} = req.query;
+    Review.find({subjectId : subjectId})
+    .skip(5 * (page - 1) )
+    .limit(5)
     .then((data) => {
       res.status(200).json(data);
     })
     .catch((err) => {
+        console.log(err);
       res.status(500).json(err);
     });
 }

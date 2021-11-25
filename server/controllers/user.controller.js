@@ -23,14 +23,22 @@ exports.create = async (req, res) => {
       });
     
       var URL = "https://cop4331c.herokuapp.com";
-      var randomVerificationLink = URL + "/api/user/verify/?userId=" + user._id + "&verificationCode="+ user.verificationCode;
+      var randomVerificationLink = URL 
+                                   + "/api/user/verify/?userId=" 
+                                   + user._id 
+                                   + "&verificationCode="
+                                   + user.verificationCode;
     
       var message = {
         from: "datherp5671@hotmail.com",
         to: user.email,
         subject: "Email Verification - Skill Trade",
         text: "Email Verification - Skill Trade",
-        html: "<h>Hello, " + firstName + "!\n\tClick this <a href=\"" + randomVerificationLink + "\">link</a> to verify your e-mail.</h>"
+        html: "<body><h1 style=\"font-size:30px;\">Hello, "
+              + firstName 
+              + "!</h1><p>Click this <a href=\""
+              + randomVerificationLink 
+              + "\">link</a> to verify your e-mail.</p></body>" 
       };
     
       transport.sendMail(message, function(error, info) {
@@ -135,6 +143,108 @@ exports.changePassword = async (req, res) => {
     });
 }
 
+
+exports.forgotPassword = async (req, res) => {
+
+  const {email} = req.body;
+  
+  const user = await User.findOne({email: email});
+  if(!user)
+    return res.status(400).json({error: "User does not exist."});
+
+  if(!user.emailVerified)
+    return res.status(400).json({error: "User needs to verify email account first."});
+
+  user.verificationCode = crypto.randomUUID();//"reset" + resetCode;
+
+  user
+    .save()
+    .then(() => {
+      var transport = nodemailer.createTransport({
+        service: 'hotmail',
+        auth: {
+          user: 'datherp5671@hotmail.com',
+          pass: process.env.PASSWORD
+        }
+      });
+
+      var URL = "https://cop4331c.herokuapp.com";
+      var randomVerificationLink = URL
+                                   + "/reset-password/?userId="
+                                   + user._id
+                                   + "&resetCode="
+                                   + user.verificationCode;
+
+      var message = {
+        from: "datherp5671@hotmail.com",
+        to: user.email,
+        subject: "Reset Password - Skill Trade",
+        text: "Reset Password - Skill Trade",
+        html: "<body><h1 style=\"font-size:30px;\">Hello, " 
+              + user.profile['firstName']
+              + "!</h1><p>Click this <a href=\""
+              + randomVerificationLink + "\">link</a> to reset your password.</p></body>"
+      };
+
+      transport.sendMail(message, function(error, info) {
+          return res.status(200).json({ message : "Verification email sent!" });
+      });
+    })
+    .catch((err) => {
+      if (err.code == 11000)
+        return res.status(400).json({ error: "Duplicate email" });
+
+      return res.status(400).json({ error: err });
+    });
+
+}
+
+
+exports.resetPassword = async(req, res) => {
+  const {userId, resetCode, newPassword} = req.body;
+
+  const space_regex = new RegExp(".* .*");
+  const validity_regex = new RegExp(
+    "(?=.*[A-Z])(?=.*[.!@#$&*])(?=.*[0-9])(?=.*[a-z])"
+  );
+
+  if(
+    space_regex.test(newPassword) ||
+    newPassword.length < 8 ||
+    !validity_regex.test(newPassword)
+  ) {
+    return res.status(400).json({ error: "Invalid new password." });
+  }
+
+  const user = await User.findById(userId);
+  if (!user) return res.status(400).json({ error: "Invalid user." });
+
+  if(user.verificationCode == "")
+  {
+    return res.status(405).json({error: "Password reset has not been requested."});
+  }
+  else if(user.verificationCode != resetCode)
+  {
+    return res.status(401).json({error: "Invalid reset code for user."});
+  }
+
+
+  user.password = newPassword;
+  user
+    .save()
+    .then(() => {
+      return res
+        .status(200)
+        .json({ message: "Successfully reset password!" });
+    })
+    .catch((err) => {
+      console.log("An error occured.");
+      console.log(err);
+      return res.status(400).json({ error: err });
+    });
+
+}
+
 exports.verifyEmail = async(req, res) => {
   const {userId, verificationCode} = req.query;
 
@@ -144,11 +254,10 @@ exports.verifyEmail = async(req, res) => {
       const user = await User.findById(userId);
       if(user.emailVerified || user.verificationCode == "")
       {
-        return res.status(405).json({error: "Email is already verified"});
+        return res.status(405).json({error: "Email is already verified bro!"});
       }
       else if(user.verificationCode != verificationCode)
       {
-        console.log("userV:" + user.verificationCode + " - emailV:" + verificationCode);
         return res.status(401).json({error: "Invalid verification code."});
       }
       else
@@ -158,7 +267,7 @@ exports.verifyEmail = async(req, res) => {
         user
           .save()
           .then(() => {
-            res.writeHead(301, { Location: 'https://cop4331c.herokuapp.com/' });
+            res.writeHead(301, { Location: 'https://cop4331c.herokuapp.com/Login' });
             return res.end();
           })
           .catch((err) => {
@@ -207,7 +316,9 @@ exports.search = async (req, res) => {
   // TODO: Implement support for location?
   const searchQuery = {$regex: search, $options: "i"}
 
-  User.find({ $or: [ {"profile.firstName": searchQuery}, {"profile.lastName": searchQuery}, {"profile.aboutMe": searchQuery}] })
+  User.find({ $or: [ {"profile.firstName": searchQuery}, 
+                     {"profile.lastName": searchQuery}, 
+                     {"profile.aboutMe": searchQuery}] })
     .skip(limit * page)
     .limit(limit)
     .sort( { updatedAt: -1} )

@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/COP-4331C/Large-Project#readme",
   "dependencies": {
-    "aws-sdk": "^2.1028.0",
+    "aws-sdk": "^2.1035.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

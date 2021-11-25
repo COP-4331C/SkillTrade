@@ -11,6 +11,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import axios from 'axios';
 import { Modal } from '@mui/material';
+import { Paper } from '@mui/material';
 
 export default function Addskills(props){
 
@@ -198,7 +199,15 @@ useEffect(() => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Paper 
+            variant="outlined" 
+            square 
+            style={{backgroundColor: Theme.palette.primary.contrastText, position: "relative", borderWidth:"0px"}}
+            sx={{height:"72px", display: displayContainer}}>
+
+            <Button onClick={handleOpen}>Open modal</Button>
+      </Paper>
+      
       
       <Modal
         open={open}

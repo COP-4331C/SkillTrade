@@ -216,13 +216,6 @@ export default function Registration() {
       <AppNavBar/>
       {/* <NavBar/> */}
       <form onSubmit={handleSubmitButton}>
-        {/* <Box sx={{
-        display: "flex",
-        width: 350,
-        justifyContent: "center",
-        alignItems: "safe center",
-        maxWidth: { xs: 270, sm: 350 }
-      }} > */}
         <Paper elevation={3} style={{padding: 40, height: 'auto', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
@@ -358,15 +351,6 @@ export default function Registration() {
             Register
           </Button>
           {/* </Link> */}
-
-          {/*********************  Forgot my password *********************/}
-
-
-          {/* <FormControlLabel
-            control={
-              <Checkbox color="black" id="agree" onChange={checkboxHandler}/>}
-            htmlFor="agree"  label="agree"
-          /> */}
 
           {/********************* already have an account  *********************/}
           <Typography fontSize="0.9rem" align="center" paddingTop="20px">Already have an account?{' '}

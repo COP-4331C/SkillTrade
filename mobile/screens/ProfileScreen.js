@@ -18,12 +18,19 @@ const Item = ({ title }) => (
 
 
 const ProfileScreen = ({navigation}) => {
-  /*useEffect(() => {
+  useEffect(async() => {
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    connectToProfileApi(userToken)
     const unsubscribe = navigation.addListener('focus', () => {
-      Alert.alert("refreshed");
+      connectToProfileApi(userToken)
     });
     return unsubscribe;
-  }, [navigation]);*/
+  }, [navigation]);
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -43,14 +50,17 @@ const ProfileScreen = ({navigation}) => {
 
   
   useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
-
+   // let userToken = null;
+   // try {
+   //     userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+   // } catch (e) {
+   //     console.warn(e);
+   // }
+   // connectToProfileApi(userToken) // if need to get userId, can get it form profile API
+   // const unsubscribe = navigation.addListner('focus', () => {
+   //   connectToProfileApi(userToken) 
+    
+   // });
     let userId = '6189698db9e8c8287e27ab7a'; //should be null; 
     // try {
     //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
@@ -58,6 +68,7 @@ const ProfileScreen = ({navigation}) => {
     //     console.warn(e);
     // }
     connectToGetReviewApi(userId)
+  // return unsubscribe;
   }, [])
 
   function connectToProfileApi(userToken){

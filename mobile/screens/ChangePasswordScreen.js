@@ -95,7 +95,12 @@ const ChangePasswordScreen = ({navigation}) => {
                 Alert.alert(
                     "Password changed!", // Alert Title
                     " ", // My Alert Msg
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                    [ // an array of objects (each object is a button)
+                        { 
+                            text: "OK", 
+                            onPress: () => console.log("OK Pressed") 
+                        },
+                    ], 
                 )
                 navigation.goBack()
             })
@@ -104,7 +109,12 @@ const ChangePasswordScreen = ({navigation}) => {
                 Alert.alert(
                     "Fail to changed password!",
                     "Please input your correct old password.",
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                    [
+                        { 
+                            text: "OK", 
+                            onPress: () => console.log("OK Pressed") 
+                        }, 
+                    ],
                 )
             });
     }
@@ -213,7 +223,12 @@ const ChangePasswordScreen = ({navigation}) => {
                                     Alert.alert(
                                         "Invalid new password!",
                                         "Please check your input.",
-                                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                                        [ // an array of objects (each object is a button)
+                                            { 
+                                                text: "OK", 
+                                                onPress: () => console.log("OK Pressed") 
+                                            },
+                                        ], 
                                     )
                                 } 
                             }}

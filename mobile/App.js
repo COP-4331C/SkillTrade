@@ -80,9 +80,16 @@ const App = () => {
           })
           .catch(function(error) {
               // console.log(error)
-              Alert.alert('Invalid User!', 'Email or password is incorrect.', [
-                {text: 'Okay'}
-            ]);
+              Alert.alert(
+                'Invalid User!', 
+                'Email or password is incorrect.', 
+                [ // an array of objects (each object is a button)
+                  { 
+                      text: "OK", 
+                      onPress: () => console.log("OK Pressed") 
+                  },
+                ], 
+              );
           });
       if( userToken !== null ){
         try {

@@ -121,7 +121,12 @@ const AddReviewScreen = ({navigation}) => {
           Alert.alert(
             "Review created!", // Alert Title
             " ", // My Alert Msg
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
           )
           navigation.goBack()
       })
@@ -130,7 +135,12 @@ const AddReviewScreen = ({navigation}) => {
           Alert.alert(
             "Fail to add your review!",
             "You can not write review for yourself.",
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
           )
       });
   }
@@ -173,7 +183,12 @@ const AddReviewScreen = ({navigation}) => {
             }
             else {
               Alert.alert('Review must between 1 to 300 characters', '', 
-                  {text: 'OK', onPress: () => console.log("OK Pressed") }
+                  [ // an array of objects (each object is a button)
+                    { 
+                        text: "OK", 
+                        onPress: () => console.log("OK Pressed") 
+                    },
+                  ], 
               );
             } 
         }}>

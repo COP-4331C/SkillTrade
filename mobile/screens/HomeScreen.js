@@ -15,8 +15,9 @@ const HomeScreen = ({navigation}) => {
 
   const [skillData, setSkillData] = React.useState([]);
 
-  async function connectToGetReviewApi(){
-    axios.get(`https://cop4331c.herokuapp.com/api/skills?search&location&page`,  {
+  async function connectToGetSkillsApi(){
+      
+    axios.get(`https://cop4331c.herokuapp.com/api/skills?search=%20&page=1`,  {
           })
         .then(function(response) {
             // console.warn("get")
@@ -27,7 +28,7 @@ const HomeScreen = ({navigation}) => {
         });
   }
 
-  useEffect(async() => { connectToGetReviewApi() }, [])
+  useEffect(async() => { connectToGetSkillsApi() }, [])
 
   const renderItem = ({ item }) => (
     <Item title={item.reviewerName} />

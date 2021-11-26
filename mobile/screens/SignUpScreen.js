@@ -207,9 +207,16 @@ const SignInScreen = ({navigation}) => {
                 // console.warn("bad  job")
                 // console.log(email)
                 // Alert if email in use
-                Alert.alert('Invalid Email!', 'Email is in currently in use.', [
-                    {text: 'Okay'}
-                ]);
+                Alert.alert(
+                    'Invalid Email!', 
+                    'Email is in currently in use.', 
+                    [ // an array of objects (each object is a button)
+                        { 
+                            text: "OK", 
+                            onPress: () => console.log("OK Pressed") 
+                        },
+                    ], 
+                );
             });
     }
 
@@ -428,15 +435,18 @@ const SignInScreen = ({navigation}) => {
                                     connectToSignUpApi(
                                     data.email, data.firstname, 
                                     data.lastname, data.password) 
-                                    /*Alert.alert('Account Created Succesfully!', [
-                                        {text: 'Okay'}
-                                    ]);*/
-                                    
                                 }
                                 else {
-                                    Alert.alert('Invalid User!', 'Username, Password, or Firstname is incorrect.', [
-                                        {text: 'Okay'}
-                                    ]);
+                                    Alert.alert(
+                                        'Invalid User!', 
+                                        'Username, Password, or Firstname is incorrect.', 
+                                        [ // an array of objects (each object is a button)
+                                            { 
+                                                text: "OK", 
+                                                onPress: () => console.log("OK Pressed") 
+                                            },
+                                        ], 
+                                    );
                                 } 
                             }}
                         >

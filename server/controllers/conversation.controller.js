@@ -20,9 +20,9 @@ exports.create = async (req, res) => {
 exports.fetchUserConversations = async (req, res) => {
   Conversation.find({ members: { $in: [req.params.userId] } })
     .then((data) => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };

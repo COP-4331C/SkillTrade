@@ -9,8 +9,22 @@ import {Divider, Fade} from "@mui/material";
 import {styled} from '@mui/material/styles';
 import SaveIcon from "@mui/icons-material/Save";
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import axios from 'axios';
+import { Avatar } from '@mui/material';
 import { Modal } from '@mui/material';
+import { Paper } from '@mui/material';
+import { Theme } from './Theme';
+
+const loginModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  // width: "auto",
+  overflow: "scroll"
+};
 
 export default function Addskills(props){
 
@@ -19,10 +33,10 @@ const handleOpen = () => setOpen(true);
 const handleClose = () => setOpen(false);
 
 //skills to be learnt 
-const [aboutMeText, setAboutMeText] = useState("learn Web-Development"); 
+const [aboutMeText, setAboutMeText] = useState(""); 
 
 //explanation of skill
-const [aboutMeText2, setAboutMeText2] = useState(" We will teach you basics of JavaScript, CSS, HTML and how to utilize MERN Stack! ");   
+const [aboutMeText2, setAboutMeText2] = useState("");   
 
 
 //City and State
@@ -36,11 +50,12 @@ const [stateAddTemp, setstateAddTemp] = useState("");
 const [aboutMeText2Temp, setAboutMeText2Temp] = useState("");
 const [aboutMeTextTemp, setAboutMeTextTemp] = useState("");
 
-
-
+const [price, setPrice] = useState(props.skillprice);
+const [priceTemp, setpriceTemp] = useState("");
 
 // const [imageOpacity, setImageOpacity] = useState(1);
 // const [photo, setPhoto] = useState(profileImage)
+
 const [editPermission, setEditPermission] = useState(true);
 const [mousePointer, setMousePointer] = useState('');
 const [disableImageUpload, setDisableImageUpload] = useState(true)
@@ -57,6 +72,9 @@ const [aboutMeText2Error, setAboutMeText2Error] = useState({
   text: ""
 })
 
+function refreshPage() {
+  window.location.reload(false);
+}
 
 // Handles the onClick event of the Save button
 function handleSave() {
@@ -70,11 +88,11 @@ function handleSave() {
     });
   }
 
-  if(!validateTextMaxLength(aboutMeText2Temp, 100)) {
+  if(!validateTextMaxLength(aboutMeText2Temp, 250)) {
     okToSaveData = false
     setAboutMeText2Error({
       state: true,
-      text: "Must be less than 30 characters (There are " + aboutMeText2Temp.length + ")"
+      text: "Must be less than 250 characters (There are " + aboutMeText2Temp.length + ")"
     });
   }
 
@@ -84,23 +102,21 @@ function handleSave() {
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
 
-    const userId = props.match.params.userId;
-    const token = localStorage.getItem('token_data');
+    const userId = "";
+    const token = localStorage.getItem('token');
   
     //value to commit to Backend changable_fields
     const payload = {
       summary: aboutMeTextTemp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
-      price: 50,
+      price: priceTemp,
       status: "Teaching",
       state: stateAddTemp,
       city: cityAddTemp
     };
   
       console.log(token);
-      // axios.post(`/api/skills/user/${!userId ? "" : userId}`, payload,{
-
       axios.post(`/api/skills/`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
     })
@@ -111,8 +127,9 @@ function handleSave() {
       console.log(err);
     })
 
-handleClose();  }
-}
+handleClose();  
+refreshPage();
+}}
 
 
 function handleCancelButton() {
@@ -157,87 +174,40 @@ function handleOnChangeStateAddress(e) {
   setstateAddTemp(e.target.value);
 }
 
-
-const Input = styled('input')({
-  display: 'none',
-});
-
-function handlePhoto(e) {
-  if (editPermission) {
-    alert("Profile picture processing coming soon");
-    // Uploaded image should be in e.target.files or e.target.files[0]
-    // Axios Post will go here
-    // Request to backend with image for cropping and resizing.
-  }
+function handleOnChangePrice(e) {
+  setpriceTemp(e.target.value);
 }
 
-useEffect(() => {
-  try {
-    // TODO: Add code to setEditPermission = true if the logged user is
-    //  the owner of the profile page. For now, we'll keep the
-    //  setEditPermission = true below. (Note: we can't set editPermission,
-    //  to then read its state immediately; it does not work.
-
-    if (editPermission) {
-      setDisableImageUpload(false);
-      setMousePointer("pointer");
-    } else {
-      setDisableImageUpload(true);
-      setMousePointer("");
-    }
-
-  } catch (e) {
-    console.log(e.message);
-  }
-
-}, []);
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      
+    <div >
+      <Paper variant="outlined" 
+            square 
+            style={{ borderWidth:"0px"}}
+            >
+            <Button justifyContent="left" style={{backgroundColor: Theme.palette.secondary.main}} onClick={handleOpen}>
+              Add New Skill </Button>
+      </Paper>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Grid container justifyContent="center">
+      <Box sx={loginModalStyle} style={{overflow:"hidden"}} >
 
+      <Grid container classes={loginModalStyle} justifyContent="center">
+      <Card  sx={{ border: 4, borderRadius:5, borderColor:"black", width:"300px"}}>
 
-      {/* //start of card// */}
-      <Card  sx={{ maxWidth: 345,border: 4, borderRadius:5, borderColor:"black", width: "300px"}}>
-      
-      {/* //start of the image-header// */}
-      <Box position="relative">
-        <label htmlFor="icon-button-file">
-          <Input
-            accept=".png, .jpg, .jpeg"
-            id="icon-button-file"
-            type="file"
-            name="photo"
-            // onChange={handlePhoto}
-            // disabled={disableImageUpload}
-          />
-          {/** **************************** Image ********************** **/}
-          <div style={{
-              background: "url(https://blog.tutorming.com/hs-fs/hubfs/how-to-learn-chinese.jpg?width=749&name=how-to-learn-chinese.jpg)",
-              backgroundSize: "300px",
-              width: 300,
-              height: 150,
-              display: "block",
-              cursor: mousePointer,
-            }}
+      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0, paddingBottom:10}}>
 
-            alt={"user"}
-            // onMouseOver={handleOnMouseOverImage}
-            // onMouseLeave={handleOnMouseLeaveImage}
-          />
-          </label>  
-      </Box>
-          
-
-      <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0}}>
+          <Grid align='center' padding>
+            <Avatar style={{backgroundColor: Theme.palette.secondary.main}}>
+              <AddCircleTwoToneIcon/>
+            </Avatar>
+            <h2>Add New Skill</h2>
+          </Grid>
 
         {/*************************** What Skills can be taught (Edit Mode) ************************************/}
             <TextField
@@ -260,7 +230,7 @@ useEffect(() => {
               // className={classes.root}
               multiline
               variant="filled"
-              rows={2}
+              rows={5}
               value={aboutMeText2Temp}
               fullWidth
               onChange={handleOnChangeAboutMeText2}
@@ -274,7 +244,8 @@ useEffect(() => {
         {/*************************** LOCATION (Edit Mode) ************************************/}
 
           <Grid container>
-            <Grid item xs={6}>
+
+            <Grid item xs={5}>
               <TextField
                 label="City"
                 variant="filled"
@@ -287,35 +258,45 @@ useEffect(() => {
                 // error={aboutMeText2Error.state}
               />
             </Grid>
-            <Grid item xs={6}>
-            <TextField
-              label="State"
-              variant="filled"
-              rows={1}
-              value={stateAddTemp}
-              fullWidth
-              onChange={handleOnChangeStateAddress}
-              // sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
-              // helperText={aboutMeText2Error.text}
-              // error={aboutMeText2Error.state}
-            />
+
+            <Grid item xs={4}>
+              <TextField
+                label="State"
+                variant="filled"
+                rows={1}
+                value={stateAddTemp}
+                fullWidth
+                onChange={handleOnChangeStateAddress}
+                // sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                label="Price"
+                variant="filled"
+                rows={1}
+                value={priceTemp}
+                fullWidth
+                onChange={handleOnChangePrice}
+                // sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
             </Grid>
 
           </Grid>
-            
-
-            
-
-              
 
          {/******************** Cancel+SAVE Button *********************/}
-        <Box sx={{
+        <Box padding sx={{
               display: 'flex',
               justifyContent: 'space-evenly',
               alignItems: 'safe center',
               flexWrap: "wrap-reverse"
             }}>
-              <Grid container justifyContent="center" style={{paddingTop: "10px"}}>
+              <Grid container justifyContent="center" >
                 
                 <Grid item xs={3}>
                   {/* <Fade in={fade}> */}
@@ -343,15 +324,15 @@ useEffect(() => {
 
                   {/* </Fade> */}
                 </Grid>
-
               </Grid>
               
               {/******************** Cancel+SAVE Button DONE *********************/}
               
-            </Box>
+        </Box>
       </CardContent>
     </Card>
     </Grid>
+    </Box>
     </Modal>
     </div>
   );

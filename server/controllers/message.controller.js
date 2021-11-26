@@ -18,19 +18,19 @@ exports.create = async (req, res) => {
 exports.fetchConversationMessages = async (req, res) => {
   Message.find({ conversationId: req.params.conversationId })
     .then((data) => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };
 
 exports.deleteMessage = async (req, res) => {
   Message.deleteOne({ messageId: req.params.messageId })
     .then((data) => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };

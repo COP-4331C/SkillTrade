@@ -18,10 +18,13 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
 import { Theme } from '../components/Theme';
+// import URLSea
 
-export default function Registration() {
+export default function Resetpassword() {
 
   const [email, setEmail] = useState("");
+
+  const [oldPass, setoldPass] = useState("");
 
   const [firstName, setfirstName] = useState("");
 
@@ -154,16 +157,29 @@ export default function Registration() {
 
     if (valid()&&isOk ) {
 
-      const URL = './api/user/register';
+      const query = new URLSearchParams(this.props.location.search);
+      const userId = query.get('userId');
+      const resetCode = query.get('resetCode');
 
-      const registerPayload = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: values.password
+      console.log(userId);
+      console.log(resetCode);
+
+      const URL = './api/user/reset-password';
+
+      const resetPayload = {
+        // firstName: firstName,
+        // lastName: lastName,
+        // email: email,
+        // password: values.password,
+
+        //parse and put the UserID
+        //paese and put the reset code
+        userId : userId,
+        newPassword: values.password,
+        resetCode: resetCode
       };
 
-      axios.post(URL, registerPayload)
+      axios.post(URL, resetPayload)
         .then(function (response) {
           console.log(response);
           window.location.href='/Login';
@@ -198,16 +214,18 @@ export default function Registration() {
       });
     }
 
-    else if (validFirstName()!==1){
-      // alert("Registration 3!" );
-      setConfirmName({
-        state: true,
-        text: "Please Enter valid First Name"
-      });
+    // else if (validFirstName()!==1){
+    //   // alert("Registration 3!" );
+    //   setConfirmName({
+    //     state: true,
+    //     text: "Please Enter valid First Name"
+    //   });
 
 
-    }
+    // }
   }
+  
+
 
 /////////////////Interface/////////////////
 
@@ -222,7 +240,7 @@ export default function Registration() {
           <Grid align='center'>
             <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
             </Avatar>
-            <h2>Register</h2>
+            <h2>Reset Password</h2>
           </Grid>
 
           {/********************* Wrong credentials message ******************** */}
@@ -237,7 +255,7 @@ export default function Registration() {
           </Collapse>
 
           {/********************* FN Text Field *********************/}
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}>
             <Grid item xs={6}>
               <FormControl required error={confirmName.state}>
                   <TextField
@@ -252,11 +270,11 @@ export default function Registration() {
                   />
                 <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
 
             {/********************* LN Text Field *********************/}
-            <Grid item xs ={6}>
+            {/* <Grid item xs ={6}>
                 <TextField
                   fullWidth
                   label="Last Name"
@@ -267,20 +285,34 @@ export default function Registration() {
                   type="text"
                 />
             </Grid>
-          </Grid>
+          </Grid> */}
 
+          
 
           {/********************* email Text Field *********************/}
-          <TextField
+          {/* <TextField
             required
             fullWidth
             label="Email"
             placeholder="Enter email"
             variant="standard"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={(e) => setoldPass(e.target.value)}
+            value={oldPass}
             type="email"
           />
+
+          <TextField
+            required
+            fullWidth
+            label="oldPass"
+            placeholder="Enter Old Pass"
+            variant="standard"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            type="text"
+          /> */}
+
+          
 
           {/********************* Password field *********************/}
           <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} >
@@ -310,7 +342,7 @@ export default function Registration() {
             <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
+          {/* <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
             <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
             <Input
               id="standard-adornment-confirm"
@@ -331,17 +363,17 @@ export default function Registration() {
               }
             />
             <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
-          </FormControl>
+          </FormControl> */}
 
           {/********************* Terms and conditions checkbox *********************/}
-          <div style={{paddingTop:15}}>
+          {/* <div style={{paddingTop:15}}>
             <input type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
             <label>I agree to </label><a href="https://www.termsandconditionsgenerator.com/live.php?token=InuuJUo6I4Xz1FPgMfkmmri3Fj6fvJ6e" style={{ textDecoration: 'none', color:"black" }} htmlFor="agree"><b>terms and conditions</b></a>
-          </div>
+          </div> */}
 
           {/********************* Sign in button *********************/}
           <Button
-            disabled={!agree}
+            // disabled={!agree}
             type='submit'
             color='secondary'
             variant='contained'

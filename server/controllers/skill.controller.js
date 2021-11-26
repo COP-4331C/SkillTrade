@@ -4,12 +4,11 @@ const uploadFile = require("../middleware/upload");
 const Review = require("../models/review.model");
 
 exports.createSkill = async (req, res) => {
-
-  const user = await User.findOne({ email: req.email })
+  const user = await User.findOne({ email: req.email });
   req.body.userId = user._id;
 
   const skill = new Skill(req.body);
-  
+
   skill
     .save()
     .then(() => {
@@ -25,42 +24,37 @@ exports.fetchOne = async (req, res) => {
   var skill = await Skill.findById(req.params.skillId)
     .lean()
     .catch((err) => {
-      res.status(500).json({ error: err });
+      return res.status(403).json({ error: err });
     });
 
   // Attaches user info to response (fullName, profilePic, rating, etc)
   skill = await addUserInfo(skill);
 
-  res.status(200).json(skill);
+  return res.status(200).json(skill);
 };
 
 exports.fetchByUser = async (req, res) => {
-
   let userId = req.params.userId;
   let status = req.query.status;
 
   // Defaults to logged in user if no userId is supplied
   if (!userId) {
-    let user = await User.findOne( { email: req.email } );
+    let user = await User.findOne({ email: req.email });
     userId = user._id;
   }
 
-  var searchFor = { userId: userId }
+  var searchFor = { userId: userId };
 
-  if (status)
-    searchFor["status"] = status;
+  if (status) searchFor["status"] = status;
 
-  var listOfSkills = await Skill.find(searchFor)
-    .sort( { updatedAt: -1} )
-    .lean()
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+  var listOfSkills = await Skill.find(searchFor).sort({ updatedAt: -1 }).lean();
+
+  if (!listOfSkills) return res.status(500).json(err);
 
   // Attaches user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  res.status(200).json(listOfSkills);
+  return res.status(200).json(listOfSkills);
 };
 
 exports.search = async (req, res) => {
@@ -74,32 +68,38 @@ exports.search = async (req, res) => {
 
   const limit = 15;
   // TODO: Implement support for location?
-  const searchQuery = {$regex: search, $options: "i"}
+  const searchQuery = { $regex: search, $options: "i" };
 
-  var listOfSkills = await Skill.find({ $or: [ {title: searchQuery}, {summary: searchQuery}, {description: searchQuery} ] })
-    .skip(limit * page)
+  var listOfSkills = await Skill.find({
+    $or: [
+      { title: searchQuery },
+      { summary: searchQuery },
+      { description: searchQuery },
+    ],
+  })
+    .skip(limit * (page - 1))
     .limit(limit)
-    .sort( { updatedAt: -1} )
+    .sort({ updatedAt: -1 })
     .lean()
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 
   // Adds user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  res.status(200).json(listOfSkills);
+  return res.status(200).json(listOfSkills);
 };
 
 exports.editSkill = async (req, res) => {
   let skill = await Skill.findOne({ _id: req.params.skillId });
   let loggedInUser = await User.findOne({ email: req.email });
-  
+
   if (skill.userId != loggedInUser._id)
     return res.status(400).json({
       error: "Invalid Credentials: Cannot edit another user's skill.",
     });
-    
+
   var newValues = req.body;
 
   var changeable_fields = [
@@ -148,10 +148,10 @@ exports.deleteSkill = async (req, res) => {
   // Once we ensure the user is deleting their own skill, then delete it
   Skill.deleteOne({ _id: skillId })
     .then((data) => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };
 
@@ -173,45 +173,37 @@ exports.uploadSkillPic = async (req, res) => {
 
     await uploadFile(req, res);
     skill.imageURL = req.file.location; // Puts imageURL in object before saving to database
-  
+
     skill.save().then(() => {
       return res.status(200).json({
         message: "Successfully added skill photo!",
-        URL: req.file.location
+        URL: req.file.location,
       });
     });
-
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
         message: "File size cannot be larger than 2MB!",
       });
     }
-
-    res.status(500).send({
-      message: err
-    });
   }
 };
 
 async function addUserInfo(skill) {
   var user = await User.findById(skill.userId);
 
-  if (!user)
-    return;
+  if (!user) return;
 
   skill["userFullName"] = user.profile.firstName + " " + user.profile.lastName;
   skill["userProfilePic"] = user.profile.profilePic;
 
-  var listOfReviews = await Review.find( { subjectId: skill.userId } );
+  var listOfReviews = await Review.find({ subjectId: skill.userId });
 
-  if (!listOfReviews)
-    return;
+  if (!listOfReviews) return;
 
   var sumRatings = 0;
 
-  for (var review of listOfReviews)
-    sumRatings += review.rating;
+  for (var review of listOfReviews) sumRatings += review.rating;
 
   skill["averageRating"] = sumRatings / listOfReviews.length;
   skill["numReviews"] = listOfReviews.length;

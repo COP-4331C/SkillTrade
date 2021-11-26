@@ -1,32 +1,35 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import {Divider, Fade, Rating, Stack, ThemeProvider} from "@mui/material";
-import {styled} from '@mui/material/styles';
+import { Divider, Fade, Rating, Stack, ThemeProvider } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SaveIcon from "@mui/icons-material/Save";
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
-import {Theme} from "../components/Theme";
-import {grey} from "@material-ui/core/colors";
+import { Theme } from "../components/Theme";
+import { grey } from "@material-ui/core/colors";
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EditIcon from '@mui/icons-material/Edit';
-import {createTheme, makeStyles} from "@material-ui/core";
+import { createTheme, makeStyles } from "@material-ui/core";
 import TextField from '@mui/material/TextField';
 import Link from "@mui/material/Link";
 import HomeNavBar from "../components/HomeNavBar";
 import Reviews from "../components/Reviews";
-import Paper from "@mui/material/Paper";
-import {retrieveData} from "../components/DataStorage";
+import { retrieveData } from "../components/DataStorage";
+import Testcard from '../components/Testcard';
 import axios from "axios";
+import Addskills from '../components/Addskills';
+import Skeleton from '@mui/material/Skeleton';
+import { Paper } from '@mui/material';
+//added props
+export default function ProfilePage(props) {
 
-
-export default function ProfilePage() {
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -80,7 +83,25 @@ export default function ProfilePage() {
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
-
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [cityTemp, setCityTemp] = useState("");
+  const [stateTemp, setStateTemp] = useState("");
+  const [countryTemp, setCountryTemp] = useState("");
+  const [cityTextError, setCityTextError] = useState({
+    state: false,
+    text: ""
+  })
+  const [stateTextError, setStateTextError] = useState({
+    state: false,
+    text: ""
+  })
+  const [countryTextError, setCountryTextError] = useState({
+    state: false,
+    text: ""
+  })
+  const [loading, setLoading] = useState(true);
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -95,6 +116,9 @@ export default function ProfilePage() {
     setLastNameTemp(lastName);                    // Copies last name to editable text fields
     setAboutMeTextTemp(aboutMeText);              // Copies about me text to editable text field
     setFade(true);                          // Tells the buttons to fade in
+    setCityTemp(city);
+    setStateTemp(state);
+    setCountryTemp(country);
     setInstagramTemp(instagram);
     setTwitterTemp(twitter);
     setLinkedInTemp(linkedIn);
@@ -143,12 +167,37 @@ export default function ProfilePage() {
       });
     }
 
-    if (!validateTextMaxLength(aboutMeTextTemp, 650)) {
+    const MAX_ABOUT_ME_TEXT = 500;
+    if (!validateTextMaxLength(aboutMeTextTemp, MAX_ABOUT_ME_TEXT)) {
       okToSaveData = false
       setAboutMeTextError({
         state: true,
-        text: "Must be less than 650 characters (There are " + aboutMeTextTemp.length + ")"
+        text: `Must be less than ${MAX_ABOUT_ME_TEXT} characters (There are ` + aboutMeTextTemp.length + ")"
       });
+    }
+
+    if (!validateTextMaxLength(cityTemp, 15)) {
+      okToSaveData = false
+      setCityTextError({
+        state: true,
+        text: `Maximum 15 chars`
+      })
+    }
+
+    if (!validateTextMaxLength(stateTemp, 15)) {
+      okToSaveData = false
+      setStateTextError({
+        state: true,
+        text: `Maximum 15 chars`
+      })
+    }
+
+    if (!validateTextMaxLength(countryTemp, 15)) {
+      okToSaveData = false
+      setCountryTextError({
+        state: true,
+        text: `Maximum 15 chars`
+      })
     }
 
     if (instagramTemp.includes("instagram.com")) {
@@ -180,6 +229,9 @@ export default function ProfilePage() {
       setInstagram(instagramHandle);
       setTwitter(twitterHandle);
       setLinkedIn(linkedInHandle);
+      setCity(cityTemp);
+      setState(stateTemp);
+      setCountry(countryTemp);
 
       // Send data to backend
       const URL = "./api/user/edit-profile";
@@ -188,21 +240,20 @@ export default function ProfilePage() {
       };
 
       const data = {
-          firstName: firstNameTemp,
-          lastName: lastNameTemp,
-          aboutMe:  aboutMeTextTemp,
-          instagram: instagramHandle,
-          twitter: twitterHandle,
-          linkedIn: linkedInHandle,
-          city: "",
-          state: "",
-          country:""
-        // TODO: Add city, state, and country in Profile
+        firstName: firstNameTemp,
+        lastName: lastNameTemp,
+        aboutMe: aboutMeTextTemp,
+        instagram: instagramHandle,
+        twitter: twitterHandle,
+        linkedIn: linkedInHandle,
+        city: cityTemp,
+        state: stateTemp,
+        country: countryTemp
       }
 
       // Saves the Profile data
       axios.put(URL, data, config).catch(console.log)
-        // .then(console.log).catch(console.log);
+      // .then(console.log).catch(console.log);
 
       exitEditMode();
     }
@@ -225,7 +276,6 @@ export default function ProfilePage() {
       handle = pathname.replaceAll('/', '');
       handle = handle.replaceAll("in", '');
     }
-
     return handle
   }
 
@@ -267,7 +317,7 @@ export default function ProfilePage() {
 
   function handleOnMouseOver() {
     if (!inEditMode && editPermission) {
-      setDisplayEditButton("inline-block");
+      setDisplayEditButton("inline-flex");
     }
   }
 
@@ -293,6 +343,18 @@ export default function ProfilePage() {
 
   function handleOnChangeLastName(e) {
     setLastNameTemp(e.target.value);
+  }
+
+  function handleOnChangeCity(e) {
+    setCityTemp(e.target.value);
+  }
+
+  function handleOnChangeState(e) {
+    setStateTemp(e.target.value);
+  }
+
+  function handleOnChangeCountry(e) {
+    setCountryTemp(e.target.value);
   }
 
   function handleOnChangeInstagram(e) {
@@ -367,19 +429,19 @@ export default function ProfilePage() {
 
       const URL = "./api/user/upload-profile-pic";
       const config = {
-        headers: { Authorization: `Bearer ${token}`,'content-type': 'multipart/form-data' }
+        headers: { Authorization: `Bearer ${token}`, 'content-type': 'multipart/form-data' }
       };
 
       // Saves the profile picture
       axios.post(URL, formData, config)
-        .then( function(response){
+        .then(function (response) {
           setPhoto(response.data.URL);
         })
         .catch(console.log);
     }
   }
 
-  function getAndDisplayReviews(){
+  function getAndDisplayReviews() {
 
     // Get token from the local storage
     const URL = `./api/review/get-reviews/${profileUserID}`;
@@ -389,7 +451,7 @@ export default function ProfilePage() {
 
     // Fetches reviews
     axios.get(URL, config)
-      .then(function(response) {
+      .then(function (response) {
         setReviewMessages(response.data);
         setNumOfReviews(response.data.length);
       })
@@ -399,40 +461,57 @@ export default function ProfilePage() {
   }
 
 
-  function getProfileData() {
+  // function getProfileData() {
+  const getProfileData = async () => {
 
     // const userId = "61894e2ab7293c19980829a2";
     const userId = "";
     // setProfileUserID("61887889e62859a35bc0de9c");
     // const userId = "";
-    const URL = `./api/user/profile/${!userId? "" : userId}`;
+    // const URL = `./api/user/profile/${!userId ? "" : userId}`;
+    // const config = { headers: {Authorization: `Bearer ${token}`}};
 
-    const config = {
-      headers: { Authorization: `Bearer ${token}` }
-    };
+    try {
+      // Fetches the profile data
+      // const response = await axios.get(URL, config);
+      const response = await axios.get(
+        `./api/user/profile/${!userId ? "" : userId}`,
+        { headers: { Authorization: `Bearer ${token}` } });
 
-    // Fetches the profile data
-    axios.get(URL, config)
-      .then(function(response) {
-        // Handle success
-        setFirstName(response.data["firstName"]);
-        setLastName(response.data["lastName"]);
-        setAboutMeText(response.data["aboutMe"])
-        setPhoto(response.data["profilePic"]);
-        setInstagram(response.data["instagram"]);
-        setTwitter(response.data["twitter"]);
-        setLinkedIn(response.data["linkedIn"]);
-        // setProfileUserID(response.data._id);
+      setFirstName(response.data["firstName"]);
+      setLastName(response.data["lastName"]);
+      setAboutMeText(response.data["aboutMe"])
+      setPhoto(response.data["profilePic"]);
+      setInstagram(response.data["instagram"]);
+      setTwitter(response.data["twitter"]);
+      setLinkedIn(response.data["linkedIn"]);
+      setCity(response.data["city"]);
+      setState(response.data["state"]);
+      setCountry(response.data["country"]);
 
-        setLoggedUser({
-          ...loggedUser,
-          firstName: retrieveData('firstName'),
-          lastName: retrieveData('lastName')
-        });
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }
+
+  //ridwan test
+
+  const [skillposts, setSkillPosts] = useState([]);
+
+  function fetchSkills() {
+    const token = localStorage.getItem('token');
+    const userId = "";
+    axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then((res) => {
+        setSkillPosts(res.data);
+        // console.log(res.data);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   useEffect(() => {
@@ -454,8 +533,12 @@ export default function ProfilePage() {
       setTwitterLink("https://twitter.com/" + twitter);
       setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
 
-      getProfileData();
-      getAndDisplayReviews();
+      setTimeout(async () => {
+        await getProfileData();
+        fetchSkills();
+        getAndDisplayReviews();
+      }, 1)
+
     } catch (e) {
       console.log(e.message);
     }
@@ -479,10 +562,43 @@ export default function ProfilePage() {
         reviewId={fetchedReview._id}
         // ratingReadOnly={true}
         // ratingReadOnly={reviewElement.userId === pr}
-        onClick={(reviewIdToDelete) => { handleDeleteReview(reviewIdToDelete) }}
+        onClick={(reviewIdToDelete) => {
+          handleDeleteReview(reviewIdToDelete)
+        }}
       />
     </div>
   );
+  //Ridwan testing
+  const skilllist = () => {
+    let content = skillposts.map((fetchedskill, index) => {
+      return (
+        <Grid item xs={3} key={index}>
+          <Testcard
+            key={fetchedskill._id}
+            skillid={fetchedskill._id}
+            skillname = {fetchedskill.summary}
+            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.description}
+            skillcity = {fetchedskill.city}
+            skillstate = {fetchedskill.state}
+            skillimage = {fetchedskill.imageURL}
+            skilluserid = {fetchedskill.userFullName}
+            skilluserdirectid = {fetchedskill.userId}
+            // avatar={fetchedReview.price}
+            skilluserpic = {fetchedskill.userProfilePic}
+            skillprice = {fetchedskill.price}
+          />
+        </Grid>
+      )
+    })
+    return (
+      <Grid container rowSpacing={3} columnSpacing={5}>
+        { content }
+      </Grid>
+    )
+  }
+
+
 
   // Removes the review from the DOM (At this point, the review has
   // been deleted from the backend already; it was done inside the
@@ -505,22 +621,23 @@ export default function ProfilePage() {
       <Reviews
         // avatar={"https://mui.com/static/images/avatar/6.jpg"}
         avatar={photo}
-        userID = {profileUserID}
+        userID={profileUserID}
         reviewerId={loggedUser.id}
         reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
         rating={5}
         message=""
         newReview={newReview}
         location="[Not provided]"
-        onClick={() => { handleCancelWriteReview() }}
-    />
+        onClick={() => {
+          handleCancelWriteReview()
+        }}
+      />
     );
   }
 
-
   return (
-    <Box sx={{flex: 1}}>
-      <HomeNavBar loggedUserAvatar={photo}/>
+    <Box sx={{ flex: 1 }}>
+      <HomeNavBar loggedUserAvatar={photo} />
 
       {/************************* Main Box ***********************/}
       <Box
@@ -530,47 +647,50 @@ export default function ProfilePage() {
           justifyContent: 'center',
           alignItems: 'safe center',
           flexWrap: "wrap",
-          marginTop: "20px"
+          backgroundColor: Theme.palette.primary.main
         }}>
         {/************************* Left Box (Image) **********************/}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'safe center',
-            flexWrap: "nowrap",
-            position: "relative"
-          }}
-        >
-          {/** ******************* Image Upload Input ********************** **/}
-          <label htmlFor="icon-button-file">
-            <Input
-              accept=".png, .jpg, .jpeg"
-              id="icon-button-file"
-              type="file"
-              name="photo"
-              onChange={handlePhoto}
-              disabled={disableImageUpload}
-            />
+        {loading && (<Skeleton variant="rectangular" width={300} height={450} sx={{ bgcolor: "grey.500" }} />)}
+        {!loading && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'safe center',
+              flexWrap: "nowrap",
+              position: "relative",
+            }}
+          >
+            {/** ******************* Image Upload Input ********************** **/}
+            <label htmlFor="icon-button-file">
+              <Input
+                accept=".png, .jpg, .jpeg, .tiff, .bmp, .jfif"
+                id="icon-button-file"
+                type="file"
+                name="photo"
+                onChange={handlePhoto}
+                disabled={disableImageUpload}
+              />
 
-            {/** **************************** Image ********************** **/}
-            <img
-              src={photo}
-              style={{
-                width: 300,
-                height: 450,
-                borderRadius: "4px 0 0 4px",
-                display: "block",
-                cursor: mousePointer,
-                opacity: imageOpacity
-              }}
-              alt="user"
-              onMouseOver={handleOnMouseOverImage}
-              onMouseLeave={handleOnMouseLeaveImage}
-            />
-          </label>
-        </Box>
+              {/** **************************** Image ********************** **/}
+              <img
+                src={photo}
+                style={{
+                  width: 300,
+                  height: 450,
+                  borderRadius: "4px 0 0 4px",
+                  display: "block",
+                  cursor: mousePointer,
+                  opacity: imageOpacity
+                }}
+                alt="user"
+                onMouseOver={handleOnMouseOverImage}
+                onMouseLeave={handleOnMouseLeaveImage}
+              />
+            </label>
+          </Box>
+        )}
 
         {/*********************** Right Box (Info) *******************/}
         <Box
@@ -580,48 +700,60 @@ export default function ProfilePage() {
             paddingRight: '40px',
             backgroundColor: Theme.palette.primary.main,
             width: 600,
-            height: 450,
+            minHeight: 450,
             borderRadius: "0 4px 4px 0",
           }}
           onMouseOver={handleOnMouseOver}
           onMouseLeave={handleOnMouseLeave}
         >
           {/** *********************** Names *************************** **/}
-          <Box sx={{display: displayNames, width: "100%", justifyContent: "left"}}>
+
+
+          <Box sx={{ display: displayNames, flexWrap: "wrap", width: "100%", justifyContent: "left" }}>
+
             <Typography
               variant={"h3"}
               sx={{
                 textAlign: "left",
                 marginTop: "20px",
+                marginRight: "20px",
                 color: "#ffb609",
                 fontWeight: 600
               }}
             >
-              {firstName}
+              {loading ? <Skeleton variant="h3" width={200} sx={{ bgcolor: 'grey.500' }} /> : firstName}
+
             </Typography>
+
             <Typography
               variant={"h3"}
               sx={{
                 textAlign: "left",
-                marginLeft: "20px",
                 marginTop: "20px",
                 fontWeight: 600
               }}
             >
-              {lastName}
+              {loading ? <Skeleton variant="h3" width={200} sx={{ bgcolor: 'grey.500' }} /> : lastName}
             </Typography>
 
             {/********************* Edit Button *********************************/}
-            <Box sx={{marginTop: "25px", marginLeft: "5px"}}>
-              <IconButton color="secondary" aria-label="edit" onClick={enterEditMode}
-                          sx={{display: displayEditButton}}>
-                <EditIcon/>
-              </IconButton>
-            </Box>
+            <Fade in={!fade}>
+              <Button
+                color='secondary'
+                variant='contained'
+                // style={{marginTop: 30}}
+                style={{ marginTop: 30, marginLeft: 20, display: displayEditButton, height: "36px" }}
+                startIcon={<EditIcon />}
+                sx={{ whiteSpace: 'nowrap' }}
+                onClick={enterEditMode}
+              >
+                Edit Profile
+              </Button>
+            </Fade>
           </Box>
 
           {/** ****************** First and Last Names (Edit Mode) *************************** **/}
-          <Box sx={{display: displayEditFields, width: "100%", justifyContent: "left"}}>
+          <Box sx={{ display: displayEditFields, width: "100%", justifyContent: "left" }}>
             <ThemeProvider theme={textFieldTheme}>
               <TextField
                 color="secondary"
@@ -630,7 +762,7 @@ export default function ProfilePage() {
                 value={firstNameTemp}
                 className={classes.root}
                 required
-                sx={{marginRight: "1rem", marginTop: "1rem"}}
+                sx={{ marginRight: "1rem", marginTop: "1rem" }}
                 onChange={handleOnChangeFirstName}
                 helperText={firstNameError.text}
                 error={firstNameError.state}
@@ -642,7 +774,7 @@ export default function ProfilePage() {
                 label={"Last Name"}
                 value={lastNameTemp}
                 className={classes.root}
-                sx={{marginTop: "1rem"}}
+                sx={{ marginTop: "1rem" }}
                 onChange={handleOnChangeLastName}
                 helperText={lastNameError.text}
                 error={lastNameError.state}
@@ -658,12 +790,11 @@ export default function ProfilePage() {
             fontStyle: "italic",
             lineHeight: 1.5,
             textAlign: "left",
-            marginTop: "10px",
             display: displayAboutMeText,
-            maxHeight: "225px",
-            height: "225px",
+            minHeight: '200px',
           }}>
-            {aboutMeText}
+            {loading ? <Skeleton variant="rectangular" widht={600} height={200} sx={{ bgcolor: "grey.500" }} /> : aboutMeText}
+
           </Box>
           {/*************************** About Me Text (Edit Mode) ************************************/}
           <ThemeProvider theme={textFieldTheme}>
@@ -673,65 +804,293 @@ export default function ProfilePage() {
               className={classes.root}
               multiline
               variant="filled"
-              rows={8.4}
+              rows={7}
               value={aboutMeTextTemp}
               fullWidth
               onChange={handleOnChangeAboutMeText}
-              sx={{display: displayEditFields, marginTop: "10px"}}
+              sx={{ display: displayEditFields, marginTop: "10px" }}
               helperText={aboutMeTextError.text}
               error={aboutMeTextError.state}
             />
           </ThemeProvider>
 
-          {/******** Stack is the container for the elements below the about me text **********/}
+          {/******** Stack is the container for the elements below the about me text ***********************/}
+
           <Stack
             direction="column"
             justifyContent="space-evenly"
             alignItems="stretch"
-            spacing={2}
+            spacing={1}
+            marginTop="15px"
           >
-            {/******************** Cancel Button *********************/}
+            {/***************** Horizontal line ***************/}
+            <Divider style={{ background: 'white', border: "1px solid", marginTop: '5px' }} />
+
+            {/** 1ST CONTAINER INSIDE THE STACK (Location) ****************************************************/}
+
+            {/***************** City, State, Country CONTAINER ***************/}
             <Box sx={{
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              alignItems: 'safe center',
-              flexWrap: "wrap-reverse"
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-around",
             }}>
+
+              {/***************** City  ***************/}
+
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+                <Typography sx={{ textAlign: "left", color: "#ffb609" }}>
+                  {loading ? <Skeleton variant="h3" width={50} sx={{ bgcolor: 'grey.500' }} /> : "City:"}
+                </Typography>
+
+                <Typography sx={{ textAlign: "left", paddingX: 1, display: displayAboutMeText }}>
+                  {loading ? <Skeleton variant="h3" width={100} sx={{ bgcolor: 'grey.500' }} /> : city}
+                </Typography>
+
+                {/** City Hidden Edit Text Field **/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant="filled"
+                    label="Enter a city name"
+                    value={cityTemp}
+                    className={classes.root}
+                    size='small'
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 150 }}
+                    onChange={handleOnChangeCity}
+                    helperText={cityTextError.text}
+                    error={cityTextError.state}
+                  >
+                  </TextField>
+                </ThemeProvider>
+              </Stack>
+
+              {/***************** State  ***************/}
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+                <Typography sx={{ textAlign: "left", color: "#ffb609" }}>
+                  {loading ? <Skeleton variant="h3" width={50} sx={{ bgcolor: 'grey.500' }} /> : "State:"}
+                </Typography>
+                <Typography sx={{ textAlign: "left", paddingX: 1, display: displayAboutMeText }}>
+                  {loading ? <Skeleton variant="h3" width={100} sx={{ bgcolor: 'grey.500' }} /> : state}
+                </Typography>
+
+                {/** State Hidden Edit Text Field **/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant="filled"
+                    label="Enter a state name"
+                    value={stateTemp}
+                    className={classes.root}
+                    size='small'
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 150 }}
+                    onChange={handleOnChangeState}
+                    helperText={stateTextError.text}
+                    error={stateTextError.state}
+                  >
+                  </TextField>
+                </ThemeProvider>
+              </Stack>
+
+              {/***************** Country  ***************/}
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+                <Typography sx={{ textAlign: "left", color: "#ffb609" }}>
+                  {loading ? <Skeleton variant="h3" width={50} sx={{ bgcolor: 'grey.500' }} /> : "Country:"}
+                </Typography>
+                <Typography sx={{ textAlign: "left", paddingX: 1, display: displayAboutMeText }}>
+                  {loading ? <Skeleton variant="h3" width={100} sx={{ bgcolor: 'grey.500' }} /> : country}
+                </Typography>
+
+                {/** Country Hidden Edit Text Field **/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant="filled"
+                    label="Enter a country name"
+                    value={countryTemp}
+                    className={classes.root}
+                    size='small'
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 150 }}
+                    onChange={handleOnChangeCountry}
+                    helperText={countryTextError.text}
+                    error={countryTextError.state}
+                  >
+                  </TextField>
+                </ThemeProvider>
+              </Stack>
+            </Box>
+
+            {/** 2nd Container inside the Stack (Social Media) ***************************************************/}
+
+            {/***************** Horizontal line ***************/}
+            <Divider style={{ background: 'white', border: "1px solid" }} />
+
+            <Box sx={{ display: "flex", flexWrap: "wrap", marginY: "20px", justifyContent: "space-around" }}>
+
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+
+                {/***************** Instagram  Icon ****************/}
+                <IconButton sx={{ padding: 0 }} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
+                  {loading ? <Skeleton variant="h4" width={50} sx={{ bgcolor: 'grey.500' }} /> :
+                    <InstagramIcon color={"secondary"} />
+                  }
+                </IconButton>
+
+                {/***** Instagram Handle *****/}
+                <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
+                  <Typography color={"white"} align={"left"}
+                    sx={{ fontSize: "1rem", display: displayAboutMeText, marginLeft: 0.5 }}
+                  >
+                    {loading ? <Skeleton variant="h4" width={100} sx={{ bgcolor: 'grey.500' }} /> : instagram}
+                  </Typography>
+                </Link>
+
+                {/**** Instagram Hidden Edit Text field ****/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant={"filled"}
+                    label={"Instagram"}
+                    value={instagramTemp}
+                    className={classes.root}
+                    size={'small'}
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 165 }}
+                    onChange={handleOnChangeInstagram}
+                  >
+                  </TextField>
+                </ThemeProvider>
+
+              </Stack>
+
+              {/****************** Twitter Icon *******************/}
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+
+                <IconButton sx={{ padding: 0 }} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
+                  {loading ? <Skeleton variant="h4" width={50} sx={{ bgcolor: 'grey.500' }} /> :
+                    <TwitterIcon color={"secondary"} />
+                  }
+                </IconButton>
+
+                {/***** Twitter Handle *****/}
+                <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
+                  <Typography color={"white"} align={"left"}
+                    sx={{ fontSize: "1rem", display: displayAboutMeText, marginLeft: 0.5 }}
+                  >
+                    {loading ? <Skeleton variant="h4" width={100} sx={{ bgcolor: 'grey.500' }} /> : twitter}
+                  </Typography>
+                </Link>
+
+                {/***** Twitter Hidden Edit Text Field *****/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant={"filled"}
+                    label={"Twitter"}
+                    value={twitterTemp}
+                    className={classes.root}
+                    size={'small'}
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 165 }}
+                    onChange={handleOnChangeTwitter}
+                  >
+                  </TextField>
+                </ThemeProvider>
+
+              </Stack>
+
+              {/******************* LinkedIn Icon *****************/}
+              <Stack direction="row" sx={{ alignItems: "center" }}>
+
+                <IconButton sx={{ padding: 0 }} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
+                  {loading ? <Skeleton variant="h4" width={50} sx={{ bgcolor: 'grey.500' }} /> :
+                    <LinkedInIcon color={"secondary"} />
+                  }
+                </IconButton>
+
+
+                {/****** LinkedIn Handle *****/}
+
+                <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
+                  <Typography color={"white"} align={"left"}
+                    sx={{ fontSize: "1rem", display: displayAboutMeText, marginLeft: 0.5 }}
+                  >
+                    {loading ? <Skeleton variant="h4" width={100} sx={{ bgcolor: 'grey.500' }} /> : linkedIn}
+                  </Typography>
+                </Link>
+
+                {/****** LinkedIn Hidden Edit Text Field *****/}
+                <ThemeProvider theme={textFieldTheme}>
+                  <TextField
+                    color="secondary"
+                    variant={"filled"}
+                    label={"LinkedIn"}
+                    value={linkedInTemp}
+                    className={classes.root}
+                    size={'small'}
+                    sx={{ display: displaySocial, marginTop: -0.5, width: 165 }}
+                    onChange={handleOnChangeLinkedIn}
+                  >
+                  </TextField>
+                </ThemeProvider>
+
+              </Stack>
+            </Box>
+
+            {/***************** Horizontal line ***************/}
+            <Divider style={{ background: 'white', border: "1px solid" }} />
+
+            {/** 3rd Container inside the Stack ************************************************************/}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                flexWrap: "wrap",
+              }}
+              style={{ marginTop: "15px", marginBottom: "10px" }}
+            >
+
+              {/******************** Cancel Button *********************/}
               <Fade in={fade}>
                 <Button
                   variant="outlined"
                   color="secondary"
-                  style={{marginTop: 30, padding: "6px 64px"}}
+                  // style={{marginTop: 0, padding: "6px 64px"}}
+                  style={{ padding: "6px 64px" }}
                   onClick={handleCancelButton}
-                  sx={{display: displayButton}}
+                  sx={{ display: displayButton }}
                 > Cancel
                 </Button>
               </Fade>
 
               {/*********************************** Rating  ************************************/}
-              <Box sx={{marginTop: 5, justifyContent: "center", display: displayContactMe}}>
-                <StyledRating
-                  defaultValue={4.5}
-                  precision={0.5}
-                  icon={<StarIcon fontSize="inherit"/>}
-                  emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
-                  readOnly
-                />
+              {/*TODO calculate the rating on review load*/}
+              <Box sx={{ display: displayContactMe }}>
+                {loading ? <Skeleton variant="h3" width={120} sx={{ bgcolor: 'grey.500' }} /> :
+                  <StyledRating
+                    defaultValue={4.5}
+                    precision={0.5}
+                    icon={<StarIcon fontSize="inherit" />}
+                    emptyIcon={<StarBorderOutlinedIcon fontSize="inherit" />}
+                    readOnly
+                    sx={{}}
+                  />
+                }
               </Box>
 
               {/******************** Contact Me Button *********************/}
               <Fade in={!fade}>
-                <Button
-                  // type='submit'
-                  color='secondary'
-                  variant='contained'
-                  style={{marginTop: 30}}
-                  startIcon={<ForumOutlinedIcon/>}
-                  sx={{display: displayContactMe, whiteSpace: 'nowrap'}}
-                  onClick={handleContactMe}
-                >
-                  Contact Me!
-                </Button>
+                {loading ? <Skeleton variant="h3" width={120} sx={{ bgcolor: 'grey.500' }} /> :
+                  <Button
+                    color='secondary'
+                    variant='contained'
+                    style={{ marginTop: 0 }}
+                    startIcon={<ForumOutlinedIcon />}
+                    sx={{ display: displayContactMe, whiteSpace: 'nowrap' }}
+                    onClick={handleContactMe}
+                  >
+                    Contact Me!
+                  </Button>
+                }
               </Fade>
 
 
@@ -739,158 +1098,35 @@ export default function ProfilePage() {
               <Fade in={fade}>
                 <Button
                   color="secondary"
-                  startIcon={<SaveIcon/>}
+                  startIcon={<SaveIcon />}
                   variant="contained"
-                  style={{marginTop: 30, padding: "6px 64px"}}
+                  style={{ marginTop: 0, padding: "6px 64px" }}
                   onClick={handleSave}
-                  sx={{display: displayButton}}
+                  sx={{ display: displayButton }}
                 >
                   Save
                 </Button>
               </Fade>
             </Box>
-
-            {/***************** Horizontal line ***************/}
-            <Divider style={{background: 'white', border: "1px solid"}}/>
-
-            {/***************** Social Media ****************/}
-            <Box sx={{display: "flex", marginY: "20px"}}>
-              <Grid container>
-
-                {/***************** Instagram  Icon ****************/}
-                <Grid item xs={1} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}} href={instagramLink} underline="none" target="_blank" rel="noreferrer">
-                    <InstagramIcon color={"secondary"}/>
-                  </IconButton>
-                </Grid>
-
-                {/***** Instagram Handle *****/}
-                <Grid item xs>
-                  <Link href={instagramLink} underline="none" target="_blank" rel="noreferrer">
-                    <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{instagram}
-                    </Typography>
-                  </Link>
-                  <ThemeProvider theme={textFieldTheme}>
-
-                    {/**** Instagram Hidden Edit Text field ****/}
-                    <TextField
-                      color="secondary"
-                      variant={"filled"}
-                      label={"Instagram"}
-                      value={instagramTemp}
-                      className={classes.root}
-                      size={'small'}
-                      sx={{display: displaySocial, marginTop: -1.5}}
-                      onChange={handleOnChangeInstagram}
-                    >
-                    </TextField>
-                  </ThemeProvider>
-                </Grid>
-
-                {/****************** Twitter Icon *******************/}
-                <Grid item xs={1} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}} href={twitterLink} underline="none" target="_blank" rel="noreferrer">
-                    <TwitterIcon color={"secondary"}/>
-                  </IconButton>
-                </Grid>
-
-                {/***** Twitter Handle *****/}
-                <Grid item xs>
-                  <Link href={twitterLink} underline="none" target="_blank" rel="noreferrer">
-                    <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{twitter}
-                    </Typography>
-                  </Link>
-
-                  {/***** Twitter Hidden Edit Text Field *****/}
-                  <ThemeProvider theme={textFieldTheme}>
-                    <TextField
-                      color="secondary"
-                      variant={"filled"}
-                      label={"Twitter"}
-                      value={twitterTemp}
-                      className={classes.root}
-                      size={'small'}
-                      sx={{display: displaySocial, marginTop: -1.5}}
-                      onChange={handleOnChangeTwitter}
-                    >
-                    </TextField>
-                  </ThemeProvider>
-                </Grid>
-
-                {/******************* LinkedIn Icon *****************/}
-                <Grid item xs={1} sx={{display: "flex"}}>
-                  <IconButton sx={{padding: 0}} href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
-                    <LinkedInIcon color={"secondary"}/>
-                  </IconButton>
-                </Grid>
-
-                {/****** LinkedIn Handle *****/}
-                <Grid item xs>
-                  <Link href={linkedInLink} underline="none" target="_blank" rel="noreferrer">
-                    <Typography color={"white"} align={"left"}
-                                sx={{fontSize: "1rem", display: displayAboutMeText, marginLeft: -3}}>{linkedIn}
-                    </Typography>
-                  </Link>
-
-                  {/****** LinkedIn Hidden Edit Text Field *****/}
-                  <ThemeProvider theme={textFieldTheme}>
-                    <TextField
-                      color="secondary"
-                      variant={"filled"}
-                      label={"LinkedIn"}
-                      value={linkedInTemp}
-                      className={classes.root}
-                      size={'small'}
-                      sx={{display: displaySocial, marginTop: -1.5}}
-                      onChange={handleOnChangeLinkedIn}
-                    >
-                    </TextField>
-                  </ThemeProvider>
-                </Grid>
-              </Grid>
-            </Box>
           </Stack>
+
         </Box>
+
       </Box>
 
       {/******************************* Skill Listings *******************************/}
-      <Paper
-        sx={{
-          p: 2,
-          margin: 'auto',
-          marginTop: 1,
-          maxWidth: 948,
-          flexGrow: 1,
-          border: "0.5px solid",
-          borderColor: "primary.light",
-          height: 450
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper elevation={3} sx={{height: 450}}>
-              Placeholder
-            </Paper>
-          </Grid>
-        </Grid>
-
+    
+      <Paper 
+            variant="outlined" 
+            square 
+            style={{backgroundColor: Theme.palette.primary.main, position: "relative",borderWidth:"0px"}}
+            sx={{ p: 10, mt:5 }}
+            >
+        {skilllist()};
       </Paper>
-
-
+     
       {/******************************* Write a Review Button *******************************/}
-      <Box sx={{maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto"}}>
+      <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto" }}>
         <Button
           variant="contained"
           color="secondary"
@@ -902,12 +1138,13 @@ export default function ProfilePage() {
       </Box>
 
       {/******************* Add a new review *****************/}
-      <div style={{display: displayNewReview}}>
+      <div style={{ display: displayNewReview }}>
         {newReviewForm}
       </div>
 
       {/******************* Reviews *****************/}
       {reviewList}
+
 
     </Box>
   );

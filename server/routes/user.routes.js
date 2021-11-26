@@ -6,6 +6,8 @@ const authenticateToken = require("../middleware/auth");
 // Register
 router.post("/register", users.create);
 
+router.get("/id", authenticateToken, users.getId);
+
 // Get Profile
 router.get("/profile/:userId?", authenticateToken, users.getProfile);
 
@@ -18,8 +20,8 @@ router.patch("/change-password", authenticateToken, users.changePassword);
 // Forgot Password (Initial Email)
 router.post("/forgot-password", users.forgotPassword);
 
-    // Reset Password (Final Step)
-    router.patch("/reset-password", users.resetPassword);
+// Reset Password (Final Step)
+router.patch("/reset-password", users.resetPassword);
 
 // Verify Email
 router.route("/verify/").get(users.verifyEmail);

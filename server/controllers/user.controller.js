@@ -55,6 +55,11 @@ exports.create = async (req, res) => {
     });
 };
 
+exports.getId = async (req, res) => {
+  let user = await User.findOne({ email: req.email });
+  return res.status(200).json({ userId: user._id });
+};
+
 exports.getProfile = async (req, res) => {
   let userId = req.params.userId;
 

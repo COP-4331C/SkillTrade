@@ -64,7 +64,14 @@ exports.fetchByUser = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  const { search, location, page } = req.query;
+  var { search, location, page } = req.query;
+
+  if (!page)
+    page = 0;
+
+  if (!search)
+    search = "";
+
   const limit = 15;
   // TODO: Implement support for location?
   const searchQuery = {$regex: search, $options: "i"}
@@ -208,8 +215,6 @@ async function addUserInfo(skill) {
 
   skill["averageRating"] = sumRatings / listOfReviews.length;
   skill["numReviews"] = listOfReviews.length;
-
-  console.log(skill);
 
   return skill;
 }

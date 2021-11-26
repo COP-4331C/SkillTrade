@@ -293,11 +293,11 @@ const EditProfileScreen = ({ navigation }) => {
       .then(function (response) {
         console.warn("profile picture is changed");
         // navigation.goBack()
-        Alert.alert(
-          "Profile Changed!", // Alert Title
-          " ", // My Alert Msg
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        );
+        // Alert.alert(
+        //   "Profile Changed!", // Alert Title
+        //   " ", // My Alert Msg
+        //   { text: "OK", onPress: () => console.log("OK Pressed") }
+        // );
         Alert.alert(
           "",
           "Profile Picture is Changed!",
@@ -330,7 +330,7 @@ const EditProfileScreen = ({ navigation }) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.uri);
+      setPickedImagePath(result);
       console.log(result.uri);
       // console.log(pickedImagePath)
     }

@@ -89,7 +89,7 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setProfileData(response.data)
-            console.warn("connected")
+            // console.warn("connected")
         })
         .catch(function(error) {
             console.warn(error)

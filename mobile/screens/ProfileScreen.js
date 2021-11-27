@@ -23,9 +23,9 @@ import moment from "moment";
 import { render } from 'react-dom';
 // import { DirectConnect } from 'aws-sdk';
 
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
+const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
+  <View > 
+    <Text >{title}</Text> 
   </View>
 );
 
@@ -44,6 +44,7 @@ const ProfileScreen = ({navigation}) => {
     });
     return unsubscribe;
   }, [navigation]);
+
   const [isEdit, setIsEdit] = React.useState(false);
 
   const [profileData, setProfileData] = React.useState({
@@ -63,23 +64,19 @@ const ProfileScreen = ({navigation}) => {
   const [reviewData, setReviewData] = React.useState([]);
   
   useEffect(async() => {
-    let userToken = null;
+    let userId = null; 
     try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+        userId = await SecureStore.getItemAsync('hostId'); // should store a hostId variable in SecureStore, then get it back here. 
+        // because the userId here is not alwasy match to the login user. when login user browse other user's profile it will not match.
     } catch (e) {
         console.warn(e);
     }
-    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
-
-    let userId = '61887889e62859a35bc0de9c'; //should be null; 
-    // try {
-    //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
-    // } catch (e) {
-    //     console.warn(e);
-    // }
     connectToGetReviewApi(userId)
-  // return unsubscribe;
-  }, [])
+    const unsubscribe = navigation.addListener('focus', () => {
+      connectToGetReviewApi(userId)
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   function connectToProfileApi(userToken){
     axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
@@ -89,7 +86,6 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setProfileData(response.data)
-            // console.warn("connected")
         })
         .catch(function(error) {
             console.warn(error)
@@ -102,20 +98,11 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setReviewData(response.data)
-            // console.warn(profileData)
         })
         .catch(function(error) {
             console.warn(error)
         });
   }
-
-  let userId = profileData._id // this is not the userId but the profileId !! FIXME ???
-  try {
-    SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
-  } catch (e) {
-    console.log(e);
-  }
-
 
   const deleteSkillHandler = () => { // FIXME: connect to delete skill API and delete record  // asyn ?? await???
     let skillId = "61a0a87aaadf7d76c38f714f"
@@ -188,9 +175,9 @@ const ProfileScreen = ({navigation}) => {
     });
   }
 
-  const renderItem = ({ item }) => (
-    <Item title={item.reviewerName} />
-  );
+  // const renderItem = ({ item }) => (
+  //   <Item title={item.reviewerName} />
+  // );
 
   const renderPost = post => { 
     return (
@@ -203,7 +190,8 @@ const ProfileScreen = ({navigation}) => {
                 </Text>
               </View>
               <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
-                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
+                <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
+                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen', {paramKey: post._id,})}} > 
                   <AntDesign name="edit" size={18} color="black" />
                 </TouchableOpacity>
                 <Text>           </Text>
@@ -332,7 +320,6 @@ const ProfileScreen = ({navigation}) => {
 
         <View style={styles.sectionContainer}>
           <Text style={[styles.sectionTitle, {marginBottom:18}]}> WANT TO LEARN </Text>
-          {/* <Text style={[styles.subText, styles.recent]}>Recent Activity</Text> */}
           <View style={{alignItems:"center"}}>
             <View style={styles.recentItem}>
                 <View style={styles.recentItemIndicator}></View>
@@ -563,6 +550,11 @@ avatar: {
   height: 36,
   borderRadius: 18,
   marginRight: 16
+},
+timestamp: {
+  fontSize: 11,
+  color: "#C4C6CE",
+  marginTop: 4
 },
   
 });

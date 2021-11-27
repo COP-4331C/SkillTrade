@@ -1,5 +1,18 @@
 import React, { Component, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Button, 
+  StyleSheet, 
+  SafeAreaView, 
+  Image, 
+  ScrollView, 
+  Linking, 
+  TouchableOpacity, 
+  FlatList, 
+  StatusBar, 
+  Alert 
+} from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
@@ -107,6 +120,32 @@ const ProfileScreen = ({navigation}) => {
     });
   };
 
+  function confirmDeleteReview (reviewId){
+    Alert.alert(
+      "Alert", // "Alert Title"
+      "Do you want to delete this review?", // "My Alert Msg"
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Delete"),
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () =>  deleteReviewHandler(reviewId),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
+    );
+  }
+
   async function deleteReviewHandler (reviewId) { 
      
     let userToken = null;
@@ -126,9 +165,11 @@ const ProfileScreen = ({navigation}) => {
         let index = reviewData.map((r)=> {return r._id}).indexOf(reviewId)
         reviewData.splice(index,1) 
         setReviewData([...reviewData])
+        Alert.alert("Review Deleted")
     })
     .catch(function(error) {
-        console.warn(error)
+        // console.warn(error)
+        Alert.alert("You can only delete the review you created.")
     });
   }
 
@@ -151,7 +192,7 @@ const ProfileScreen = ({navigation}) => {
                   <AntDesign name="edit" size={18} color="black" />
                 </TouchableOpacity>
                 <Text>           </Text>
-                <TouchableOpacity onPress={()=>{ deleteReviewHandler(post._id) }} >                 
+                <TouchableOpacity onPress={()=>{ confirmDeleteReview(post._id) }} >                 
                   <AntDesign name="delete" size={18} color="black" />
                 </TouchableOpacity>
               </View>

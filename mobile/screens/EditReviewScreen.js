@@ -20,7 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 const EditReviewScreen = ({navigation}) => {
   const [data, setData] = React.useState({
-    userId: '', // get from storage
+    userId: '', // get from storage // profileId != userId FIXME ???
     reviewerId: '', // get from storage
     reviewerName: '', // get from storage & database??
     rating: 0,

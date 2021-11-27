@@ -1,5 +1,18 @@
 import React, { Component, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Image, ScrollView, Linking, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Button, 
+  StyleSheet, 
+  SafeAreaView, 
+  Image, 
+  ScrollView, 
+  Linking, 
+  TouchableOpacity, 
+  FlatList, 
+  StatusBar, 
+  Alert 
+} from 'react-native';
 import { Entypo, Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
@@ -31,6 +44,7 @@ const ProfileScreen = ({navigation}) => {
     });
     return unsubscribe;
   }, [navigation]);
+  const [isEdit, setIsEdit] = React.useState(false);
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -47,21 +61,17 @@ const ProfileScreen = ({navigation}) => {
   });
 
   const [reviewData, setReviewData] = React.useState([]);
-
   
   useEffect(async() => {
-   // let userToken = null;
-   // try {
-   //     userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-   // } catch (e) {
-   //     console.warn(e);
-   // }
-   // connectToProfileApi(userToken) // if need to get userId, can get it form profile API
-   // const unsubscribe = navigation.addListner('focus', () => {
-   //   connectToProfileApi(userToken) 
-    
-   // });
-    let userId = '6189698db9e8c8287e27ab7a'; //should be null; 
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
+
+    let userId = '61887889e62859a35bc0de9c'; //should be null; 
     // try {
     //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
     // } catch (e) {
@@ -99,19 +109,83 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
-  let userId = profileData._id
+  let userId = profileData._id // this is not the userId but the profileId !! FIXME ???
   try {
     SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
   } catch (e) {
     console.log(e);
   }
 
-  const deleteSkillHandler = () => {
-    navigation.navigate('EditSkillScreen') // FIXME: connect to delete skill API and delete record
+
+  const deleteSkillHandler = () => { // FIXME: connect to delete skill API and delete record  // asyn ?? await???
+    let skillId = "61a0a87aaadf7d76c38f714f"
+    axios.delete(`https://cop4331c.herokuapp.com/api/skills/61a0a881aadf7d76c38f7157`,  { // ${reviewId}
+            
+      }, {// 
+        headers: {
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc`  //  `Bearer ${userToken}` 
+        } //eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0
+      })
+    .then(function(response) {
+        console.warn("skill deleted!")
+    })
+    .catch(function(error) {
+        console.warn(error)
+        // console.warn("fail to deleted!")
+    });
+  };
+
+  function confirmDeleteReview (reviewId){
+    Alert.alert(
+      "Alert", // "Alert Title"
+      "Do you want to delete this review?", // "My Alert Msg"
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Delete"),
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () =>  deleteReviewHandler(reviewId),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
+    );
   }
 
-  const deleteReviewHandler = () => {
-    navigation.navigate('EditReviewScreen') // FIXME: connect to delete review API and delete record
+  async function deleteReviewHandler (reviewId) { 
+     
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); 
+    } catch (e) {
+        console.warn(e);
+    };
+
+    axios.delete(`https://cop4331c.herokuapp.com/api/review/delete-review/${reviewId}`, 
+     {
+        headers: {
+          'Authorization': `Bearer ${userToken}`  
+        } 
+      })
+    .then(function(response) {
+        let index = reviewData.map((r)=> {return r._id}).indexOf(reviewId)
+        reviewData.splice(index,1) 
+        setReviewData([...reviewData])
+        Alert.alert("Review Deleted")
+    })
+    .catch(function(error) {
+        // console.warn(error)
+        Alert.alert("You can only delete the review you created.")
+    });
   }
 
   const renderItem = ({ item }) => (
@@ -133,7 +207,7 @@ const ProfileScreen = ({navigation}) => {
                   <AntDesign name="edit" size={18} color="black" />
                 </TouchableOpacity>
                 <Text>           </Text>
-                <TouchableOpacity onPress={()=>{ deleteReviewHandler() }} >                 
+                <TouchableOpacity onPress={()=>{ confirmDeleteReview(post._id) }} >                 
                   <AntDesign name="delete" size={18} color="black" />
                 </TouchableOpacity>
               </View>
@@ -214,7 +288,12 @@ const ProfileScreen = ({navigation}) => {
         <View style={styles.sectionContainer}>
           <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
             <Text style={styles.sectionTitle}> MY SKILLS </Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
+            <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
+            <Entypo name="email" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style = {{display:isEdit ? "block" : 'none'}}
+              onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
             <Entypo name="add-to-list" size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -301,6 +380,7 @@ const ProfileScreen = ({navigation}) => {
       <FlatList 
         
         data={reviewData}
+        extraData = {reviewData}
         renderItem={({item}) => renderPost(item)}
         keyExtractor={item => item._id}
         ListHeaderComponent={

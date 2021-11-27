@@ -25,7 +25,7 @@ import * as ImagePicker from 'expo-image-picker';
 const AddReviewScreen = ({navigation}) => {
 
   const [data, setData] = React.useState({
-    userId: '', 
+    subjectId: '', 
     // rating: 0,
     content: '',
     userToken: '',
@@ -49,18 +49,19 @@ const AddReviewScreen = ({navigation}) => {
   }
 
 
-  useEffect(async() => { // get userId from storage ; profileId != userId; FIXME???
-    let userIdData = '61887889e62859a35bc0de9c'; // = null;
-    let userTokenData = "eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0"; // = null;
-    // try {
-    //   userIdData = await SecureStore.getItemAsync('userId'); // need to add 'await' 
-    //   userTokenData = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    // } catch (e) {
-    //     console.warn(e);
-    // }
+  useEffect(async() => { 
+    let subjectId = '61887889e62859a35bc0de9c'; // = null;
+    // let userTokenData = "eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0"; // = null;
+    try {
+      // subjectIdData = await SecureStore.getItemAsync('subjectId'); // FIXME: get subjectId from storage ;store subjectId in advance ???
+      subjectIdData = subjectId; // for test
+      userTokenData = await SecureStore.getItemAsync('userToken'); 
+    } catch (e) {
+        console.warn(e);
+    }
     setData({
       ...data,
-      userId: userIdData,
+      subjectId: subjectIdData,
       userToken: userTokenData,
     })
   }, [])
@@ -106,9 +107,9 @@ const AddReviewScreen = ({navigation}) => {
   const fall = new Animated.Value(1); 
 
   
-  function connectToAddReviewApi(userId, defaultRating, content, userToken){
+  function connectToAddReviewApi(subjectId, defaultRating, content, userToken){
     axios.post('https://cop4331c.herokuapp.com/api/review/create-review', {
-          userId: userId, // userId !== reviewerID, can not review yourself
+          subjectId: subjectId, 
           rating: defaultRating,  // int
           content: content, 
       }, {
@@ -131,16 +132,16 @@ const AddReviewScreen = ({navigation}) => {
       })
       .catch(function(error) {
           console.warn(error)
-          Alert.alert(
-            "Fail to add your review!",
-            "You can not write review for yourself.",
-            [ // an array of objects (each object is a button)
-              { 
-                  text: "OK", 
-                  onPress: () => console.log("OK Pressed") 
-              },
-            ], 
-          )
+          // Alert.alert(
+          //   "Fail to add your review!",
+          //   "You can not write review for yourself.",
+          //   [ // an array of objects (each object is a button)
+          //     { 
+          //         text: "OK", 
+          //         onPress: () => console.log("OK Pressed") 
+          //     },
+          //   ], 
+          // )
       });
   }
 
@@ -178,7 +179,7 @@ const AddReviewScreen = ({navigation}) => {
 
         <TouchableOpacity style={styles.commandButton} onPress={() => {
             if (data.content.length > 0 && data.content.length < 300 ){
-              connectToAddReviewApi( data.userId, defaultRating, data.content, data.userToken) 
+              connectToAddReviewApi( data.subjectId, defaultRating, data.content, data.userToken) 
             }
             else {
               Alert.alert('Review must between 1 to 300 characters', '', 

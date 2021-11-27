@@ -533,7 +533,7 @@ const EditProfileScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          <Text>{pickedImagePath.uri}</Text>
+        
 
           <View style={styles.action}>
             <FontAwesome name="user-o" size={20} />

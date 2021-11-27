@@ -49,16 +49,15 @@ const AddReviewScreen = ({navigation}) => {
   }
 
 
-  useEffect(async() => { // get userId from storage 
-    let userIdData = null;
-    let userTokenData = null;
-    try {
-      userIdData = await SecureStore.getItemAsync('userId'); // need to add 'await' 
-      userTokenData = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    // console.warn(userIdData)
+  useEffect(async() => { // get userId from storage ; profileId != userId; FIXME???
+    let userIdData = '61887889e62859a35bc0de9c'; // = null;
+    let userTokenData = "eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0"; // = null;
+    // try {
+    //   userIdData = await SecureStore.getItemAsync('userId'); // need to add 'await' 
+    //   userTokenData = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    // } catch (e) {
+    //     console.warn(e);
+    // }
     setData({
       ...data,
       userId: userIdData,
@@ -131,7 +130,7 @@ const AddReviewScreen = ({navigation}) => {
           navigation.goBack()
       })
       .catch(function(error) {
-          // console.warn(error)
+          console.warn(error)
           Alert.alert(
             "Fail to add your review!",
             "You can not write review for yourself.",

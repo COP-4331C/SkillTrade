@@ -42,7 +42,7 @@ exports.createReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
   var listOfReviews = await Review.find({ subjectId: req.params.userId })
-    .sort({ updatedAt: -1 })
+    .sort({ createdAt: -1 })
     .lean()
     .catch((err) => {
       console.log(err);

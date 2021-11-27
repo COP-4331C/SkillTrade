@@ -189,12 +189,11 @@ const ProfileScreen = ({navigation}) => {
                 <Text style={{fontWeight:"400"}}> {post.content}</Text>
                 </Text>
               </View>
-              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
+              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='space-between'>
                 <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
                 <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen', {paramKey: post._id,})}} > 
-                  <AntDesign name="edit" size={18} color="black" />
+                  <AntDesign name="edit" size={18} color="black" style={{paddingLeft:100}}/>
                 </TouchableOpacity>
-                <Text>           </Text>
                 <TouchableOpacity onPress={()=>{ confirmDeleteReview(post._id) }} >                 
                   <AntDesign name="delete" size={18} color="black" />
                 </TouchableOpacity>

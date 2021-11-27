@@ -42,7 +42,7 @@ const HomeScreen = ({navigation}) => {
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                       <View>
                           <Text style={styles.name}>{post.userFullName}</Text>
-                          <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
+                          <Text style={styles.timestamp}>{moment(post.updatedAt).fromNow()}</Text>
                       </View>
                       <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
                         <Entypo name="star" size={18} color="black" />

@@ -1,4 +1,3 @@
-// dark theme customisation at the end at abt 29:57
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -31,9 +30,8 @@ const AddReviewScreen = ({navigation}) => {
     userToken: '',
   }); 
 
-  // Confirm FirstName is there
   const contentInputChange = (val) => { // check contentInputChange 
-    if(val.length > 0 && val.length <= 300){
+    if(val.length > 0 && val.length <= 260){
         setData({
             ...data,
             content:val,
@@ -44,7 +42,6 @@ const AddReviewScreen = ({navigation}) => {
             firstname:val,
             isValidContent:false,
         })
-        console.warn("review must between 1~600 characters.")// add a warning FIXME
     }
   }
 
@@ -52,6 +49,8 @@ const AddReviewScreen = ({navigation}) => {
   useEffect(async() => { 
     let subjectId = '61887889e62859a35bc0de9c'; // = null;
     // let userTokenData = "eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0"; // = null;
+    let subjectIdData = null;
+    let userTokenData = null;
     try {
       // subjectIdData = await SecureStore.getItemAsync('subjectId'); // FIXME: get subjectId from storage ;store subjectId in advance ???
       subjectIdData = subjectId; // for test
@@ -131,17 +130,17 @@ const AddReviewScreen = ({navigation}) => {
           navigation.goBack()
       })
       .catch(function(error) {
-          console.warn(error)
-          // Alert.alert(
-          //   "Fail to add your review!",
-          //   "You can not write review for yourself.",
-          //   [ // an array of objects (each object is a button)
-          //     { 
-          //         text: "OK", 
-          //         onPress: () => console.log("OK Pressed") 
-          //     },
-          //   ], 
-          // )
+          // console.warn(error)
+          Alert.alert(
+            "Fail to add your review!",
+            "Please select your rating star.",
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
       });
   }
 
@@ -162,7 +161,7 @@ const AddReviewScreen = ({navigation}) => {
       <Text style={styles.textStyle}> {defaultRating + ' / ' + maxRating.length} </Text> 
 
       <Text style={[styles.textStyle,{fontSize:18}]} >write your review:</Text>
-      <Text style={[styles.textStyle,{fontSize:18}]} >(no more than 300 characters)</Text>
+      <Text style={[styles.textStyle,{fontSize:18}]} >(no more than 260 characters)</Text>
         <View style={styles.action}>
           
           <TextInput 
@@ -178,11 +177,11 @@ const AddReviewScreen = ({navigation}) => {
         </View>
 
         <TouchableOpacity style={styles.commandButton} onPress={() => {
-            if (data.content.length > 0 && data.content.length < 300 ){
+            if (data.content.length > 0 && data.content.length < 260 ){
               connectToAddReviewApi( data.subjectId, defaultRating, data.content, data.userToken) 
             }
             else {
-              Alert.alert('Review must between 1 to 300 characters', '', 
+              Alert.alert('Review must between 1 to 260 characters', '', 
                   [ // an array of objects (each object is a button)
                     { 
                         text: "OK", 
@@ -217,12 +216,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFFFFF',
     paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
   },
 
   panelButton: {

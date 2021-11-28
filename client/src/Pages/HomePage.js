@@ -1,22 +1,22 @@
 import HomeNavBar from "../components/HomeNavBar";
 import * as React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import {alpha, styled} from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import {Theme} from "../components/Theme";
+import { Theme } from "../components/Theme";
 import Grid from "@mui/material/Grid";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {retrieveData} from "../components/DataStorage";
+import { retrieveData } from "../components/DataStorage";
 import Testcard from "../components/Testcard";
 import Pagination from '@mui/material/Pagination';
-import {Stack, Typography} from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import SkillCardSkeleton from "../components/SkillCardSkeleton";
 
 // TODO: Check if the user is logged in, if not, then redirect user to login or landing page.
 
-const Search = styled('div')(({theme}) => ({
+const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.80),
@@ -33,7 +33,7 @@ const Search = styled('div')(({theme}) => ({
   },
 }));
 
-const SearchIconWrapper = styled('div')(({theme}) => ({
+const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
   position: 'absolute',
@@ -43,7 +43,7 @@ const SearchIconWrapper = styled('div')(({theme}) => ({
   justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({theme}) => ({
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
@@ -77,7 +77,7 @@ const HomePage = () => {
     // Fetches the profile data
     axios.get(
       "./api/user/profile",
-      {headers: {Authorization: `Bearer ${token}`}}
+      { headers: { Authorization: `Bearer ${token}` } }
     )
       .then(function (response) {
         // storeData('firstName', response.data["firstName"]);
@@ -112,15 +112,15 @@ const HomePage = () => {
 
     await axios.get(`/api/skills/?page=${page}&limit=${limit}&search=${searchText}`,
       {
-        headers: {'Authorization': `Bearer ${token}`}
+        headers: { 'Authorization': `Bearer ${token}` }
       })
       .then((res) => {
 
-        if(res.data["totalCount"] > limit ) {
+        if (res.data["totalCount"] > limit) {
           setNumOfPages(Math.ceil(res.data["totalCount"] / limit));
           setDisplayPagination("flex");
         }
-        else if(res.data["totalCount"] !== 0){
+        else if (res.data["totalCount"] !== 0) {
           setDisplayPagination("none");
         }
         else {
@@ -143,10 +143,19 @@ const HomePage = () => {
       return (
         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
           <Testcard
-            key={fetchedSkill._id}
-            skillid={fetchedSkill._id}
-            skillname={fetchedSkill.summary}
-            titlename={fetchedSkill.title}
+            // key={fetchedSkill._id}
+            // skillid={fetchedSkill._id}
+            // skillname={fetchedSkill.summary}
+            // titlename={fetchedSkill.title}
+            // skilldescription={fetchedSkill.description}
+            // skillcity={fetchedSkill.city}
+            // skillstate={fetchedSkill.state}
+            // skillimage={fetchedSkill.imageURL}
+            // skilluserid={fetchedSkill.userFullName}
+            // skilluserdirectid={fetchedSkill.userId}
+
+            skilldescription={fetchedSkill.summary}
+            skillname={fetchedSkill.title}
             skilldescription={fetchedSkill.description}
             skillcity={fetchedSkill.city}
             skillstate={fetchedSkill.state}
@@ -169,10 +178,10 @@ const HomePage = () => {
 
   const skillListSkeleton = () => {
 
-    let content = Array.from({length: limit}, (() => 10)).map((index) => {
+    let content = Array.from({ length: limit }, (() => 10)).map((index) => {
       return (
         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-          <SkillCardSkeleton key={{index}} />
+          <SkillCardSkeleton key={{ index }} />
         </Grid>
       );
     })
@@ -203,39 +212,39 @@ const HomePage = () => {
     <div>
       <HomeNavBar
         loggedUserAvatar={loggedUserAvatar}
-        onKeyDown={(textToSearch) => {handleEnterKey(textToSearch)}}
-        onClick={() => {handleResetSearch()}}
+        onKeyDown={(textToSearch) => { handleEnterKey(textToSearch) }}
+        onClick={() => { handleResetSearch() }}
       />
       <Grid container sx={{
         alignItems: "center",
         height: "60px",
         backgroundColor: Theme.palette.primary.light,
-        display: {sx: "block", sm: "none"}
+        display: { sx: "block", sm: "none" }
       }}>
-        <Grid item xs sx={{marginLeft: "20px", marginRight: "20px"}}>
+        <Grid item xs sx={{ marginLeft: "20px", marginRight: "20px" }}>
           <Search>
             <SearchIconWrapper>
-              <SearchIcon/>
+              <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search for a skill to learn..."
-              inputProps={{'aria-label': 'search'}}
-              style={{width: "90%", marginLeft: 40}}
+              inputProps={{ 'aria-label': 'search' }}
+              style={{ width: "90%", marginLeft: 40 }}
             />
           </Search>
         </Grid>
       </Grid>
 
       {/*This box is just an spacer*/}
-      <Box sx={{marginTop: 2}}/>
+      <Box sx={{ marginTop: 2 }} />
 
       {/******************************** Skill Poss ************************************************
       {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
 
-      <Typography variant="h4" sx={{display:displayNoResultMessage, justifyContent:"center"}}>
+      <Typography variant="h4" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
         No Skills Found For Your Search
       </Typography>
-      <Typography variant="h6" sx={{display:displayNoResultMessage, justifyContent:"center"}}>
+      <Typography variant="h6" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
         Try a new search.
       </Typography>
 
@@ -243,9 +252,9 @@ const HomePage = () => {
       {!loading && skillList()}
 
       {/******************************** Pagination *************************************************/}
-      <Box sx={{marginTop: 5, display: displayPagination, justifyContent: "center"}}>
+      <Box sx={{ marginTop: 5, display: displayPagination, justifyContent: "center" }}>
         <Stack spacing={2}>
-          <Pagination count={numOfPages} page={page} size="large" onChange={handlePaginationChange}/>
+          <Pagination count={numOfPages} page={page} size="large" onChange={handlePaginationChange} />
         </Stack>
       </Box>
 

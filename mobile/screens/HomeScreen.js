@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 import moment from "moment";
-import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
-import axios from "axios";
+import { Entypo,FontAwesome5,FontAwesome } from '@expo/vector-icons'
+import axios from 'axios';
+import StarRating from 'react-native-star-rating';
+
 
 const Item = ({ title }) => (
   <View>
@@ -13,78 +15,59 @@ const Item = ({ title }) => (
 const HomeScreen = ({ navigation }) => {
   const [skillData, setSkillData] = React.useState([]);
 
-  async function connectToGetSkillsApi() {
-    axios
-      .get(`https://cop4331c.herokuapp.com/api/skills?search=%20&page=1`, {})
-      .then(function (response) {
-        // console.warn("get")
-        setSkillData(response.data.data);
-      })
-      .catch(function (error) {
-        console.warn(error);
-      });
+  async function connectToGetSkillsApi(){
+    let search = "";
+    let page = 1;
+    let limit = 8;
+    axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`,
+          ) 
+        .then(function(response) {
+            setSkillData(response.data.data)
+        })
+        .catch(function(error) {
+            console.warn(error)
+        });
   }
 
-  useEffect(async () => {
-    connectToGetSkillsApi();
-  }, []);
+  useEffect(async() => { connectToGetSkillsApi() }, [])
 
-  const renderItem = ({ item }) => <Item title={item.reviewerName} />;
+  const renderItem = ({ item }) => (
+    <Item title={item.reviewerName} />
+  );
 
-  const renderPost = (post) => {
-    // Image source=...; post.avatar  get user's picture; post.image  get skill picture;  FIXME
-    return (
-      <View style={styles.feedItem}>
-        <Image source={{ uri: post.userProfilePic }} style={styles.avatar} />
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Text style={styles.name}>{post.userFullName}</Text>
-              <Text style={styles.timestamp}>
-                {moment(post.createdAt).fromNow()}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-              <Entypo name="star" size={18} color="black" />
-              <Entypo name="star" size={18} color="black" />
-              <Entypo name="star" size={18} color="black" />
-              <Entypo name="star" size={18} color="black" />
-              <Entypo name="star" size={18} color="black" />
-              <Text> (25)</Text>
-            </View>
+  const renderPost = post => { 
+      return (
+          <View style={styles.feedItem}> 
+              <Image source={{uri:post.userProfilePic}} style={styles.avatar} /> 
+              <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                      <View>
+                          <Text style={styles.name}>{post.userFullName}</Text>
+                          <Text style={styles.timestamp}>{moment(post.updatedAt).fromNow()}</Text>
+                      </View>
+                      <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
+                        <StarRating
+                        disabled={false}
+                        maxStars={5}
+                        rating={post.averageRating}
+                        fullStarColor={'gold'}
+                        starSize={15}
+                        />
+                        <Text> ({post.numReviews})</Text>
+                      </View>
+                  </View>
+                  <Text style={styles.titleText}>{post.title}</Text>
+                  <Text style={styles.postText}>{post.summary}</Text>
+                  <Text style={styles.postText}>{post.description}</Text>
+                  <Text style={styles.postText,{fontWeight:"800"}}>Location: {post.city}, {post.state}</Text>
+                  <Image source={{uri:post.imageURL}} style={styles.postImage} resizeMode="cover" /> 
+                  <View style={{ flexDirection: "row" , justifyContent: "space-between"}}>
+                      <FontAwesome5 name="comment-dollar" size={24} color="black" style={{ marginRight: 16 }}><Text> {post.price} </Text></FontAwesome5>
+                      <FontAwesome name="wechat" size={24} color="black" />
+                      <FontAwesome name="circle" size={18} color="black"><Text> {post.status} </Text></FontAwesome>
+                  </View>
+              </View>
           </View>
-          <Text style={styles.titleText}>{post.title}</Text>
-          <Text style={styles.postText}>{post.summary}</Text>
-          <Text style={styles.postText}>{post.description}</Text>
-          <Image
-            source={{ uri: post.imageURL }}
-            style={styles.postImage}
-            resizeMode="cover"
-          />
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <FontAwesome5
-              name="comment-dollar"
-              size={24}
-              color="black"
-              style={{ marginRight: 16 }}
-            >
-              <Text> {post.price} </Text>
-            </FontAwesome5>
-            <FontAwesome name="wechat" size={24} color="black" />
-            <FontAwesome name="circle" size={18} color="black">
-              <Text> {post.status} </Text>
-            </FontAwesome>
-          </View>
-        </View>
-      </View>
     );
   };
 

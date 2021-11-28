@@ -64,7 +64,9 @@ exports.search = async (req, res) => {
 
   if (!search) search = "";
 
+  limit = parseInt(limit);
   if (!limit || limit > 30 || limit < 1) limit = 10;
+
   // TODO: Implement support for location?
   const searchQuery = { $regex: search, $options: "i" };
 

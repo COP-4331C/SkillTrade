@@ -60,9 +60,15 @@ export default function AccountMenuMobile(props) {
   function displayBackToHomePageButtonIfNeeded() {
     if (window.location.href.toLowerCase().includes("profile")) {
       return (
-        <Button variant="text" color="secondary" component={RouterLink} to="/home">
-          Back to home Page
-        </Button>
+        <Box sx={{display: 'flex', alignItems: 'center', textAlign:'right', justifyContent: 'right', height: '100%'}}>
+          <Button
+            variant="text"
+            color="secondary"
+            sx={{whiteSpace: 'nowrap', overflow: "e"}}
+            component={RouterLink} to="/home">
+            Back to Search
+          </Button>
+        </Box>
       )
     } else {
       return(<></>);

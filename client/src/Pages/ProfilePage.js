@@ -24,12 +24,13 @@ import Reviews from "../components/Reviews";
 import { retrieveData } from "../components/DataStorage";
 import Testcard from '../components/Testcard';
 import axios from "axios";
-import Addskills from '../components/Addskills';
 import Skeleton from '@mui/material/Skeleton';
 import { Paper } from '@mui/material';
-//added props
-export default function ProfilePage(props) {
 
+
+export default function ProfilePage(props) {
+  const token = retrieveData('token');
+  const configuration = {headers: { Authorization: `Bearer ${token}` }};
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -72,14 +73,14 @@ export default function ProfilePage(props) {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
-  const [profileUserID, setProfileUserID] = useState("61894e2ab7293c19980829a2");
+  const [profileUserID, setProfileUserID] = useState(""); //"61894e2ab7293c19980829a2"
   const [loggedUser, setLoggedUser] = useState({
     firstName: "",
     lastName: "",
     location: "TODO: [City, State, Country]",
   });
   const [reviewMessages, setReviewMessages] = useState([]);
-  const token = retrieveData('token');
+
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
@@ -441,26 +442,6 @@ export default function ProfilePage(props) {
     }
   }
 
-  function getAndDisplayReviews() {
-
-    // Get token from the local storage
-    const URL = `./api/review/get-reviews/${profileUserID}`;
-    const config = {
-      headers: { Authorization: `Bearer ${token}` }
-    };
-
-    // Fetches reviews
-    axios.get(URL, config)
-      .then(function (response) {
-        setReviewMessages(response.data);
-        setNumOfReviews(response.data.length);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
-
   // function getProfileData() {
   const getProfileData = async () => {
 
@@ -476,7 +457,8 @@ export default function ProfilePage(props) {
       // const response = await axios.get(URL, config);
       const response = await axios.get(
         `./api/user/profile/${!userId ? "" : userId}`,
-        { headers: { Authorization: `Bearer ${token}` } });
+        configuration
+      );
 
       setFirstName(response.data["firstName"]);
       setLastName(response.data["lastName"]);
@@ -489,13 +471,50 @@ export default function ProfilePage(props) {
       setState(response.data["state"]);
       setCountry(response.data["country"]);
 
+      setProfileUserID(response.data["_id"])
+      console.log("user ID: " + response.data["_id"]);
+
+
+      // Fetches reviews
+      axios.get(
+        `./api/review/get-reviews/${response.data["_id"]}}`,
+        configuration
+      )
+        .then(function (response) {
+          setReviewMessages(response.data);
+          setNumOfReviews(response.data.length);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   }
 
-  //ridwan test
+
+  function fetchReviews() {
+    // console.log(profileUserID);
+    // // Get token from the local storage
+    // const URL = `./api/review/get-reviews/${profileUserID}`;
+    // const config = {
+    //   headers: { Authorization: `Bearer ${token}` }
+    // };
+    //
+    // // Fetches reviews
+    // axios.get(URL, config)
+    //   .then(function (response) {
+    //     setReviewMessages(response.data);
+    //     setNumOfReviews(response.data.length);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+  }
+
 
   const [skillposts, setSkillPosts] = useState([]);
 
@@ -536,7 +555,7 @@ export default function ProfilePage(props) {
       setTimeout(async () => {
         await getProfileData();
         fetchSkills();
-        getAndDisplayReviews();
+        fetchReviews();
       }, 1)
 
     } catch (e) {
@@ -568,6 +587,7 @@ export default function ProfilePage(props) {
       />
     </div>
   );
+
   //Ridwan testing
   const skilllist = () => {
     let content = skillposts.map((fetchedskill, index) => {
@@ -638,6 +658,7 @@ export default function ProfilePage(props) {
   return (
     <Box sx={{ flex: 1 }}>
       <HomeNavBar loggedUserAvatar={photo} />
+      {/*<HomeNavBar />*/}
 
       {/************************* Main Box ***********************/}
       <Box
@@ -1122,7 +1143,7 @@ export default function ProfilePage(props) {
             style={{backgroundColor: Theme.palette.primary.main, position: "relative",borderWidth:"0px"}}
             sx={{ p: 10, mt:5 }}
             >
-        {skilllist()};
+        {skilllist()}
       </Paper>
      
       {/******************************* Write a Review Button *******************************/}

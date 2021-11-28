@@ -58,17 +58,25 @@ exports.fetchByUser = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  var { search, location, page } = req.query;
+  let { search, location, limit, page } = req.query;
 
-  if (!page)
-    page = 0;
+  if (!page) page = 0;
 
-  if (!search)
-    search = "";
+  if (!search) search = "";
 
-  const limit = 15;
+  limit = parseInt(limit);
+  if (!limit || limit > 30 || limit < 1) limit = 10;
+
   // TODO: Implement support for location?
   const searchQuery = { $regex: search, $options: "i" };
+
+  let count = await Skill.count({
+    $or: [
+      { title: searchQuery },
+      { summary: searchQuery },
+      { description: searchQuery },
+    ],
+  });
 
   var listOfSkills = await Skill.find({
     $or: [
@@ -88,7 +96,7 @@ exports.search = async (req, res) => {
   // Adds user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  return res.status(200).json(listOfSkills);
+  return res.status(200).json({ totalCount: count, data: listOfSkills });
 };
 
 exports.editSkill = async (req, res) => {

@@ -130,17 +130,17 @@ const AddReviewScreen = ({navigation}) => {
           navigation.goBack()
       })
       .catch(function(error) {
-          console.warn(error)
-          // Alert.alert(
-          //   "Fail to add your review!",
-          //   "You can not write review for yourself.",
-          //   [ // an array of objects (each object is a button)
-          //     { 
-          //         text: "OK", 
-          //         onPress: () => console.log("OK Pressed") 
-          //     },
-          //   ], 
-          // )
+          // console.warn(error)
+          Alert.alert(
+            "Fail to add your review!",
+            "Please select your rating star.",
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
       });
   }
 

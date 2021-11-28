@@ -19,15 +19,29 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
-
+import {useIsFocused} from "@react-navigation/native"
+import { is } from '@babel/types';
 
 const EditReviewScreen = ({navigation, route}) => {
 
   const [data, setData] = React.useState({
-    reviewId: route.params.paramKey, // {route.params.paramKey}
-    newContent: '',
+    reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
+    newContent: route.params.paramKey.content,
     userToken: '',
   }); 
+
+  const isFocused = useIsFocused()
+
+  useEffect(()=>{
+    if (isFocused){
+      setData({
+        ...data,
+        reviewId: route.params.paramKey._id,
+        newContent: route.params.paramKey.content,
+      })
+      setnewRating(route.params.paramKey.rating)
+    }
+  },[isFocused])
 
   // catch newContentInputChange 
   const newContentInputChange = (val) => { 
@@ -39,7 +53,7 @@ const EditReviewScreen = ({navigation, route}) => {
     } else {
         setData({
             ...data,
-            firstname:val,
+            newContent:val,
             isValidContent:false,
         })
     }
@@ -59,7 +73,7 @@ const EditReviewScreen = ({navigation, route}) => {
   }, [])
 
   // newRating varable hold the user input rating as a number within 1~5
-  const [newRating, setnewRating] = useState(0) // initial rating
+  const [newRating, setnewRating] = useState(route.params.paramKey.rating) // initial rating
   const [maxRating, setmaxRating] = useState([1,2,3,4,5])
 
   const starImgFilled = 'https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true' // source={require('../assets/logo.png')} // '../assets/star_filled.png' ?
@@ -97,8 +111,8 @@ const EditReviewScreen = ({navigation, route}) => {
   const fall = new Animated.Value(1); 
 
   
-  function connectToEditReviewApi(reviewId, newRating, newContent, userToken){
-    axios.patch('https://cop4331c.herokuapp.com/api/review/edit-review', {
+  async function connectToEditReviewApi(reviewId, newRating, newContent, userToken){
+    await axios.patch('https://cop4331c.herokuapp.com/api/review/edit-review', { // {route.params.paramKey._id}
           reviewId: reviewId, 
           newRating: newRating,  // int
           newContent: newContent, 
@@ -121,17 +135,17 @@ const EditReviewScreen = ({navigation, route}) => {
           navigation.goBack()
       })
       .catch(function(error) {
-          console.warn(error)
-          // Alert.alert(
-          //   "Fail to add your review!",
-          //   "You can not write review for yourself.",
-          //   [ // an array of objects (each object is a button)
-          //     { 
-          //         text: "OK", 
-          //         onPress: () => console.log("OK Pressed") 
-          //     },
-          //   ], 
-          // )
+          navigation.goBack()
+          Alert.alert(
+            "Fail to edit review!",
+            "You can not edit other user's review.",
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
       });
   }
 
@@ -156,7 +170,7 @@ const EditReviewScreen = ({navigation, route}) => {
         <View style={styles.action}>
           
           <TextInput 
-            placeholder="new review content" // FIXME: input length limit(can not enter when overfit), 
+            value={data.newContent} // FIXME: input length limit(can not enter when overfit), //
             placeholderTextColor="#666666"
             autoCorrect={false}
             multiline={true}
@@ -168,6 +182,7 @@ const EditReviewScreen = ({navigation, route}) => {
         </View>
 
         <TouchableOpacity style={styles.commandButton} onPress={() => {
+          console.log(data)
             if (data.newContent.length > 0 && data.newContent.length < 260 ){
               connectToEditReviewApi( data.reviewId, newRating, data.newContent, data.userToken) 
             }

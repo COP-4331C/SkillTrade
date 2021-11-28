@@ -16,7 +16,6 @@ let storage = multerS3({
     cb(null, `skilltrade-bucket/${req.directory}`);
   },
   key: function(req, file, next) {
-    console.log(file);
     var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.jfif'];
     var fileExtension = "";
 

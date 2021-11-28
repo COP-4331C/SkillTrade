@@ -8,6 +8,9 @@ router
   .get(skill.search) // Fetch by page (Query parameters: search & page)
   .post(authenticateToken, skill.createSkill); // Add skill
 
+router // Create skill WITH photo. API call as multipart form with "file" and "body"
+  .post("/create-skill", authenticateToken, skill.createSkillWithPhoto);
+
 router
   .route("/user/:userId?")
   .get(authenticateToken, skill.fetchByUser) // Fetch skills for user (Query parameter: status)

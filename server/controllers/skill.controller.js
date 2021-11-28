@@ -165,7 +165,6 @@ exports.deleteSkill = async (req, res) => {
 
 exports.uploadSkillPic = async (req, res) => {
   try {
-    req.directory = "SkillPictures";
     const { skillId } = req.params;
 
     const skill = await Skill.findById(skillId);
@@ -179,6 +178,7 @@ exports.uploadSkillPic = async (req, res) => {
         error: "Invalid Credentials: Cannot delete another user's skill.",
       });
 
+    req.directory = "SkillPictures";
     await uploadFile(req, res);
     skill.imageURL = req.file.location; // Puts imageURL in object before saving to database
 
@@ -195,6 +195,28 @@ exports.uploadSkillPic = async (req, res) => {
       });
     }
   }
+};
+
+exports.createSkillWithPhoto = async (req, res) => {
+  const user = await User.findOne({ email: req.email });
+
+  req.directory = "SkillPictures";
+  await uploadFile(req, res);
+
+  var body = JSON.parse(req.body.body);
+  body.userId = user._id;
+  body.imageURL = req.file.location;
+
+  var skill = new Skill(body);
+
+  skill
+    .save()
+    .then(() => {
+      return res.status(200).json({ message: "Successfully created skill!" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ error: err });
+    });
 };
 
 async function addUserInfo(skill) {

@@ -44,8 +44,8 @@ export default function Skills(props) {
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
-            skillname = {fetchedskill.summary}
-            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.summary}
+            skillname = {fetchedskill.title}
             skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}

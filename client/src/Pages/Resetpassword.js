@@ -18,6 +18,8 @@ import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
 import { Theme } from '../components/Theme';
+import {useLocation} from "react-router-dom";
+
 // import URLSea
 
 export default function Resetpassword() {
@@ -124,6 +126,9 @@ export default function Resetpassword() {
   // }
 
 //submit handeler
+  const search = useLocation().search;
+  const params = new URLSearchParams(search);
+
   function handleSubmitButton(event) {
     event.preventDefault();
 
@@ -155,31 +160,28 @@ export default function Resetpassword() {
 
     console.log(isOk);
 
-    if (valid()&&isOk ) {
+    // if (valid()&&isOk ) {
 
-      const query = new URLSearchParams(this.props.location.search);
-      const userId = query.get('userId');
-      const resetCode = query.get('resetCode');
+      
+
+      const userId = params.get('userId');
+      const resetCode = params.get('resetCode');
 
       console.log(userId);
       console.log(resetCode);
+      params.get('userId')
+      params.get('resetCode')
 
-      const URL = './api/user/reset-password';
+      const URL = '/api/user/reset-password';
 
       const resetPayload = {
-        // firstName: firstName,
-        // lastName: lastName,
-        // email: email,
-        // password: values.password,
-
-        //parse and put the UserID
-        //paese and put the reset code
+  
         userId : userId,
         newPassword: values.password,
         resetCode: resetCode
       };
 
-      axios.post(URL, resetPayload)
+      axios.patch(URL, resetPayload)
         .then(function (response) {
           console.log(response);
           window.location.href='/Login';
@@ -187,10 +189,12 @@ export default function Resetpassword() {
 
 
         .catch(function (error) {
-          setOpenMessage(true);});
+          setOpenMessage(true);
+          console.log(error);
+        });
 
       //If any of the validation function fails
-    }
+    // }
       // else if(validateInputLength()!==1) {
       //   setPwdError({
       //     state: true,
@@ -198,21 +202,21 @@ export default function Resetpassword() {
       //   });
     // }
 
-    else if (valid()!==1){
-      // alert("Registration 1!" );
-      setconfirmError({
-        state: true,
-        text: "Passwords do not match, please check again!"
-      });
-    }
+    // else if (valid()!==1){
+    //   // alert("Registration 1!" );
+    //   setconfirmError({
+    //     state: true,
+    //     text: "Passwords do not match, please check again!"
+    //   });
+    // }
 
-    else if(!isOk){
-      // alert("Registration 2!" );
-      setComplexity({
-        state: true,
-        text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
-      });
-    }
+    // else if(!isOk){
+    //   // alert("Registration 2!" );
+    //   setComplexity({
+    //     state: true,
+    //     text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
+    //   });
+    // }
 
     // else if (validFirstName()!==1){
     //   // alert("Registration 3!" );

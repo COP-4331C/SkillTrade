@@ -123,8 +123,8 @@ const HomePage = () => {
           <Testcard
             key={fetchedSkill._id}
             skillid={fetchedSkill._id}
-            skillname = {fetchedSkill.summary}
-            titlename = {fetchedSkill.title}
+            skilldescription = {fetchedSkill.summary}
+            skillname = {fetchedSkill.title}
             skilldescription = {fetchedSkill.description}
             skillcity = {fetchedSkill.city}
             skillstate = {fetchedSkill.state}

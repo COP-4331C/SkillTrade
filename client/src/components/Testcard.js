@@ -162,6 +162,8 @@ function handleSave() {
     });
   }
 
+  //Edit Skill Pic Axios Put
+
   if(okToSaveData) {
     setCityAdd(cityAddTemp);
     setStateAdd(stateAddTemp);
@@ -172,7 +174,7 @@ function handleSave() {
     const token = localStorage.getItem('token');  
     //value to commit to Backend changable_fields
     const payload = {
-      summary: aboutMeTextTemp, 
+      summary: aboutMeText2Temp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
       price: priceTemp,
@@ -202,6 +204,7 @@ function handleCancelButton() {
   exitEditMode();
 }
 
+//Delete Skill Axios Delete
 function handleDeleteButton(){
 
   const token = localStorage.getItem('token');
@@ -281,6 +284,7 @@ const Input = styled('input')({
   display: 'none',
 });
 
+//Upload Skill Pic Axios Post
 function handleskillpic(e) {
 
   const formData = new FormData();

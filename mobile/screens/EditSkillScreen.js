@@ -22,20 +22,25 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 const EditSkillScreen = ({navigation}) => {
-  const [data, setData] = React.useState({
-    userId: '', // get from storage
-    title: '',
-    summary: '',
-    description: '',
-    imageURL: '',
-    status: '',
-    price: 0,
-    country: '',
-    state: '',
-    city: '',
-});
-
+  // const [data, setData] = React.useState({
+  //   reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
+  //   newContent: route.params.paramKey.content,
+  //   userToken: '',
+  // }); 
+  
+  const [id, setId] = useState("");
+  setId(route.params.paramKey._id);
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+  const [price, setPrice] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [pickedImagePath, setPickedImagePath] = useState('');
+  
+
 
   // This function is triggered when the "Select an image" button pressed
   const showImagePicker = async () => {
@@ -53,7 +58,7 @@ const EditSkillScreen = ({navigation}) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.url); // Marked: changed all uri to url, to avoid empty uri warning
+      setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
       console.log(result.url);
     }
   }
@@ -74,7 +79,7 @@ const EditSkillScreen = ({navigation}) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.url);
+      setPickedImagePath(result);
       console.log(result.url);
     }
   }
@@ -109,6 +114,104 @@ const EditSkillScreen = ({navigation}) => {
   const {colors} = useTheme();
   const bs = React.createRef();
   const fall = new Animated.Value(1); 
+  
+  // API Connections
+
+
+  // Edit - Profile API
+  async function connectToEditSkillApi(skillId, title, summary, description, status, price, country, state, city){
+    await axios.patch('https://cop4331c.herokuapp.com/api/review/edit-skill', { // {route.params.paramKey._id}
+          skillId: skillId, 
+          title: title,
+          summary: summary,
+          description: description,
+          status: status,
+          price: price,
+          country: country,
+          state: state,
+          city: city
+      }, {
+          headers: {
+            'Authorization': `Bearer ${userToken}`  
+          }
+        })
+      .then(function(response) {
+          Alert.alert(
+            "Skill updated!", // Alert Title
+            " ", // My Alert Msg
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
+          navigation.goBack()
+      })
+      .catch(function(error) {
+          console.warn("edit skill not working")
+          // navigation.goBack()
+          
+      });
+  }
+
+
+  // Upload Pic API Stuff
+  const createFileFormData = (image, body = {}) => {
+    const data = new FormData();
+
+    data.append("file", {
+      name: image.uri.split("/").pop(),
+      type: "image/jpg",
+      uri: Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
+    });
+
+    Object.keys(body).forEach((key) => {
+      data.append(key, body[key]);
+    });
+
+    return data;
+  };
+
+  function uploadProfilePic(skillId, image) {
+    const data = createFileFormData(image);
+    console.log(image);
+    console.log(data);
+    axios
+      .post(
+        "https://cop4331c.herokuapp.com/api/user/upload-profile-pic",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "content-type": "multipart/form-data",
+          },
+        }
+      )
+      .then(function (response) {
+        console.warn("profile picture is changed");
+        // navigation.goBack()
+        // Alert.alert(
+        //   "Profile Changed!", // Alert Title
+        //   " ", // My Alert Msg
+        //   { text: "OK", onPress: () => console.log("OK Pressed") }
+        // );
+        Alert.alert(
+          "",
+          "Profile Picture is Changed!",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: true }
+        );
+        // navigation.goBack()
+        // navigation.navigate('ProfileScreen')
+      })
+      .catch(function (error) {
+        console.log(error.message);
+        console.warn("profile picture is not changed");
+      });
+  }
+
+
 
 
   return (

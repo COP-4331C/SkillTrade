@@ -17,26 +17,137 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 
 
 const AddSkillScreen = ({navigation}) => {
-  const [data, setData] = React.useState({
-    userId: '', // get from storage
-    title: '',
-    summary: '',
-    description: '',
-    imageURL: '',
-    status: '',
-    price: 0,
-    country: '',
-    state: '',
-    city: '',
-});
+//   const [data, setData] = React.useState({
+//     userId: '', // get from storage
+//     title: '',
+//     summary: '',
+//     description: '',
+//     imageURL: '',
+//     status: '',
+//     price: 0,
+//     country: '',
+//     state: '',
+//     city: '',
+// });
+React.useEffect(() => {
+  const unsubscribe = navigation.addListener('focus', () => {
+    // do something
+  });
 
+  return unsubscribe;
+}, [navigation]);
+
+  const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+  const [price, setPrice] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [pickedImagePath, setPickedImagePath] = useState('');
+  
 
+  function getId(userToken)
+  {
+        let userId;
+        userId = null;
+        await axios.get('https://cop4331c.herokuapp.com/api/user/id',  {
+              headers: {
+                Authorization: `Bearer ${userToken}`  
+              }
+            })
+          .then(function(response) {
+            userId = response.data.userId
+          })
+          .catch(function(error) {
+              console.warn(error)
+          });
+  }
+
+  const createFileFormData = (image, body = {}) => {
+    const data = new FormData();
+
+    data.append("file", {
+      name: image.uri.split("/").pop(),
+      type: "image/jpg",
+      uri: Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
+    });
+
+    Object.keys(body).forEach((key) => {
+      data.append(key, body[key]);
+    });
+
+    return data;
+  };
+  
+  function connectToAddSkillAPI(
+    userId,
+    title,
+    summary,
+    description,
+    status,
+    price,
+    country,
+    state,
+    city,
+    pickedImagePath
+    ) {
+    const data = createFileFormData(image);
+    console.log(image);
+    console.log(data);
+    axios
+      .post(
+        "https://cop4331c.herokuapp.com/api/skills/create-skill",
+        {
+          userId : userId,
+          title: title,
+          summary: summary,
+          description: description,
+          status: status,
+          price: price,
+          country: country,
+          state: state,
+          city: city,
+        },
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "content-type": "multipart/form-data",
+          },
+        }
+      )
+      .then(function (response) {
+        console.warn("skill is added");
+        // navigation.goBack()
+        // Alert.alert(
+        //   "Profile Changed!", // Alert Title
+        //   " ", // My Alert Msg
+        //   { text: "OK", onPress: () => console.log("OK Pressed") }
+        // );
+        Alert.alert(
+          "",
+          "Skill is Added!",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: true }
+        );
+        // navigation.goBack()
+        // navigation.navigate('ProfileScreen')
+      })
+      .catch(function (error) {
+        console.log(error.message);
+        console.warn("Skill is not added");
+      });
+  }
   // This function is triggered when the "Select an image" button pressed
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
@@ -50,11 +161,11 @@ const AddSkillScreen = ({navigation}) => {
     const result = await ImagePicker.launchImageLibraryAsync();
 
     // Explore the result
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.url); // Marked: changed all uri to url, to avoid empty uri warning
-      console.log(result.url);
+      setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
+      // console.log(result.url);
     }
   }
 
@@ -74,8 +185,8 @@ const AddSkillScreen = ({navigation}) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.url);
-      console.log(result.url);
+      setPickedImagePath(result);
+      console.log(result.uri);
     }
   }
 
@@ -143,7 +254,7 @@ const AddSkillScreen = ({navigation}) => {
                 <ImageBackground
                 resizeMode='cover' 
                 source={{
-                  url: pickedImagePath,
+                  uri: pickedImagePath,
                 }}
 
                 style={{height:100, width: 100}}
@@ -178,6 +289,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="Skill title"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setTitle(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -195,6 +307,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="summary"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setSummary(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -212,6 +325,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="description"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setDescription(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -223,12 +337,13 @@ const AddSkillScreen = ({navigation}) => {
           />
         </View>
 
-        <View style={styles.action}>
+        {/* <View style={styles.action}>
         <Entypo name="image" size={24} color="black" />
           <TextInput 
             placeholder="imageURL"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => set(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -238,7 +353,7 @@ const AddSkillScreen = ({navigation}) => {
               },
             ]}
           />
-        </View>
+        </View> */}
 
         <View style={styles.action}>
         <MaterialCommunityIcons name="calendar-star" size={24} color="black" />
@@ -246,6 +361,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="status"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setStatus(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -264,6 +380,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholderTextColor="#666666"
             keyboardType='decimal-pad'
             autoCorrect={false}
+            onChangeText={(val) => setPrice(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -281,6 +398,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="country"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setCountry(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -298,6 +416,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="state"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setState(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -315,6 +434,7 @@ const AddSkillScreen = ({navigation}) => {
             placeholder="city"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setCity(val)}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -326,7 +446,42 @@ const AddSkillScreen = ({navigation}) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.commandButton} onPress={async() => {
+          let userToken = null;
+          try {
+            userToken = await SecureStore.getItemAsync("userToken"); // need to add 'await'
+          } catch (e) {
+            console.warn("SecureStore error");
+          }
+          let userId;
+          userId = null;
+          await axios.get('https://cop4331c.herokuapp.com/api/user/id',  {
+                headers: {
+                  Authorization: `Bearer ${userToken}`  
+                }
+              })
+            .then(function(response) {
+              userId = response.data.userId
+            })
+            .catch(function(error) {
+                console.warn(error)
+            });
+          // userId = getId(userToken);
+          // uploadProfilePic(userToken, pickedImagePath);
+
+          connectToAddSkillAPI(
+            userId,
+            title,
+            summary,
+            description,
+            status,
+            price,
+            country,
+            state,
+            city,
+            pickedImagePath
+          );
+        }}>
           <Text style={styles.panelButtonTitle}>Add Skill</Text>
         </TouchableOpacity>
 

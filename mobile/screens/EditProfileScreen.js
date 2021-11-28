@@ -528,9 +528,10 @@ const EditProfileScreen = ({ navigation }) => {
                 </ImageBackground>
               </View>
             </TouchableOpacity>
-            <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "bold" }}>
+            {/* <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "bold" }}>
               {firstName} {lastName}
-            </Text>
+            </Text> */}
+            <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text>
           </View>
 
         

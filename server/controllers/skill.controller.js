@@ -58,15 +58,13 @@ exports.fetchByUser = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  var { search, location, page } = req.query;
+  let { search, location, limit, page } = req.query;
 
-  if (!page)
-    page = 0;
+  if (!page) page = 0;
 
-  if (!search)
-    search = "";
+  if (!search) search = "";
 
-  const limit = 15;
+  if (!limit || limit > 30 || limit < 1) limit = 10;
   // TODO: Implement support for location?
   const searchQuery = { $regex: search, $options: "i" };
 

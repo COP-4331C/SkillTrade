@@ -10,8 +10,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import Grid from "@mui/material/Grid";
 import {Theme} from "./Theme";
+import {useState} from "react";
 
 export default function HomeNavBar(props) {
+  const [searchText, setSearchText] = useState("");
 
   const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -54,6 +56,11 @@ export default function HomeNavBar(props) {
     },
   }));
 
+  function handleSearchOnChange(e) {
+    setSearchText(e.target.value);
+
+  }
+
 
   // Avoid displaying the search bar in the Profile Page
   function displaySearchBarIfNeeded () {
@@ -72,6 +79,10 @@ export default function HomeNavBar(props) {
           <StyledInputBase
             placeholder="Search for skills to learn..."
             inputProps={{'aria-label': 'search'}}
+            onChange={handleSearchOnChange}
+            value={searchText}
+
+
           />
         </Search>
       );

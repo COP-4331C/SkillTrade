@@ -496,7 +496,7 @@ export default function ProfilePage(props) {
   }
 
 
-  function fetchReviews() {
+  // function fetchReviews() {
     // console.log(profileUserID);
     // // Get token from the local storage
     // const URL = `./api/review/get-reviews/${profileUserID}`;
@@ -513,7 +513,7 @@ export default function ProfilePage(props) {
     //   .catch(function (error) {
     //     console.log(error);
     //   });
-  }
+  // }
 
 
   const [skillposts, setSkillPosts] = useState([]);
@@ -555,7 +555,7 @@ export default function ProfilePage(props) {
       setTimeout(async () => {
         await getProfileData();
         fetchSkills();
-        fetchReviews();
+        // fetchReviews();
       }, 1)
 
     } catch (e) {

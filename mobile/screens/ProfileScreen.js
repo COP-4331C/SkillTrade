@@ -10,6 +10,7 @@ import {
   Linking, 
   TouchableOpacity, 
   FlatList, 
+  SectionList,
   StatusBar, 
   Alert 
 } from 'react-native';
@@ -21,29 +22,18 @@ import * as SecureStore from 'expo-secure-store';
 import AddSkillScreen from './AddSkillScreen';
 import moment from "moment";
 import { render } from 'react-dom';
+import StarRating from 'react-native-star-rating';
 // import { DirectConnect } from 'aws-sdk';
 
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
+const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
+  <View > 
+    <Text >{title}</Text> 
   </View>
 );
 
-
 const ProfileScreen = ({navigation}) => {
-  useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToProfileApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
-      connectToProfileApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
+
+
   const [isEdit, setIsEdit] = React.useState(false);
 
   const [profileData, setProfileData] = React.useState({
@@ -61,7 +51,35 @@ const ProfileScreen = ({navigation}) => {
   });
 
   const [reviewData, setReviewData] = React.useState([]);
-  
+  const [skillData, setSkillData] = React.useState([]);
+  const [learnSkillData, setLearnSkillData] = React.useState([]);
+
+  const sections = [
+    {
+      _id: '0',
+      title: 'MY SKILLS',
+      data: skillData,
+      renderItem: ({ item }) => 
+        renderSkills(item),
+        // {return <Text style={styles.row}>{item.title}</Text>}
+    },
+    {
+      _id: '1',
+      title: 'WANT TO LEARN',
+      data: learnSkillData,
+      renderItem: ({ item }) => 
+        renderLearnSkills(item),
+      // <Text style={styles.rowDark}>{item.text}</Text>,
+    },
+    {
+      _id: '2',
+      title: 'REVIEWS',
+      data: reviewData,
+      renderItem: ({ item }) => //<Text style={styles.rowDark}>{item.content}</Text>,
+        renderReviews(item),
+    },
+  ]
+
   useEffect(async() => {
     let userToken = null;
     try {
@@ -69,17 +87,43 @@ const ProfileScreen = ({navigation}) => {
     } catch (e) {
         console.warn(e);
     }
-    connectToProfileApi(userToken) // if need to get userId, can get it form profile API
+    connectToProfileApi(userToken)
+    const unsubscribe = navigation.addListener('focus', () => {
+      connectToProfileApi(userToken)
+    });
+    return unsubscribe;
+  }, [navigation]);
 
-    let userId = '61887889e62859a35bc0de9c'; //should be null; 
-    // try {
-    //     userId = await SecureStore.getItemAsync('userId'); // can get the userId when connect to profile API, store in SecureStore, then get it back here. // or try to use the data get from profile API directly
-    // } catch (e) {
-    //     console.warn(e);
-    // }
+  useEffect(async() => {
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    connectToUserSkillsApi(userToken)
+    connectToLearnSkillsApi(userToken)
+    const unsubscribe = navigation.addListener('focus', () => {
+      connectToUserSkillsApi(userToken)
+      connectToLearnSkillsApi(userToken)
+    });
+    return unsubscribe;
+  }, [navigation]);
+  
+  useEffect(async() => {
+    let userId = null; 
+    try {
+        userId = await SecureStore.getItemAsync('hostId'); // should store a hostId variable in SecureStore, then get it back here. 
+        // because the userId here is not alwasy match to the login user. when login user browse other user's profile it will not match.
+    } catch (e) {
+        console.warn(e);
+    }
     connectToGetReviewApi(userId)
-  // return unsubscribe;
-  }, [])
+    const unsubscribe = navigation.addListener('focus', () => {
+      connectToGetReviewApi(userId)
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   function connectToProfileApi(userToken){
     axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
@@ -89,7 +133,48 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setProfileData(response.data)
-            // console.warn("connected")
+        })
+        .catch(function(error) {
+            console.warn(error)
+        });
+  }
+
+  async function connectToUserSkillsApi(userToken){
+    let hostId = null;
+    let status = 'Teaching';
+    try {
+      hostId = await SecureStore.getItemAsync('hostId'); 
+    } catch (e) {
+        console.warn(e);
+    };
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${hostId}`,  { 
+            headers: { 
+              Authorization: `Bearer ${userToken}`  
+            }
+          })
+        .then(function(response) {
+          setSkillData(response.data)
+        })
+        .catch(function(error) {
+            console.warn(error)
+        });
+  }
+
+  async function connectToLearnSkillsApi(userToken){
+    let hostId = null;
+    let status = 'Learning';
+    try {
+      hostId = await SecureStore.getItemAsync('hostId'); 
+    } catch (e) {
+        console.warn(e);
+    };
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${hostId}`,  { 
+            headers: { 
+              Authorization: `Bearer ${userToken}`  
+            }
+          })
+        .then(function(response) {
+          setLearnSkillData(response.data)
         })
         .catch(function(error) {
             console.warn(error)
@@ -102,36 +187,60 @@ const ProfileScreen = ({navigation}) => {
           })
         .then(function(response) {
             setReviewData(response.data)
-            // console.warn(profileData)
         })
         .catch(function(error) {
             console.warn(error)
         });
   }
 
-  let userId = profileData._id // this is not the userId but the profileId !! FIXME ???
-  try {
-    SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
-  } catch (e) {
-    console.log(e);
+  function confirmDeleteSkill (skillId){
+    Alert.alert(
+      "Alert", // "Alert Title"
+      "Do you want to delete this skill?", // "My Alert Msg"
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Delete"),
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () =>  deleteSkillHandler(skillId),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
+    );
   }
 
-
-  const deleteSkillHandler = () => { // FIXME: connect to delete skill API and delete record  // asyn ?? await???
-    let skillId = "61a0a87aaadf7d76c38f714f"
-    axios.delete(`https://cop4331c.herokuapp.com/api/skills/61a0a881aadf7d76c38f7157`,  { // ${reviewId}
-            
-      }, {// 
+  const deleteSkillHandler = async(skillId) => { 
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    axios.delete(`https://cop4331c.herokuapp.com/api/skills/${skillId}`,  
+    {
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc`  //  `Bearer ${userToken}` 
-        } //eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0
+          'Authorization': `Bearer ${userToken}`  
+        }
       })
     .then(function(response) {
-        console.warn("skill deleted!")
+        let index = skillData.map((r)=> {return r._id}).indexOf(skillId) // get index of the delete item; map is creaeting an array of _id
+        skillData.splice(index,1) // cut out the item (base on the previous index) from skillData array, 1 means delete one item
+        setSkillData([...skillData]) // skillData is state variable, so we need to update it with setSkillData()
+        Alert.alert("Skill Deleted!")
     })
     .catch(function(error) {
-        console.warn(error)
-        // console.warn("fail to deleted!")
+        // console.warn(error)
+        Alert.alert("Fail to deleted!")
     });
   };
 
@@ -188,11 +297,65 @@ const ProfileScreen = ({navigation}) => {
     });
   }
 
-  const renderItem = ({ item }) => (
-    <Item title={item.reviewerName} />
-  );
+  // const renderItem = ({ item }) => (
+  //   <Item title={item.reviewerName} />
+  // );
 
-  const renderPost = post => { 
+  const renderSkills = post => { 
+    return (
+      <View style={styles.sectionContainer}>
+        <View style={styles.skillContainer}>
+          <View style={styles.skillBar}>
+            <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
+              <AntDesign name="edit" size={18} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
+              <AntDesign name="delete" size={18} color="black" />
+            </TouchableOpacity>
+
+          </View> 
+          <Text style={[styles.about, {fontWeight:"600"}]}>Summary: </Text>
+          <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.summary}</Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>description: </Text>
+          <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.description}</Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>Price: <Text style={{fontWeight:"400"}}>{post.price}</Text></Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>Location: <Text style={{fontWeight:"400"}}>{post.city}</Text></Text>
+          <View style={{marginTop:10}}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <View style={styles.imageContainer}>
+                <Image source={{uri:post.imageURL}} style={styles.image} resizeMode="cover"></Image>
+              </View>
+            </ScrollView> 
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderLearnSkills = post => { 
+    return (
+      <View style={styles.sectionContainer}>
+        <View style={{alignItems:"center"}}>
+          <View style={styles.recentItem}>
+              <View style={styles.recentItemIndicator}></View>
+              <View style={{width:270}}>
+                <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
+                {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
+                <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
+                <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
+                <Text style={[styles.text, {fontWeight: "600"}]}>Description: </Text>
+                <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.description}</Text>
+                <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
+                <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
+              </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderReviews = post => { 
     return (
         <View>
             <View style={styles.reviewContainer}>
@@ -202,11 +365,18 @@ const ProfileScreen = ({navigation}) => {
                 <Text style={{fontWeight:"400"}}> {post.content}</Text>
                 </Text>
               </View>
-              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='flex-end'>
-                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen')}} > 
+              <View style={{paddingTop: 8}} flexDirection="row" justifyContent='space-around'>
+                <Text style={styles.timestamp}>{moment(post.createdAt).fromNow()}</Text>
+                <StarRating
+                disabled={false}
+                maxStars={5}
+                rating={post.rating}
+                fullStarColor={'gold'}
+                starSize={15}
+                />
+                <TouchableOpacity onPress={()=>{ navigation.navigate('EditReviewScreen', {paramKey: post,})}} >  
                   <AntDesign name="edit" size={18} color="black" />
                 </TouchableOpacity>
-                <Text>           </Text>
                 <TouchableOpacity onPress={()=>{ confirmDeleteReview(post._id) }} >                 
                   <AntDesign name="delete" size={18} color="black" />
                 </TouchableOpacity>
@@ -216,7 +386,7 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
-  const renderHeader = () => {
+  const renderHeader = () => { 
     return (
       <SafeAreaView style={styles.container}>
 
@@ -285,116 +455,50 @@ const ProfileScreen = ({navigation}) => {
           <Text style={styles.about}>{profileData.aboutMe}</Text>
         </View>
         
-        <View style={styles.sectionContainer}>
-          <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
-            <Text style={styles.sectionTitle}> MY SKILLS </Text>
-            <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
-            <Entypo name="email" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style = {{display:isEdit ? "block" : 'none'}}
-              onPress={()=>{ navigation.navigate('AddSkillScreen')}} > 
-            <Entypo name="add-to-list" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.skillContainer}>
-            <View style={styles.skillBar}>
-              <Text style={[styles.about, {fontWeight:"600"}]}>Cooking chinese food</Text>
-              <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-                <AntDesign name="edit" size={18} color="black" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{ deleteSkillHandler() }} > 
-                <AntDesign name="delete" size={18} color="black" />
-              </TouchableOpacity>
-
-            </View>
-            <Text style={[styles.about, {fontWeight:"400"}]}>
-              I am good at cooking and have been a chef in a chinese resturant couple years ago.
-            </Text>
-
-            <View style={{marginTop:10}}>
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://pic2.zhimg.com/v2-705cd9ed6cb5ffb9bca5b0aa7941c18f_1440w.jpg?source=172ae18b'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://static2.qiang100.com/images/zhuanti-icon/original/400/gouliang.jpg'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-                <View style={styles.imageContainer}>
-                  <Image source={{uri:'https://p5.itc.cn/images01/20210301/547198d3eb884443ace76c9a9d3d77fb.jpeg'}} style={styles.image} resizeMode="cover"></Image>
-                </View>
-              </ScrollView>
-            </View>
-          </View>
-
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionTitle, {marginBottom:18}]}> WANT TO LEARN </Text>
-          {/* <Text style={[styles.subText, styles.recent]}>Recent Activity</Text> */}
-          <View style={{alignItems:"center"}}>
-            <View style={styles.recentItem}>
-                <View style={styles.recentItemIndicator}></View>
-                <View style={{width:250}}>
-                  <Text style={[styles.text, {color:"#41444B", fontWeight:"600"}]}>Play piano -  </Text>
-                  <Text style={[styles.text, {fontWeight: "400"}]}>entry level / 
-                  <Text style={{fontWeight:"400"}}> pay by exchange hours</Text>
-                  </Text>
-                </View>
-            </View>
-          </View>
-          <View style={{alignItems:"center"}}>
-            <View style={styles.recentItem}>
-                <View style={styles.recentItemIndicator}></View>
-                <View style={{width:250}}>
-                  <Text style={[styles.text, {color:"#41444B", fontWeight:"600"}]}>Coding in Python - </Text>
-                  <Text style={[styles.text, {fontWeight: "400"}]}>advanced level / 
-                  <Text style={{fontWeight:"400"}}> pay by coins or money</Text>
-                  </Text>
-                </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.sectionContainer}>
-
-          <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
-            <Text style={[styles.sectionTitle, {marginBottom:18}]}> REVIEWS </Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('AddReviewScreen')}} > 
-              <Entypo name="add-to-list" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-
-        </View>
-
       </SafeAreaView>
     );
 
   }
 
+  const addButtonHandler = (title) => {
+    if ( title == "MY SKILLS"){
+      navigation.navigate('AddSkillScreen')
+    } else if ( title == "WANT TO LEARN" ){
+      navigation.navigate('AddSkillScreen')
+    } else if ( title == "REVIEWS" ){
+      navigation.navigate('AddReviewScreen')
+    }
+
+  }
 
   return (
-
     <SafeAreaView style={{flex: 1}}> 
-      <FlatList 
-        
-        data={reviewData}
-        extraData = {reviewData}
-        renderItem={({item}) => renderPost(item)}
-        keyExtractor={item => item._id}
+      <SectionList
+        // style={styles.container}
+        sections={sections}
+        renderSectionHeader={({ section }) => {
+          return (
+            <View style={styles.sectionContainer}>
+              <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
+                <Text style={styles.sectionTitle}> {section.title} </Text>
+                <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
+                  <Entypo name="email" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style = {{display:isEdit ? "block" : 'none'}}
+                  onPress={()=>{ addButtonHandler(section.title) }} > 
+                  <Entypo name="add-to-list" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )
+        }}
+        keyExtractor={(item) => item._id}
         ListHeaderComponent={
           renderHeader()
         }
-        // ListFooterComponent={
-        //   <Text>This is the ListFooterComponent!!</Text>
-        // }
-
       />
     </SafeAreaView>
-
-
-    
 
   );
 };
@@ -534,8 +638,9 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   sectionContainer: {
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 32,
+    backgroundColor: "#FFF",
     // marginBottom: 8,
     // backgroundColor: 
   },
@@ -547,9 +652,10 @@ const styles = StyleSheet.create({
     // backgroundColor: 
   },
   skillContainer: {
-    paddingVertical: 12,
+    // paddingVertical: 12,
     paddingLeft: 10,
-    marginBottom: 4,
+    // marginBottom: 4,
+    // backgroundColor: "#FFF",
     // backgroundColor: 
   },
   skillBar: {
@@ -563,6 +669,31 @@ avatar: {
   height: 36,
   borderRadius: 18,
   marginRight: 16
+},
+timestamp: {
+  fontSize: 11,
+  color: "#C4C6CE",
+  marginTop: 4
+},
+
+
+
+row: {
+  padding: 15,
+  marginBottom: 5,
+  backgroundColor: 'skyblue',
+},
+rowDark: {
+  padding: 15,
+  marginBottom: 5,
+  backgroundColor: 'steelblue',
+},
+header: {
+  padding: 15,
+  marginBottom: 5,
+  backgroundColor: 'darkblue',
+  color: 'white',
+  fontWeight: 'bold',
 },
   
 });

@@ -12,7 +12,6 @@ import ChangePasswordScreen from './screens/ChangePasswordScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './screens/RootStackScreen';
 import * as SecureStore from 'expo-secure-store';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
@@ -63,13 +62,13 @@ const App = () => {
     }
   };
 
-  // create a loginState variable and assign value, ?
-  // in the meanwhile, create a dispatch method use for changing the value of loginState. ?
+  // create a loginState variable and assign value, 
+  // in the meanwhile, create a dispatch method use for changing the value of loginState. 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState); 
   const authContext = React.useMemo(() => ({ // React.useMemo() ??
     signIn: async(userName, password) => {
       let userToken;
-      userToken = null
+      userToken = null;
       await axios.post('https://cop4331c.herokuapp.com/api/auth/login', { //connect API, need to be await
               email: userName, // 'test@example.com'
               password: password // 'fooBarBaz'
@@ -92,19 +91,32 @@ const App = () => {
               );
           });
       if( userToken !== null ){
-        try {
-          await SecureStore.setItemAsync('userToken', userToken);
-          // await AsyncStorage.setItem('userToken', userToken) //store the token in AsyncStorage
-        } catch (e) {
-          console.log(e);
-        }
+        let userId;
+        userId = null;
+        await axios.get('https://cop4331c.herokuapp.com/api/user/id',  {
+              headers: {
+                Authorization: `Bearer ${userToken}`  
+              }
+            })
+          .then(function(response) {
+            userId = response.data.userId
+            try {
+               SecureStore.setItemAsync('userToken', userToken); //store userToken in SecureStore
+               SecureStore.setItemAsync('userId', userId); //store userId in SecureStore
+               SecureStore.setItemAsync('hostId', userId); //store userId in SecureStore as hostId
+            } catch (e) {
+              console.log(e);
+            }
+          })
+          .catch(function(error) {
+              console.warn(error)
+          });
       }
       dispatch({type: 'LOGIN', id: userName, token: userToken})
     },
     signOut: async() => {
       try {
         await SecureStore.deleteItemAsync('userToken');
-        // await AsyncStorage.removeItem('userToken')
       } catch (e) {
         console.log(e);
       }

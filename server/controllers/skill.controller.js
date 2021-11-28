@@ -58,17 +58,25 @@ exports.fetchByUser = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  var { search, location, page } = req.query;
+  let { search, location, limit, page } = req.query;
 
-  if (!page)
-    page = 0;
+  if (!page) page = 0;
 
-  if (!search)
-    search = "";
+  if (!search) search = "";
 
-  const limit = 15;
+  limit = parseInt(limit);
+  if (!limit || limit > 30 || limit < 1) limit = 10;
+
   // TODO: Implement support for location?
   const searchQuery = { $regex: search, $options: "i" };
+
+  let count = await Skill.count({
+    $or: [
+      { title: searchQuery },
+      { summary: searchQuery },
+      { description: searchQuery },
+    ],
+  });
 
   var listOfSkills = await Skill.find({
     $or: [
@@ -88,7 +96,7 @@ exports.search = async (req, res) => {
   // Adds user info to each skill for response (fullName, profilePic, rating, etc)
   listOfSkills = await asyncForEach(listOfSkills, addUserInfo);
 
-  return res.status(200).json(listOfSkills);
+  return res.status(200).json({ totalCount: count, data: listOfSkills });
 };
 
 exports.editSkill = async (req, res) => {
@@ -157,7 +165,6 @@ exports.deleteSkill = async (req, res) => {
 
 exports.uploadSkillPic = async (req, res) => {
   try {
-    req.directory = "SkillPictures";
     const { skillId } = req.params;
 
     const skill = await Skill.findById(skillId);
@@ -171,6 +178,7 @@ exports.uploadSkillPic = async (req, res) => {
         error: "Invalid Credentials: Cannot delete another user's skill.",
       });
 
+    req.directory = "SkillPictures";
     await uploadFile(req, res);
     skill.imageURL = req.file.location; // Puts imageURL in object before saving to database
 
@@ -187,6 +195,28 @@ exports.uploadSkillPic = async (req, res) => {
       });
     }
   }
+};
+
+exports.createSkillWithPhoto = async (req, res) => {
+  const user = await User.findOne({ email: req.email });
+
+  req.directory = "SkillPictures";
+  await uploadFile(req, res);
+
+  var body = JSON.parse(req.body.body);
+  body.userId = user._id;
+  body.imageURL = req.file.location;
+
+  var skill = new Skill(body);
+
+  skill
+    .save()
+    .then(() => {
+      return res.status(200).json({ message: "Successfully created skill!" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ error: err });
+    });
 };
 
 async function addUserInfo(skill) {

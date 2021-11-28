@@ -107,7 +107,7 @@ function handleSave() {
   
     //value to commit to Backend changable_fields
     const payload = {
-      summary: aboutMeTextTemp, 
+      summary: aboutMeText2Temp, 
       title:    aboutMeTextTemp,
       description: aboutMeText2Temp,
       price: priceTemp,

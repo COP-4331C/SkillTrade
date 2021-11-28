@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 import Box from "@mui/material/Box";
 import HomeNavBar from "../components/HomeNavBar";
 import Testcard from '../components/Testcard';
@@ -44,8 +44,8 @@ export default function Skills(props) {
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
-            skillname = {fetchedskill.summary}
-            titlename = {fetchedskill.title}
+            skilldescription = {fetchedskill.summary}
+            skillname = {fetchedskill.title}
             skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
@@ -87,7 +87,7 @@ export default function Skills(props) {
             style={{backgroundColor: Theme.palette.primary.main, position: "relative", width:"100vw", borderWidth:"0px"}}
             sx={{ p: 10, mt:5 }}
             >
-        {skilllist()};
+        {skilllist()}
       </Paper>
       </Grid>
       

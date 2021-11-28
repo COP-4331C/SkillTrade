@@ -556,7 +556,7 @@ export default function ProfilePage(props) {
         await getProfileData();
         fetchSkills();
         // fetchReviews();
-      }, 1)
+      }, 1);
 
     } catch (e) {
       console.log(e.message);

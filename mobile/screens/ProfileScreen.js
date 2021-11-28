@@ -55,14 +55,14 @@ const ProfileScreen = ({navigation}) => {
   const [learnSkillData, setLearnSkillData] = React.useState([]);
 
   const sections = [
-    // {
-    //   _id: '0',
-    //   title: 'MY SKILLS',
-    //   data: skillData,
-    //   renderItem: ({ item }) => 
-    //     renderSkills(item),
-    //     // {return <Text style={styles.row}>{item.title}</Text>}
-    // },
+    {
+      _id: '0',
+      title: 'MY SKILLS',
+      data: skillData,
+      renderItem: ({ item }) => 
+        renderSkills(item),
+        // {return <Text style={styles.row}>{item.title}</Text>}
+    },
     {
       _id: '1',
       title: 'WANT TO LEARN',
@@ -193,21 +193,54 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
-  const deleteSkillHandler = () => { // FIXME: connect to delete skill API and delete record  // asyn ?? await???
-    let skillId = "61a0a87aaadf7d76c38f714f"
-    axios.delete(`https://cop4331c.herokuapp.com/api/skills/61a0a881aadf7d76c38f7157`,  { // ${skillId}
-            
-      }, {// 
+  function confirmDeleteSkill (skillId){
+    Alert.alert(
+      "Alert", // "Alert Title"
+      "Do you want to delete this skill?", // "My Alert Msg"
+      [
+        {
+          text: "Cancel",
+          onPress: () => Alert.alert("Cancel Delete"),
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () =>  deleteSkillHandler(skillId),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+      }
+    );
+  }
+
+  const deleteSkillHandler = async(skillId) => { 
+    let userToken = null;
+    try {
+        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+    } catch (e) {
+        console.warn(e);
+    }
+    axios.delete(`https://cop4331c.herokuapp.com/api/skills/${skillId}`,  
+    {
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc`  //  `Bearer ${userToken}` 
-        } //eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0
+          'Authorization': `Bearer ${userToken}`  
+        }
       })
     .then(function(response) {
-        console.warn("skill deleted!")
+        let index = skillData.map((r)=> {return r._id}).indexOf(skillId) // get index of the delete item; map is creaeting an array of _id
+        skillData.splice(index,1) // cut out the item (base on the previous index) from skillData array, 1 means delete one item
+        setSkillData([...skillData]) // skillData is state variable, so we need to update it with setSkillData()
+        Alert.alert("Skill Deleted!")
     })
     .catch(function(error) {
-        console.warn(error)
-        // console.warn("fail to deleted!")
+        // console.warn(error)
+        Alert.alert("Fail to deleted!")
     });
   };
 
@@ -277,7 +310,7 @@ const ProfileScreen = ({navigation}) => {
             <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
               <AntDesign name="edit" size={18} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{ deleteSkillHandler() }} > 
+            <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
               <AntDesign name="delete" size={18} color="black" />
             </TouchableOpacity>
 

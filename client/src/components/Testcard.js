@@ -829,7 +829,7 @@ export default function Testcard(props) {
               {props.skilluserid}
           </Typography> */}
           <Button
-              onClick={handleGoProfile}
+              // onClick={handleGoProfile}
               sx={{
                 textAlign: "left",
                 marginTop: "20px",

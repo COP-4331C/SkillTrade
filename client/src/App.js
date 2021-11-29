@@ -12,9 +12,8 @@ import Testcard from './components/Testcard';
 import Addskills from './components/Addskills';
 import Resetpassword from './Pages/Resetpassword';
 import Changepassword from './components/Changepassword';
-import LoginPage from "./Pages/LoginPage";
 import SkillCreditsPage from "./Pages/SkillCreditsPage";
-import Resetpassword from "./Pages/Resetpassword";
+// import Resetpassword from "./Pages/Resetpassword";
 
 function App() {
   return (

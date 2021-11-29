@@ -1,5 +1,16 @@
 .App {
+  height: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-body {
+  flex: 1 0 auto;
+}
+
+.App-footer {
+  flex-shrink: 0;
 }
 
 .App-logo {

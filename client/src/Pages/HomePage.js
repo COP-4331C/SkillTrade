@@ -99,14 +99,14 @@ const HomePage = () => {
           <Testcard
             key={fetchedSkill._id}
             skillid={fetchedSkill._id}
-            skilldescription={fetchedSkill.summary}
-            skillname={fetchedSkill.title}
-            skilldescription={fetchedSkill.description}
-            skillcity={fetchedSkill.city}
-            skillstate={fetchedSkill.state}
-            skillimage={fetchedSkill.imageURL}
-            skilluserid={fetchedSkill.userFullName}
-            skilluserdirectid={fetchedSkill.userId}
+            skilldescription = {fetchedSkill.summary}
+            skillname = {fetchedSkill.title}
+            // skilldescription = {fetchedSkill.description}
+            skillcity = {fetchedSkill.city}
+            skillstate = {fetchedSkill.state}
+            skillimage = {fetchedSkill.imageURL}
+            skilluserid = {fetchedSkill.userFullName}
+            skilluserdirectid = {fetchedSkill.userId}
             // avatar={fetchedReview.price}
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}

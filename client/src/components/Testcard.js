@@ -10,16 +10,21 @@ import Box from "@mui/material/Box";
 import { Divider, Fade } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SaveIcon from "@mui/icons-material/Save";
-import { Theme } from "../components/Theme";
-import EditIcon from "@mui/icons-material/Edit";
-import DescriptionIcon from "@mui/icons-material/Description";
-import PersonPinCircleIcon from "@mui/icons-material/PersonPinCircle";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-import MonetizationOnTwoToneIcon from "@mui/icons-material/MonetizationOnTwoTone";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Paper } from "@mui/material";
-import { Avatar } from "@mui/material";
-import axios from "axios";
+import {Theme} from "../components/Theme";
+import EditIcon from '@mui/icons-material/Edit';
+import DescriptionIcon from '@mui/icons-material/Description';
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Paper } from '@mui/material';
+import { Avatar } from '@mui/material';
+import axios from 'axios';
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
+import ProfilePage from '../Pages/ProfilePage';
+import { Redirect } from 'react-router';
+
 
 export default function Testcard(props) {
   //skills to be learnt
@@ -811,8 +816,8 @@ export default function Testcard(props) {
             <Avatar alt="User Pic" src={props.skilluserpic} />
           </Grid>
 
-          <Grid item xs={6} justifyContent="left">
-            <Typography
+        <Grid item xs={6} justifyContent="left">
+          {/* <Typography
               variant={"body5"}
               sx={{
                 textAlign: "left",
@@ -822,8 +827,19 @@ export default function Testcard(props) {
               }}
             >
               {props.skilluserid}
-            </Typography>
-          </Grid>
+          </Typography> */}
+          <Button
+              onClick={handleGoProfile}
+              sx={{
+                textAlign: "left",
+                marginTop: "20px",
+                color: "black",
+                fontWeight: 600
+              }}
+            >
+              {props.skilluserid}
+          </Button>
+        </Grid>
 
           <Grid item xs={3} justifyContent="right">
             <IconButton

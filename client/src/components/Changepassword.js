@@ -10,21 +10,17 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import InputLabel from "@mui/material/InputLabel";
+import {Alert, Collapse, FormHelperText, Typography} from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import InputLabel from "@mui/material/InputLabel";
-import {Alert, Collapse, FormHelperText} from "@mui/material";
-import AppNavBar from '../components/AppNavBar';
-import {useLocation} from "react-router-dom";
 import { Divider } from '@mui/material';
+import HomeNavBar from './HomeNavBar';
 
-
-// import URLSea
-
-export default function Resetpassword() {
+export default function Changepassword(props) {
 
   const [firstName, setName] = useState(localStorage.getItem('firstName'));
   const [lastName, setPwd] = useState(localStorage.getItem('lastName'));
@@ -38,10 +34,17 @@ export default function Resetpassword() {
     showConfirm: false
   });
 
+  const [values2, setValues2] = React.useState({
+    password2:'',
+    showPassword2: false,
+    confirm2: '',
+    showConfirm2: false
+  });
 
 //error message
   const [openMessage, setOpenMessage] = useState(false);
 
+  
 //show password for the password field
   const handleClickShowPassword = () => {
     setValues({
@@ -58,6 +61,22 @@ export default function Resetpassword() {
     });
   };
 
+  //show password for the password field
+  const handleClickShowPassword2 = () => {
+    setValues2({
+      ...values2,
+      showPassword2: !values2.showPassword2,
+    });
+  };
+
+//show password for the confirm password field
+  const handleClickShowConfirm2 = () => {
+    setValues2({
+      ...values2,
+      showConfirm2: !values2.showConfirm2,
+    });
+  };
+
 //
   const [agree, setAgree] = useState(false);
 
@@ -68,24 +87,33 @@ export default function Resetpassword() {
   const handleMouseDown = (event) => {
     event.preventDefault();};
 
-  const handleMouseDownConfirm = (event) => {
-    event.preventDefault();};
+  // const handleMouseDownConfirm = (event) => {
+  //   event.preventDefault();};
+
+    const handleMouseDown2 = (event) => {
+      event.preventDefault();};
+
+      const handleMouseDownConfirm2 = (event) => {
+        event.preventDefault();};
 
 
   // Stores the password in the password variable
   const handleChangePasswordField = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });};
 
+    const handleChangePasswordField2 = (prop) => (event) => {
+      setValues2({ ...values2, [prop]: event.target.value });};
+
+      
+
   // Verification for eveything
   // const verification_length = 8
 
   function valid(){
-    if(values.password !== values.confirm)
+    if(values2.password2 !== values2.confirm2)
       return false;
-    else if(values.password === values.confirm)
+    else if(values2.password2 === values2.confirm2)
       return 1;}
-
-
 
   //error messages
   //password valiadation variable
@@ -109,20 +137,16 @@ export default function Resetpassword() {
     text: ""
   });
 
-//submit handeler
-const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-const handleClickOpen = () => {
-  setOpen(true);
-};
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-const handleClose = () => {
-  setOpen(false);
-  window.location.href='/Login';
-};
-
-  const search = useLocation().search;
-  const params = new URLSearchParams(search);
+  const handleClose = () => {
+    setOpen(false);
+    window.location.href='/Login';
+  };
 
   function handleSubmitButton(event) {
     event.preventDefault();
@@ -151,43 +175,36 @@ const handleClose = () => {
 
     //  const{value} = this.state;
     const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-    const isOk = re.test(values.password);
+    const isOk = re.test(values2.password2);
 
     console.log(isOk);
 
     if (valid()&&isOk ) {
 
-      const userId = params.get('userId');
-      const resetCode = params.get('resetCode');
+    const token = localStorage.getItem('token');
+    const userId = "";
+    const chnagePayload = {
+          oldPassword: values.password,
+          newPassword: values2.password2
+        };
+    
+    // axios.patch(`/api/user/forgot-password/${!userId ? "" : userId}`,chnagePayload, {
+          axios.patch(`/api/user/change-password/${!userId ? "" : userId}`,chnagePayload, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then((res) => {
 
-      // console.log(userId);
-      // console.log(resetCode);
-      params.get('userId')
-      params.get('resetCode')
+        console.log(res.data);
+        setOpen(true);
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      })
 
-      const URL = '/api/user/reset-password';
-
-      const resetPayload = {
-  
-        userId : userId,
-        newPassword: values.password,
-        resetCode: resetCode
-      };
-
-      axios.patch(URL, resetPayload)
-        .then(function (response) {
-          console.log(response);
-          setOpen(true);
-        })
-
-        .catch(function (error) {
-          setOpenMessage(true);
-          console.log(error);
-        });
-
-      // If any of the validation function fails
+      //If any of the validation function fails
     }
-
+     
     else if (valid()!==1){
       // alert("Registration 1!" );
       setconfirmError({
@@ -200,11 +217,11 @@ const handleClose = () => {
       // alert("Registration 2!" );
       setComplexity({
         state: true,
-        text: "Password too weak. Please use at-least 8 characters including one symbol, lowercase & uppercase letter and one number"
+        text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
       });
     }
 
-    
+  
   }
   
 
@@ -213,7 +230,7 @@ const handleClose = () => {
 
   return (
     <Grid>
-      <AppNavBar/>
+      <HomeNavBar/>
       {/* <NavBar/> */}
       <form onSubmit={handleSubmitButton}>
         <Paper elevation={3} style={{padding: 40, height: 'auto', width: 280, margin: '20px auto'}}>
@@ -225,7 +242,7 @@ const handleClose = () => {
               {firstName +" " + lastName} 
               </h4>
               <Divider variant="middle" style={{color: 'black', border: "1px solid"}}/>
-            <h3>Reset Password</h3>
+            <h3>Change Password</h3>
           </Grid>
 
           {/********************* Wrong credentials message ******************** */}
@@ -239,16 +256,16 @@ const handleClose = () => {
             </Alert>
           </Collapse>
 
-          {/********************* Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} >
+          {/********************* Old Password field *********************/}
+          <FormControl sx={{  width: "100%"  }} variant="standard" required  >
             {/* required error={ complexity.state} */}
-            <InputLabel htmlFor="standard-adornment-password">Enter New Password</InputLabel>
+            <InputLabel htmlFor="standard-adornment-password">Old Password</InputLabel>
             <Input
               id="standard-adornment-password"
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               onChange={handleChangePasswordField('password')}
-              placeholder="Enter Password"
+              placeholder="Enter Old Password"
               autoComplete="on"
 
               endAdornment={
@@ -263,25 +280,52 @@ const handleClose = () => {
                 </InputAdornment>
               }
             />
+            
+          </FormControl>
+
+          {/********************* New Password field *********************/}
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} >
+            <InputLabel htmlFor="standard-adornment-password2">New Password</InputLabel>
+            <Input
+              id="standard-adornment-password2"
+              type={values2.showPassword2 ? 'text' : 'password'}
+              value={values2.password2}
+              onChange={handleChangePasswordField2('password2')}
+              placeholder="Enter New Password"
+              autoComplete="on"
+
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword2}
+                    onMouseDown={handleMouseDown2}
+                  >
+                    {values2.showPassword2 ? <Visibility />:<VisibilityOff />  }
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
             <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
           <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
-            <InputLabel htmlFor="standard-adornment-confirm">Confirm New Password</InputLabel>
+            <InputLabel htmlFor="standard-adornment-confirm2">Confirm New Password</InputLabel>
             <Input
-              id="standard-adornment-confirm"
-              type={values.showConfirm ? 'text' : 'password'}
-              value={values.confirm}
-              onChange={handleChangePasswordField('confirm')}
+              id="standard-adornment-confirm2"
+              type={values2.showConfirm2 ? 'text' : 'password'}
+              value={values2.confirm2}
+              onChange={handleChangePasswordField2('confirm2')}
+              placeholder="Confirm New Password"
               autoComplete="on"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={handleClickShowConfirm}
-                    onMouseDown={handleMouseDownConfirm}
+                    onClick={handleClickShowConfirm2}
+                    onMouseDown={handleMouseDownConfirm2}
                   >
-                    {values.showConfirm ? <Visibility />:<VisibilityOff /> }
+                    {values2.showConfirm2 ? <Visibility />:<VisibilityOff /> }
                   </IconButton>
                 </InputAdornment>
               }
@@ -298,23 +342,23 @@ const handleClose = () => {
             fullWidth
             style={{ margin: '20px 0' }}
           >
-            Reset
+            Submit
           </Button>
-
+          {/* Test */}
           <div>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Password has been Reset!</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Please know that your account password has been reset. Do not Share the password with anyone since it may be a Security Hazard!
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-          
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Password Changed!</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please know that your account password has been changed. Do not Share the password with anyone since it may be a Security Hazard!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          {/* <Button onClick={handleClose}>Subscribe</Button> */}
+        </DialogActions>
+      </Dialog>
+    </div>
         </Paper>
       </form>
     </Grid>

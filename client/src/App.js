@@ -10,6 +10,7 @@ import LoginPage from './Pages/LoginPage';
 import Testcard from './components/Testcard';
 import Addskills from './components/Addskills';
 import Resetpassword from './Pages/Resetpassword';
+import Changepassword from './components/Changepassword';
 
 function App() {
   return (
@@ -20,11 +21,12 @@ function App() {
             <Route path="/registration" component={ RegistrationPage} />
             <Route path="/login" component={LoginPage} />
             <Route path="/home" component={HomePage} />
-            <Route path="/profile" component={ProfilePage} />
+            <Route path="/profile/:userId?" component={ProfilePage} />
             <Route path="/card/:userId?" component={Testcard}/>
             <Route path="/cards/:userId?" component={Addskills}/>
             <Route path="/skillpage/:userId?" component={Skills}/>
             <Route path="/Resetpassword" component={Resetpassword}/>
+            <Route path="/change" component={Changepassword}/>
             
             {/* <Route path="/card/:userId?" component={Testcard}/> */}
 

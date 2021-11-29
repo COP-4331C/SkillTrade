@@ -134,17 +134,17 @@ export default function AccountMenuMobile(props) {
         </MenuItem>
         <Divider />
 
-        <MenuItem component={RouterLink} to="/card">
+        <MenuItem component={RouterLink} to="/change">
           <ListItemIcon>
               <ConstructionOutlinedIcon />
             </ListItemIcon>
-          My Skills
+          Change Password
         </MenuItem>
 
         <MenuItem component={RouterLink} to="/skillpage">
           <ListItemIcon>
               <ConstructionOutlinedIcon />
-            </ListItemIcon> Test Add Skills
+            </ListItemIcon> My Skills
         </MenuItem>
 
         {/* <MenuItem>

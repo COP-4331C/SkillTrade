@@ -21,6 +21,11 @@ import {Alert, Collapse, FormHelperText} from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import {storeData} from "../components/DataStorage";
 import {Theme} from "../components/Theme";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import AppNavBar from '../components/AppNavBar';
 
 // TODO Improvement: The wrong credentials message and the minimum password length message
@@ -207,6 +212,17 @@ export default function LoginPage() {
 
   }, []);
 
+const [open, setOpen] = React.useState(false);
+
+const handleClickOpen = () => {
+  setOpen(true);
+};
+
+const handleClose = () => {
+  setOpen(false);
+  window.location.href='/Login';
+};
+
   function handleFrogot(){
 
     const payload ={
@@ -217,6 +233,7 @@ export default function LoginPage() {
     .then(function(res) {
       console.log("success");
       console.log(res);
+      setOpen(false);
       
   })
   .catch((err) => {
@@ -329,20 +346,23 @@ export default function LoginPage() {
           </Button>
 
           {/*********************  Forgot my password *********************/}
-          
-          {/* <Typography align="center">
-            <Link
-              href='#'
-              underline='hover'
-              color='primary'
-              fontSize='0.9rem'
-              marginY='20px'
-            >
-              Forgot my password
-            </Link>
-          </Typography> */}
 
-          <Button onClick={handleFrogot}> Forgot Password </Button>
+          <Button onClick={handleClickOpen}> Forgot Password </Button>
+
+            <div>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Forgot Your Password!</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please click the subnit button below and you will receive a link via your verified email to reset your password. 
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Close</Button>
+                  <Button onClick={handleFrogot}>Submit</Button>
+                </DialogActions>
+              </Dialog>
+            </div>
 
           {/********************* No Account? Create one! *********************/}
           <Typography fontSize="0.9rem" align="center">No account?{' '}

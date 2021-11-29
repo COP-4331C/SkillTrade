@@ -185,7 +185,7 @@ function handleOnChangePrice(e) {
             square 
             style={{ borderWidth:"0px"}}
             >
-            <Button justifyContent="left" style={{backgroundColor: Theme.palette.secondary.main}} onClick={handleOpen}>
+            <Button justifycontent="left" style={{backgroundColor: Theme.palette.secondary.main}} onClick={handleOpen}>
               Add New Skill </Button>
       </Paper>
 
@@ -197,7 +197,7 @@ function handleOnChangePrice(e) {
       >
       <Box sx={loginModalStyle} style={{overflow:"hidden"}} >
 
-      <Grid container classes={loginModalStyle} justifyContent="center">
+      <Grid container classes={loginModalStyle} justifycontent="center">
       <Card  sx={{ border: 4, borderRadius:5, borderColor:"black", width:"300px"}}>
 
       <CardContent style={{paddingLeft: 0,paddingRight:0, paddingTop:0, paddingBottom:10}}>
@@ -292,11 +292,11 @@ function handleOnChangePrice(e) {
          {/******************** Cancel+SAVE Button *********************/}
         <Box padding sx={{
               display: 'flex',
-              justifyContent: 'space-evenly',
+              justifycontent: 'space-evenly',
               alignItems: 'safe center',
               flexWrap: "wrap-reverse"
             }}>
-              <Grid container justifyContent="center" >
+              <Grid container justifycontent="center" >
                 
                 <Grid item xs={3}>
                   {/* <Fade in={fade}> */}

@@ -46,7 +46,7 @@ export default function Skills(props) {
             skillid={fetchedskill._id}
             skilldescription = {fetchedskill.summary}
             skillname = {fetchedskill.title}
-            skilldescription = {fetchedskill.description}
+            // skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
             skillimage = {fetchedskill.imageURL}

@@ -26,6 +26,7 @@ import Testcard from '../components/Testcard';
 import axios from "axios";
 import Skeleton from '@mui/material/Skeleton';
 import { Paper } from '@mui/material';
+import Changepassword from '../components/Changepassword';
 
 
 export default function ProfilePage(props) {
@@ -470,6 +471,7 @@ export default function ProfilePage(props) {
       setCity(response.data["city"]);
       setState(response.data["state"]);
       setCountry(response.data["country"]);
+      localStorage.setItem('recent-image',response.data["profilePic"]);
 
       setProfileUserID(response.data["_id"])
       console.log("user ID: " + response.data["_id"]);
@@ -588,6 +590,8 @@ export default function ProfilePage(props) {
     </div>
   );
 
+
+
   //Ridwan testing
   const skilllist = () => {
     let content = skillposts.map((fetchedskill, index) => {
@@ -598,7 +602,7 @@ export default function ProfilePage(props) {
             skillid={fetchedskill._id}
             skilldescription = {fetchedskill.summary}
             skillname = {fetchedskill.title}
-            skilldescription = {fetchedskill.description}
+            // skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
             skillimage = {fetchedskill.imageURL}

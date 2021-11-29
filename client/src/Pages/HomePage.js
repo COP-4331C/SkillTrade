@@ -104,7 +104,7 @@ const HomePage = () => {
             skillid={fetchedSkill._id}
             skilldescription = {fetchedSkill.summary}
             skillname = {fetchedSkill.title}
-            skilldescription = {fetchedSkill.description}
+            // skilldescription = {fetchedSkill.description}
             skillcity = {fetchedSkill.city}
             skillstate = {fetchedSkill.state}
             skillimage = {fetchedSkill.imageURL}

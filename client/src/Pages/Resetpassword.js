@@ -3,8 +3,6 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Avatar from '@mui/material/Avatar'
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
@@ -12,25 +10,25 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import TextField from '@mui/material/TextField';
-import { Link as RouterLink } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
-import { Theme } from '../components/Theme';
 import {useLocation} from "react-router-dom";
+import { Divider } from '@mui/material';
+
 
 // import URLSea
 
 export default function Resetpassword() {
 
-  const [email, setEmail] = useState("");
-
-  const [oldPass, setoldPass] = useState("");
-
-  const [firstName, setfirstName] = useState("");
-
-  const [lastName, setlastName] = useState("");
+  const [firstName, setName] = useState(localStorage.getItem('firstName'));
+  const [lastName, setPwd] = useState(localStorage.getItem('lastName'));
+  const [photo, setPhoto] = useState(localStorage.getItem('recent-image'));
 
 
   const [values, setValues] = React.useState({
@@ -87,21 +85,14 @@ export default function Resetpassword() {
     else if(values.password === values.confirm)
       return 1;}
 
-// function validEmail(){
-//     if(email.length >1)
-//         return 1;}
-
-  function validFirstName(){
-    if(firstName.length>=1 && firstName.length<50)
-      return 1;}
 
 
   //error messages
   //password valiadation variable
-  // const [pwdError, setPwdError] = useState( {
-  //     state: false,
-  //     text: ""
-  //     });
+  const [pwdError, setPwdError] = useState( {
+      state: false,
+      text: ""
+      });
 
   const [confirmError, setconfirmError] = useState( {
     state: false,
@@ -118,14 +109,18 @@ export default function Resetpassword() {
     text: ""
   });
 
-  // const styles = {
-  //   helper: {
-  //     color: 'red',
-  //     fontSize: '.8em',
-  //   }
-  // }
-
 //submit handeler
+const [open, setOpen] = React.useState(false);
+
+const handleClickOpen = () => {
+  setOpen(true);
+};
+
+const handleClose = () => {
+  setOpen(false);
+  window.location.href='/Login';
+};
+
   const search = useLocation().search;
   const params = new URLSearchParams(search);
 
@@ -134,10 +129,10 @@ export default function Resetpassword() {
 
     setOpenMessage(false);
 
-    // setPwdError({
-    //     state: false,
-    //     text: ""
-    // });
+    setPwdError({
+        state: false,
+        text: ""
+    });
 
     setconfirmError({
       state: false,
@@ -160,15 +155,13 @@ export default function Resetpassword() {
 
     console.log(isOk);
 
-    // if (valid()&&isOk ) {
-
-      
+    if (valid()&&isOk ) {
 
       const userId = params.get('userId');
       const resetCode = params.get('resetCode');
 
-      console.log(userId);
-      console.log(resetCode);
+      // console.log(userId);
+      // console.log(resetCode);
       params.get('userId')
       params.get('resetCode')
 
@@ -184,49 +177,34 @@ export default function Resetpassword() {
       axios.patch(URL, resetPayload)
         .then(function (response) {
           console.log(response);
-          window.location.href='/Login';
+          setOpen(true);
         })
-
 
         .catch(function (error) {
           setOpenMessage(true);
           console.log(error);
         });
 
-      //If any of the validation function fails
-    // }
-      // else if(validateInputLength()!==1) {
-      //   setPwdError({
-      //     state: true,
-      //     text: "Minimum password is 8 characters"
-      //   });
-    // }
+      // If any of the validation function fails
+    }
 
-    // else if (valid()!==1){
-    //   // alert("Registration 1!" );
-    //   setconfirmError({
-    //     state: true,
-    //     text: "Passwords do not match, please check again!"
-    //   });
-    // }
+    else if (valid()!==1){
+      // alert("Registration 1!" );
+      setconfirmError({
+        state: true,
+        text: "Passwords do not match, please check again!"
+      });
+    }
 
-    // else if(!isOk){
-    //   // alert("Registration 2!" );
-    //   setComplexity({
-    //     state: true,
-    //     text: "Password too weak. Please use at-least eight characters including one symbol, lowercase & uppercase letter and one number"
-    //   });
-    // }
+    else if(!isOk){
+      // alert("Registration 2!" );
+      setComplexity({
+        state: true,
+        text: "Password too weak. Please use at-least 8 characters including one symbol, lowercase & uppercase letter and one number"
+      });
+    }
 
-    // else if (validFirstName()!==1){
-    //   // alert("Registration 3!" );
-    //   setConfirmName({
-    //     state: true,
-    //     text: "Please Enter valid First Name"
-    //   });
-
-
-    // }
+    
   }
   
 
@@ -242,9 +220,12 @@ export default function Resetpassword() {
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-            <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
-            </Avatar>
-            <h2>Reset Password</h2>
+          <Avatar alt="User Pic" src={photo}/>
+            <h4> 
+              {firstName +" " + lastName} 
+              </h4>
+              <Divider variant="middle" style={{color: 'black', border: "1px solid"}}/>
+            <h3>Reset Password</h3>
           </Grid>
 
           {/********************* Wrong credentials message ******************** */}
@@ -258,70 +239,10 @@ export default function Resetpassword() {
             </Alert>
           </Collapse>
 
-          {/********************* FN Text Field *********************/}
-          {/* <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <FormControl required error={confirmName.state}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="First Name"
-                    placeholder="Enter First Name"
-                    variant="standard"
-                    onChange={(e) => setfirstName(e.target.value)}
-                    value={firstName}
-                    type="text"
-                  />
-                <FormHelperText id="component-error-text">{confirmName.text}</FormHelperText>
-              </FormControl>
-            </Grid> */}
-
-
-            {/********************* LN Text Field *********************/}
-            {/* <Grid item xs ={6}>
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  placeholder="Enter Last Name"
-                  variant="standard"
-                  onChange={(e) => setlastName(e.target.value)}
-                  value={lastName}
-                  type="text"
-                />
-            </Grid>
-          </Grid> */}
-
-          
-
-          {/********************* email Text Field *********************/}
-          {/* <TextField
-            required
-            fullWidth
-            label="Email"
-            placeholder="Enter email"
-            variant="standard"
-            onChange={(e) => setoldPass(e.target.value)}
-            value={oldPass}
-            type="email"
-          />
-
-          <TextField
-            required
-            fullWidth
-            label="oldPass"
-            placeholder="Enter Old Pass"
-            variant="standard"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="text"
-          /> */}
-
-          
-
           {/********************* Password field *********************/}
           <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} >
             {/* required error={ complexity.state} */}
-            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+            <InputLabel htmlFor="standard-adornment-password">Enter New Password</InputLabel>
             <Input
               id="standard-adornment-password"
               type={values.showPassword ? 'text' : 'password'}
@@ -342,12 +263,11 @@ export default function Resetpassword() {
                 </InputAdornment>
               }
             />
-            {/* <MuiFormHelperText id="component-error-text" styles="styles.helper" >{pwdError.text}</MuiFormHelperText> */}
             <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
-          {/* <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
-            <InputLabel htmlFor="standard-adornment-confirm">Confirm Password</InputLabel>
+          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
+            <InputLabel htmlFor="standard-adornment-confirm">Confirm New Password</InputLabel>
             <Input
               id="standard-adornment-confirm"
               type={values.showConfirm ? 'text' : 'password'}
@@ -367,13 +287,7 @@ export default function Resetpassword() {
               }
             />
             <FormHelperText id="component-error-text">{confirmError.text}</FormHelperText>
-          </FormControl> */}
-
-          {/********************* Terms and conditions checkbox *********************/}
-          {/* <div style={{paddingTop:15}}>
-            <input type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
-            <label>I agree to </label><a href="https://www.termsandconditionsgenerator.com/live.php?token=InuuJUo6I4Xz1FPgMfkmmri3Fj6fvJ6e" style={{ textDecoration: 'none', color:"black" }} htmlFor="agree"><b>terms and conditions</b></a>
-          </div> */}
+          </FormControl>
 
           {/********************* Sign in button *********************/}
           <Button
@@ -384,18 +298,24 @@ export default function Resetpassword() {
             fullWidth
             style={{ margin: '20px 0' }}
           >
-            Register
+            Reset
           </Button>
-          {/* </Link> */}
 
-          {/********************* already have an account  *********************/}
-          <Typography fontSize="0.9rem" align="center" paddingTop="20px">Already have an account?{' '}
-            <Link style={{color: "blue"}} component={RouterLink} to="/Login">Login</Link>
-          </Typography>
-
+          <div>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Password has been Reset!</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please know that your account password has been reset. Do not Share the password with anyone since it may be a Security Hazard!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+          
         </Paper>
-        {/* </Box> */}
-
       </form>
     </Grid>
   );

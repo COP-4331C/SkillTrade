@@ -138,13 +138,13 @@ export default function AccountMenuMobile(props) {
           <ListItemIcon>
               <ConstructionOutlinedIcon />
             </ListItemIcon>
-          Change
+          Change Password
         </MenuItem>
 
         <MenuItem component={RouterLink} to="/skillpage">
           <ListItemIcon>
               <ConstructionOutlinedIcon />
-            </ListItemIcon> Test Add Skills
+            </ListItemIcon> My Skills
         </MenuItem>
 
         {/* <MenuItem>

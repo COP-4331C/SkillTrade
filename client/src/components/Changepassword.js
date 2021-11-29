@@ -12,7 +12,6 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText, Typography} from "@mui/material";
-import AppNavBar from '../components/AppNavBar';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -351,7 +350,7 @@ export default function Changepassword(props) {
         <DialogTitle>Password Changed!</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please know that your account password has been changed. Do not Share the password with anyone since it may be a security issue
+            Please know that your account password has been changed. Do not Share the password with anyone since it may be a Security Hazard!
           </DialogContentText>
         </DialogContent>
         <DialogActions>

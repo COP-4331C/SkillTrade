@@ -20,6 +20,11 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Paper } from '@mui/material';
 import { Avatar } from '@mui/material';
 import axios from 'axios';
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
+import ProfilePage from '../Pages/ProfilePage';
+import { Redirect } from 'react-router';
+
 
 export default function Testcard(props) {
 
@@ -223,6 +228,73 @@ function handleDeleteButton(){
 exitEditMode();
 refreshPage() ;
 }
+
+// Get Prfile Axios get
+function handleGoProfile(){
+
+  // const URL = `/profile/${props.skilluserdirectid}`;
+  // <Link to={{ pathname:`/profile/${props.skilluserdirectid}`}} />
+
+  const token = localStorage.getItem('token');
+
+  console.log(token);
+  axios.get(`/api/user/profile/${props.skilluserdirectid}`,{
+    headers: { 'Authorization': `Bearer ${token}`}
+})
+.then((res) => {
+  // testemp(res.data);
+  console.log("success");
+  console.log(res);
+  console.log(props.skilluserdirectid);
+  <Link to={{ pathname:`/profile/${props.skilluserdirectid}`}} />
+  
+
+})
+.catch((err) => {
+  console.log(err);
+})
+
+// exitEditMode();
+// refreshPage() ;
+}
+// const [skillposts, setSkillPosts] = useState([]);
+
+// const skilllist = () => {
+//   let content = skillposts.map((fetchedskill, index) => {
+//     return (
+//       <Grid item xs={3} key={index}>
+//         <ProfilePage
+//           key={fetchedskill._id}
+//           skillid={fetchedskill._id}
+//           skilldescription = {fetchedskill.summary}
+//           skillname = {fetchedskill.title}
+//           // skilldescription = {fetchedskill.description}
+//           skillcity = {fetchedskill.city}
+//           skillstate = {fetchedskill.state}
+//           skillimage = {fetchedskill.imageURL}
+//           skilluserid = {fetchedskill.userFullName}
+//           skilluserdirectid = {fetchedskill.userId}
+//           // avatar={fetchedReview.price}
+//           skilluserpic = {fetchedskill.userProfilePic}
+//           skillprice = {fetchedskill.price}
+//         />
+//       </Grid>
+//     )
+//   })
+//   return (
+//     <Grid container rowSpacing={3} columnSpacing={5}>
+//       { content }
+//     </Grid>
+//   )
+// }
+
+// function handleGoProfile(){
+//   // <Router component={RouterLink} to="/profile" />
+//   // <Router exact path="/profile" component={skilllist()} />
+//   const URL = `/profile`;
+//   // window.location.href=URL;
+//   <Route path={URL} component={ProfilePage}/>
+// }
 
 function validateTextMaxLength(text, max) {
   if(text.length <= max) {
@@ -707,7 +779,7 @@ useEffect(() => {
         </Grid>
 
         <Grid item xs={6} justifyContent="left">
-          <Typography
+          {/* <Typography
               variant={"body5"}
               sx={{
                 textAlign: "left",
@@ -717,7 +789,18 @@ useEffect(() => {
               }}
             >
               {props.skilluserid}
-          </Typography>
+          </Typography> */}
+          <Button
+              onClick={handleGoProfile}
+              sx={{
+                textAlign: "left",
+                marginTop: "20px",
+                color: "black",
+                fontWeight: 600
+              }}
+            >
+              {props.skilluserid}
+          </Button>
         </Grid>
 
         <Grid item xs={3} justifyContent="right">

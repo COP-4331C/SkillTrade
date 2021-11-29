@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  FlatList, 
+  TouchableOpacity, 
+} from "react-native";
 import moment from "moment";
 import { Entypo,FontAwesome5,FontAwesome } from '@expo/vector-icons'
 import axios from 'axios';
@@ -35,36 +42,50 @@ const HomeScreen = ({ navigation }) => {
     <Item title={item.reviewerName} />
   );
 
-  const renderPost = post => { 
+  //  function renderPost(item) {
+  const renderPost = item =>  { 
       return (
           <View style={styles.feedItem}> 
-              <Image source={{uri:post.userProfilePic}} style={styles.avatar} /> 
+              <Image source={{uri:item.userProfilePic}} style={styles.avatar} /> 
               <View style={{ flex: 1 }}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                      <View>
-                          <Text style={styles.name}>{post.userFullName}</Text>
-                          <Text style={styles.timestamp}>{moment(post.updatedAt).fromNow()}</Text>
-                      </View>
-                      <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                        <StarRating
-                        disabled={false}
-                        maxStars={5}
-                        rating={post.averageRating}
-                        fullStarColor={'gold'}
-                        starSize={15}
-                        />
-                        <Text> ({post.numReviews})</Text>
-                      </View>
-                  </View>
-                  <Text style={styles.titleText}>{post.title}</Text>
-                  <Text style={styles.postText}>{post.summary}</Text>
-                  <Text style={styles.postText}>{post.description}</Text>
-                  <Text style={styles.postText,{fontWeight:"800"}}>Location: {post.city}, {post.state}</Text>
-                  <Image source={{uri:post.imageURL}} style={styles.postImage} resizeMode="cover" /> 
+                  <TouchableOpacity  onPress = { async() => {
+                        try {
+                          await SecureStore.setItemAsync('hostId', item.userId); //update hostId in SecureStore
+                        } catch (e) {
+                          console.log(e);
+                        }
+                        navigation.navigate('ProfileScreen') // when jump to Profile Screen, the navigation bars did not show up?? FIXME
+                  } }>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}> 
+                        <View>
+                            <Text style={styles.name}>{item.userFullName}</Text>
+                            <Text style={styles.timestamp}>{moment(item.updatedAt).fromNow()}</Text>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end"}}>
+                          <StarRating
+                          disabled={false}
+                          maxStars={5}
+                          rating={item.averageRating}
+                          fullStarColor={'gold'}
+                          starSize={15}
+                          />
+                          <Text> ({item.numReviews})</Text>
+                        </View>
+                    </View>
+                  </TouchableOpacity>
+
+
+                  <Text style={styles.titleText}>{item.title}</Text>
+                  <Text style={styles.postText}>{item.summary}</Text>
+                  <Text style={styles.postText}>{item.description}</Text>
+                  <Text style={styles.postText,{fontWeight:"800"}}>Location: {item.city}, {item.state}</Text>
+                  <TouchableOpacity onPress = { () => navigation.navigate('SkillDetailScreen', {item, skillData})}>
+                    <Image source={{uri:item.imageURL}} style={styles.postImage} resizeMode="cover" /> 
+                  </TouchableOpacity>
                   <View style={{ flexDirection: "row" , justifyContent: "space-between"}}>
-                      <FontAwesome5 name="comment-dollar" size={24} color="black" style={{ marginRight: 16 }}><Text> {post.price} </Text></FontAwesome5>
+                      <FontAwesome5 name="comment-dollar" size={24} color="black" style={{ marginRight: 16 }}><Text> {item.price} </Text></FontAwesome5>
                       <FontAwesome name="wechat" size={24} color="black" />
-                      <FontAwesome name="circle" size={18} color="black"><Text> {post.status} </Text></FontAwesome>
+                      <FontAwesome name="circle" size={18} color="black"><Text> {item.status} </Text></FontAwesome>
                   </View>
               </View>
           </View>

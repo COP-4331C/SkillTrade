@@ -125,8 +125,15 @@ const ProfileScreen = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
-  function connectToProfileApi(userToken){
-    axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
+  async function connectToProfileApi(userToken){
+    let hostId = null;
+    try {
+      hostId = await SecureStore.getItemAsync('hostId'); 
+    } catch (e) {
+        console.warn(e);
+    };
+    console.warn(hostId) // test issue ; FIXME
+    axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${hostId}`,  {
             headers: {
               Authorization: `Bearer ${userToken}`  
             }

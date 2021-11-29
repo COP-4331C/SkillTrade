@@ -19,6 +19,9 @@ import AddSkillScreen from './screens/AddSkillScreen';
 import EditSkillScreen from './screens/EditSkillScreen';
 import AddReviewScreen from './screens/AddReviewScreen';
 import EditReviewScreen from './screens/EditReviewScreen';
+import ExploreScreen from './screens/ExploreScreen';
+import SkillDetailScreen from './screens/SkillDetailScreen';
+// import HomeScreen from './screens/HomeScreen';
 
 const Drawer = createDrawerNavigator(); 
 
@@ -165,6 +168,9 @@ const App = () => {
         <Drawer.Screen name="EditSkillScreen" component={EditSkillScreen} />
         <Drawer.Screen name="AddReviewScreen" component={AddReviewScreen} />
         <Drawer.Screen name="EditReviewScreen" component={EditReviewScreen} />
+        <Drawer.Screen name="ExploreScreen" component={ExploreScreen} />
+        <Drawer.Screen name="SkillDetailScreen" component={SkillDetailScreen} />
+        {/* <Drawer.Screen name="HomeScreen" component={HomeScreen} /> */}
       </Drawer.Navigator>
     )
     :

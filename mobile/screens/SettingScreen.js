@@ -7,7 +7,7 @@ const SettingsScreen = ({navigation}) => {
       <View style={styles.container}>
         <Text>Settings Screen</Text>
         <Button
-          title="go back"
+          title="go back to home"
           onPress={() => navigation.goBack()}
         />
         <Button

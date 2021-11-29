@@ -211,6 +211,34 @@ export default function Testcard(props) {
     exitEditMode();
   }
 
+  function handleGoProfile(){
+
+    // const URL = `/profile/${props.skilluserdirectid}`;
+    // <Link to={{ pathname:`/profile/${props.skilluserdirectid}`}} />
+  
+    const token = localStorage.getItem('token');
+  
+    console.log(token);
+    axios.get(`/api/user/profile/${props.skilluserdirectid}`,{
+      headers: { 'Authorization': `Bearer ${token}`}
+  })
+  .then((res) => {
+    // testemp(res.data);
+    console.log("success");
+    console.log(res);
+    console.log(props.skilluserdirectid);
+    <Link to={{ pathname:`/profile/${props.skilluserdirectid}`}} />
+    
+  
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  
+  // exitEditMode();
+  // refreshPage() ;
+  }
+
   //Delete Skill Axios Delete
   function handleDeleteButton() {
     const token = localStorage.getItem("token");

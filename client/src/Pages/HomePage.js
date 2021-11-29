@@ -1,8 +1,5 @@
 import HomeNavBar from "../components/HomeNavBar";
 import * as React from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import { alpha, styled } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
 import { Theme } from "../components/Theme";
 import Grid from "@mui/material/Grid";
 import { useEffect, useState } from "react";
@@ -13,49 +10,9 @@ import Pagination from '@mui/material/Pagination';
 import { Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import SkillCardSkeleton from "../components/SkillCardSkeleton";
+import SearchBar from "../components/SearchBar";
 
 // TODO: Check if the user is logged in, if not, then redirect user to login or landing page.
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.80),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 1),
-  },
-  // marginLeft: theme.spacing(2),
-  // marginRight: 20,
-  marginX: "10px",
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    // paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '40ch',
-    }
-  },
-}));
 
 const HomePage = () => {
   const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
@@ -143,28 +100,19 @@ const HomePage = () => {
       return (
         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
           <Testcard
-            // key={fetchedSkill._id}
-            // skillid={fetchedSkill._id}
-            // skillname={fetchedSkill.summary}
-            // titlename={fetchedSkill.title}
-            // skilldescription={fetchedSkill.description}
-            // skillcity={fetchedSkill.city}
-            // skillstate={fetchedSkill.state}
-            // skillimage={fetchedSkill.imageURL}
-            // skilluserid={fetchedSkill.userFullName}
-            // skilluserdirectid={fetchedSkill.userId}
-
-            skilldescription={fetchedSkill.summary}
-            skillname={fetchedSkill.title}
-            skilldescription={fetchedSkill.description}
-            skillcity={fetchedSkill.city}
-            skillstate={fetchedSkill.state}
-            skillimage={fetchedSkill.imageURL}
-            skilluserid={fetchedSkill.userFullName}
-            skilluserdirectid={fetchedSkill.userId}
+            key={fetchedSkill._id}
+            skillid={fetchedSkill._id}
+            skilldescription = {fetchedSkill.summary}
+            skillname = {fetchedSkill.title}
+            skilldescription = {fetchedSkill.description}
+            skillcity = {fetchedSkill.city}
+            skillstate = {fetchedSkill.state}
+            skillimage = {fetchedSkill.imageURL}
+            skilluserid = {fetchedSkill.userFullName}
+            skilluserdirectid = {fetchedSkill.userId}
             // avatar={fetchedReview.price}
-            skilluserpic={fetchedSkill.userProfilePic}
-            skillprice={fetchedSkill.price}
+            skilluserpic = {fetchedSkill.userProfilePic}
+            skillprice = {fetchedSkill.price}
           />
         </Grid>
       )
@@ -210,11 +158,14 @@ const HomePage = () => {
 
   return (
     <div>
+      {/******************************** Home Navigation Bar ********************************************/}
       <HomeNavBar
         loggedUserAvatar={loggedUserAvatar}
         onKeyDown={(textToSearch) => { handleEnterKey(textToSearch) }}
         onClick={() => { handleResetSearch() }}
       />
+
+      {/******************************** Search Bar MOBILE VERSION ***************************************/}
       <Grid container sx={{
         alignItems: "center",
         height: "60px",
@@ -222,34 +173,38 @@ const HomePage = () => {
         display: { sx: "block", sm: "none" }
       }}>
         <Grid item xs sx={{ marginLeft: "20px", marginRight: "20px" }}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search for a skill to learn..."
-              inputProps={{ 'aria-label': 'search' }}
-              style={{ width: "90%", marginLeft: 40 }}
-            />
-          </Search>
+          <SearchBar
+            onKeyDown={(textToSearch) => { handleEnterKey(textToSearch) }}
+            onClick={() => { handleResetSearch() }}
+            xs="flex"
+            sm="none"
+            md="none"
+            bgColor={0.80}
+            bgColorHover={1}
+            searchBarColumns={12}
+            xIconColor="primary"
+          />
         </Grid>
       </Grid>
 
-      {/*This box is just an spacer*/}
+      {/*This Box is just an spacer*/}
       <Box sx={{ marginTop: 2 }} />
 
-      {/******************************** Skill Poss ************************************************
-      {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
-
+      {/************************* No Results messages ***********************************************/}
       <Typography variant="h4" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
-        No Skills Found For Your Search
+        No Matches Found
       </Typography>
       <Typography variant="h6" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
         Try a new search.
       </Typography>
 
+
+      {/******************************** Skill Posts *************************************************/}
+      {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
       {loading && skillListSkeleton()}
       {!loading && skillList()}
+
+
 
       {/******************************** Pagination *************************************************/}
       <Box sx={{ marginTop: 5, display: displayPagination, justifyContent: "center" }}>

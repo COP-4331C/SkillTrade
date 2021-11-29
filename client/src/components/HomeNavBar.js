@@ -33,6 +33,13 @@ export default function HomeNavBar(props) {
             <SearchBar
               onKeyDown={props.onKeyDown}
               onClick={props.onClick}
+              xs="none"
+              sm="flex"
+              md="flex"
+              bgColor={0.15}
+              bgColorHover={0.25}
+              searchBarColumns={6}
+              xIconColor="secondary"
             />
 
             {/** ************************** Avatar and My Skills ***************************************/}

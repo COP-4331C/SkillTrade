@@ -73,18 +73,17 @@ const HomePage = () => {
       })
       .then((res) => {
 
-        if (res.data["totalCount"] > limit) {
+        if (res.data["totalCount"] > limit) {         // Case when skill total count is greater than 8
           setNumOfPages(Math.ceil(res.data["totalCount"] / limit));
           setDisplayPagination("flex");
-        } else if (res.data["totalCount"] !== 0) {
+        } else if (res.data["totalCount"] !== 0) {    // Case when skill total count is 1 to 8
           setDisplayPagination("none");
-        } else {
+        } else {                                      // Case when skill total count is 0
           setDisplayPagination("none");
           setDisplayNoResultMessage("flex");
         }
         setSkillPosts(res.data["data"]);
 
-        setNumOfPages(1);
       })
       .catch((err) => {
         console.log(err);

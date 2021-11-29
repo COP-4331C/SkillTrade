@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const uploadFile = require("../middleware/upload");
+const { multerFile, uploadFileToS3 } = require("../middleware/upload");
 
 exports.create = async (req, res) => {
   const { firstName, lastName } = req.body;
@@ -284,15 +284,22 @@ exports.verifyEmail = async (req, res) => {
 exports.uploadProfilePic = async (req, res) => {
   try {
     req.directory = "ProfilePictures";
-    await uploadFile(req, res);
+    await multerFile(req, res);
+    await uploadFileToS3(req, res);
+
+    if (!req.file) {
+      return res.status(500).send({
+        message: "Failed to upload file.",
+      });
+    }
 
     let user = await User.findOne({ email: req.email });
-    user.profile.profilePic = req.file.location;
+    user.profile.profilePic = req.file.Location;
 
     user.save().then(() => {
       return res.status(200).json({
         message: "Successfully added profile photo!",
-        URL: req.file.location,
+        URL: req.file.Location,
       });
     });
   } catch (err) {

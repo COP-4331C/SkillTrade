@@ -1,6 +1,6 @@
 const Skill = require("../models/skill.model");
 const User = require("../models/user.model");
-const uploadFile = require("../middleware/upload");
+const { multerFile, uploadFileToS3 } = require("../middleware/upload");
 const Review = require("../models/review.model");
 
 exports.createSkill = async (req, res) => {
@@ -179,13 +179,21 @@ exports.uploadSkillPic = async (req, res) => {
       });
 
     req.directory = "SkillPictures";
-    await uploadFile(req, res);
-    skill.imageURL = req.file.location; // Puts imageURL in object before saving to database
+    await multerFile(req, res);
+    await uploadFileToS3(req, res);
+
+    if (!req.file) {
+      return res.status(500).send({
+        message: "Failed to upload file.",
+      });
+    }
+
+    skill.imageURL = req.file.Location; // Puts imageURL in object before saving to database
 
     skill.save().then(() => {
       return res.status(200).json({
         message: "Successfully added skill photo!",
-        URL: req.file.location,
+        URL: req.file.Location,
       });
     });
   } catch (err) {
@@ -201,11 +209,18 @@ exports.createSkillWithPhoto = async (req, res) => {
   const user = await User.findOne({ email: req.email });
 
   req.directory = "SkillPictures";
-  await uploadFile(req, res);
+  await multerFile(req, res);
+  await uploadFileToS3(req, res);
+
+  if (!req.file) {
+    return res.status(500).send({
+      message: "Failed to upload file.",
+    });
+  }
 
   var body = JSON.parse(req.body.body);
   body.userId = user._id;
-  body.imageURL = req.file.location;
+  body.imageURL = req.file.Location;
 
   var skill = new Skill(body);
 

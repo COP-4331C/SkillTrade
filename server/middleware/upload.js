@@ -1,40 +1,60 @@
 const util = require("util");
 const aws = require("aws-sdk");
 const multer = require("multer");
-const multerS3 = require("multer-s3");
 const crypto = require("crypto");
+const sharp = require("sharp");
 
-const maxSize = 2 * 1024 * 1024;
+const maxSize = 5 * 1024 * 1024; // Max upload size of 5MB (it will be reduced by sharp)
 
 aws.config.update({ region: "us-east-2" });
 
 s3 = new aws.S3();
 
-let storage = multerS3({
-  s3: s3,
-  bucket:  function (req, file, cb) {
-    cb(null, `skilltrade-bucket/${req.directory}`);
-  },
-  key: function(req, file, next) {
-    var validExtensions = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.jfif'];
-    var fileExtension = "";
+const uploadParams = (directory, fileName, fileBuffer) => {
+  return {
+    Bucket: `skilltrade-bucket/${directory}`,
+    Key: fileName,
+    Body: fileBuffer,
+  };
+};
 
-    for (var ext of validExtensions)
-      if (file.originalname.toLowerCase().endsWith(ext))
-        fileExtension = ext;
+let uploadFileToS3 = async (req, res) => {
+  let file = req.file;
+  var validExtensions = [".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".jfif"];
 
-    if (fileExtension.length == 0)
-      next("Error: missing or invalid file type");
+  let isValidExtension = false;
+  for (var ext of validExtensions)
+    if (file.originalname.toLowerCase().endsWith(ext)) isValidExtension = true;
 
-    var newFileName = crypto.randomBytes(20).toString('hex') + fileExtension;
-    next(null, newFileName);
+  if (!isValidExtension) {
+    req.file = null;
+    return;
   }
-});
 
-let uploadFile = multer({
-  storage: storage,
-  limits: { fileSize: maxSize }
+  var newFileName = crypto.randomBytes(20).toString("hex") + ".jpg";
+
+  let imageBuffer = await sharp(req.file.buffer)
+    .resize(1024, null, {
+      withoutEnlargement: true,
+    })
+    .jpeg({ quality: 90 })
+    .toBuffer();
+
+  await s3
+    .upload(uploadParams(req.directory, newFileName, imageBuffer))
+    .promise()
+    .then((data) => {
+      req.file = data;
+    })
+    .catch((err) => {
+      req.file = null;
+    });
+};
+
+let multerFile = multer({
+  // storage: storage,
+  limits: { fileSize: maxSize },
 }).single("file");
 
-let uploadFileMiddleware = util.promisify(uploadFile);
-module.exports = uploadFileMiddleware;
+exports.multerFile = util.promisify(multerFile);
+exports.uploadFileToS3 = uploadFileToS3;

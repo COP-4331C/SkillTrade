@@ -1,5 +1,5 @@
 // dark theme customisation at the end at abt 29:57
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -17,19 +17,26 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 
 
-const EditSkillScreen = ({navigation}) => {
+const EditSkillScreen = ({navigation, route}) => {
   // const [data, setData] = React.useState({
   //   reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
   //   newContent: route.params.paramKey.content,
   //   userToken: '',
   // }); 
-  
-  const [id, setId] = useState("");
-  setId(route.params.paramKey._id);
+
+  const [data, setData] = React.useState({
+    skillId: route.params.paramKey._id, // {route.params.paramKey._id}
+    // userToken: '',
+  }); 
+  // const [id, setId] = useState("");
+  // setId(route.params.paramKey._id);
+  const [userToken, setToken] = useState("");
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
@@ -40,88 +47,216 @@ const EditSkillScreen = ({navigation}) => {
   const [city, setCity] = useState("");
   const [pickedImagePath, setPickedImagePath] = useState('');
   
-
-
-  // This function is triggered when the "Select an image" button pressed
-  const showImagePicker = async () => {
-    // Ask the user for the permission to access the media library 
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
-      return;
+  // USE EFFECT ///////////////////////////////////////////////////////////////////////////
+  useEffect(async() => { 
+    console.warn(data.skillId)
+    let userTokenData = null; 
+    try {
+      userTokenData = await SecureStore.getItemAsync('userToken'); 
+    } catch (e) {
+        console.warn(e);
     }
+    setToken(userTokenData);
+  }, [])
 
-    const result = await ImagePicker.launchImageLibraryAsync();
+  useEffect(() => {
+    connectToSkillApi(data.skillId);
+  }, []);
+  // USE EFFECT ///////////////////////////////////////////////////////////////////////////
 
-    // Explore the result
-    console.log(result);
-
-    if (!result.cancelled) {
-      setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
-      console.log(result.url);
-    }
-  }
-
-  // This function is triggered when the "Open camera" button pressed
-  const openCamera = async () => {
-    // Ask the user for the permission to access the camera
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync();
-
-    // Explore the result
-    console.log(result);
-
-    if (!result.cancelled) {
-      setPickedImagePath(result);
-      console.log(result.url);
-    }
-  }
-
-  const renderInner = () => (
-    <View style={styles.panel}>
-      <View style={{alignItems: 'center'}}>
-        <Text style={styles.panelTitle}>Upload Photo</Text>
-        <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+  // Camera /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This function is triggered when the "Select an image" button pressed
+    const showImagePicker = async () => {
+      // Ask the user for the permission to access the media library
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+  
+      if (permissionResult.granted === false) {
+        alert("You've refused to allow this appp to access your photos!");
+        return;
+      }
+  
+      const result = await ImagePicker.launchImageLibraryAsync();
+  
+      // Explore the result
+      console.log(result);
+  
+      if (!result.cancelled) {
+        setPickedImagePath(result);
+        console.log(result.uri);
+        // console.log(pickedImagePath)
+      }
+    };
+  
+    // This function is triggered when the "Open camera" button pressed
+    const openCamera = async () => {
+      // Ask the user for the permission to access the camera
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+  
+      if (permissionResult.granted === false) {
+        alert("You've refused to allow this appp to access your camera!");
+        return;
+      }
+  
+      const result = await ImagePicker.launchCameraAsync();
+      //let localUri = result.uri;
+      //let filename = localUri.split('/').pop();
+      // setPickedImagePath(result.uri);
+      // Explore the result
+      console.log(result);
+  
+      if (!result.cancelled) {
+        setPickedImagePath(result);
+        console.log(result.uri);
+      }
+    };
+  
+    const renderInner = () => (
+      <View style={styles.panel}>
+        <View style={{ alignItems: "center" }}>
+          <Text style={styles.panelTitle}>Upload Photo</Text>
+          <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+        </View>
+        <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
+          <Text style={styles.panelButtonTitle}>Take Photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.panelButton} onPress={showImagePicker}>
+          <Text style={styles.panelButtonTitle}>Choose From Libary</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.panelButton}
+          onPress={() => bs.current.snapTo(1)}
+        >
+          <Text style={styles.panelButtonTitle}>Cancel</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
-        <Text style={styles.panelButtonTitle}>Take Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={showImagePicker}>
-        <Text style={styles.panelButtonTitle}>Choose From Libary</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={() => bs.current.snapTo(1)}>
-        <Text style={styles.panelButtonTitle}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  const renderHeader = () => (
-    <View style={styles.header}>
-      <View style={styles.panelHeader}>
-        <View style={styles.panelHandle}></View>
+    );
+  
+    const renderHeader = () => (
+      <View style={styles.header}>
+        <View style={styles.panelHeader}>
+          <View style={styles.panelHandle}></View>
+        </View>
       </View>
+    );
+  //Camera//////////////////////
+  // // This function is triggered when the "Select an image" button pressed
+  // const showImagePicker = async () => {
+  //   // Ask the user for the permission to access the media library 
+  //   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    </View>
-  );
+  //   if (permissionResult.granted === false) {
+  //     alert("You've refused to allow this appp to access your photos!");
+  //     return;
+  //   }
+
+  //   const result = await ImagePicker.launchImageLibraryAsync();
+
+  //   // Explore the result
+  //   console.log(result);
+
+  //   if (!result.cancelled) {
+  //     setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
+  //     console.log(result.url);
+  //   }
+  // }
+
+  // // This function is triggered when the "Open camera" button pressed
+  // const openCamera = async () => {
+  //   // Ask the user for the permission to access the camera
+  //   const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+  //   if (permissionResult.granted === false) {
+  //     alert("You've refused to allow this appp to access your camera!");
+  //     return;
+  //   }
+
+  //   const result = await ImagePicker.launchCameraAsync();
+
+  //   // Explore the result
+  //   console.log(result);
+
+  //   if (!result.cancelled) {
+  //     setPickedImagePath(result);
+  //     console.log(result.url);
+  //   }
+  // }
+
+  // const renderInner = () => (
+  //   <View style={styles.panel}>
+  //     <View style={{alignItems: 'center'}}>
+  //       <Text style={styles.panelTitle}>Upload Photo</Text>
+  //       <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+  //     </View>
+  //     <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
+  //       <Text style={styles.panelButtonTitle}>Take Photo</Text>
+  //     </TouchableOpacity>
+  //     <TouchableOpacity style={styles.panelButton} onPress={showImagePicker}>
+  //       <Text style={styles.panelButtonTitle}>Choose From Libary</Text>
+  //     </TouchableOpacity>
+  //     <TouchableOpacity style={styles.panelButton} onPress={() => bs.current.snapTo(1)}>
+  //       <Text style={styles.panelButtonTitle}>Cancel</Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+
+  // const renderHeader = () => (
+  //   <View style={styles.header}>
+  //     <View style={styles.panelHeader}>
+  //       <View style={styles.panelHandle}></View>
+  //     </View>
+
+  //   </View>
+  // );
 
   const {colors} = useTheme();
   const bs = React.createRef();
   const fall = new Animated.Value(1); 
-  
-  // API Connections
+  // Camera ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // API Connections ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Edit - Profile API
+  // GetSkill API
+  async function connectToSkillApi(skillId) {
+    let userToken = null;
+    try {
+      userToken = await SecureStore.getItemAsync("userToken"); 
+    } catch (e) {
+      console.warn("SecureStore error");
+    }
+    axios
+      .get(`https://cop4331c.herokuapp.com/api/skills/${skillId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .then(function (response) {
+        setPickedImagePath({ uri: response.data["imageURL"] });
+        setTitle(response.data["title"]);
+        setDescription(response.data["description"]);
+        setSummary(response.data["summary"]);
+        setStatus(response.data["status"]);
+        setPrice(response.data["price"]);
+        setCountry(response.data["country"]);
+        setState(response.data["state"]);
+        setCity(response.data["city"]);
+        console.warn("Connetcted to get skill api!");
+      })
+      .catch(function (error) {
+        console.log(error)
+        console.warn("Fail to connetcted to get skill api!");
+      });
+  }
+
+  // Edit - skill API 
   async function connectToEditSkillApi(skillId, title, summary, description, status, price, country, state, city){
-    await axios.patch('https://cop4331c.herokuapp.com/api/review/edit-skill', { // {route.params.paramKey._id}
-          skillId: skillId, 
+    let userToken = null;
+    try {
+      userToken = await SecureStore.getItemAsync("userToken"); 
+    } catch (e) {
+      console.warn("SecureStore error");
+    }
+    axios.put(`https://cop4331c.herokuapp.com/api/skills/${skillId}`, { // {route.params.paramKey._id}
           title: title,
           summary: summary,
           description: description,
@@ -136,19 +271,21 @@ const EditSkillScreen = ({navigation}) => {
           }
         })
       .then(function(response) {
-          Alert.alert(
-            "Skill updated!", // Alert Title
-            " ", // My Alert Msg
-            [ // an array of objects (each object is a button)
-              { 
-                  text: "OK", 
-                  onPress: () => console.log("OK Pressed") 
-              },
-            ], 
-          )
+          // Alert.alert(
+          //   "Skill updated!", // Alert Title
+          //   " ", // My Alert Msg
+          //   [ // an array of objects (each object is a button)
+          //     { 
+          //         text: "OK", 
+          //         onPress: () => console.log("OK Pressed") 
+          //     },
+          //   ], 
+          // )
+          console.warn("skill edited and working")
           navigation.goBack()
       })
       .catch(function(error) {
+          console.log(error)
           console.warn("edit skill not working")
           // navigation.goBack()
           
@@ -163,6 +300,7 @@ const EditSkillScreen = ({navigation}) => {
     data.append("file", {
       name: image.uri.split("/").pop(),
       type: "image/jpg",
+      // font
       uri: Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
     });
 
@@ -179,7 +317,7 @@ const EditSkillScreen = ({navigation}) => {
     console.log(data);
     axios
       .post(
-        "https://cop4331c.herokuapp.com/api/user/upload-profile-pic",
+        `https://cop4331c.herokuapp.com/api/skills/${skillId}`,
         data,
         {
           headers: {
@@ -213,7 +351,7 @@ const EditSkillScreen = ({navigation}) => {
 
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <View style={styles.container}>
       
@@ -244,9 +382,39 @@ const EditSkillScreen = ({navigation}) => {
                 alignItems: 'center',
               }}>
                 <ImageBackground
+                  resizeMode="cover"
+                  source={{
+                    uri: pickedImagePath.uri,
+                  }}
+                  style={{ height: 100, width: 100 }}
+                  imageStyle={{ borderRadius: 15 }}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      name="camera"
+                      size={35}
+                      color="#fff"
+                      style={{
+                        opacity: 0.7,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderWidth: 1,
+                        borderColor: "#fff",
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
+                </ImageBackground>
+                {/* <ImageBackground
                 resizeMode='cover' 
                 source={{
-                  url: pickedImagePath,
+                  uri: pickedImagePath,
                 }}
 
                 style={{height:100, width: 100}}
@@ -267,7 +435,7 @@ const EditSkillScreen = ({navigation}) => {
                     }}/>
                   </View>
 
-                </ImageBackground>
+                </ImageBackground> */}
 
               </View>
             </TouchableOpacity>
@@ -280,7 +448,9 @@ const EditSkillScreen = ({navigation}) => {
           <TextInput 
             placeholder="Skill title"
             placeholderTextColor="#666666"
+            onChangeText={(val) => setTitle(val)}
             autoCorrect={false}
+            value = {title}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -297,7 +467,9 @@ const EditSkillScreen = ({navigation}) => {
           <TextInput 
             placeholder="summary"
             placeholderTextColor="#666666"
+            onChangeText={(val) => setSummary(val)}
             autoCorrect={false}
+            value = {summary}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -314,24 +486,9 @@ const EditSkillScreen = ({navigation}) => {
           <TextInput 
             placeholder="description"
             placeholderTextColor="#666666"
+            onChangeText={(val) => setDescription(val)}
             autoCorrect={false}
-            // Some dark theme stuff here
-            // style={styles.textInput}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-
-        <View style={styles.action}>
-        <Entypo name="image" size={24} color="black" />
-          <TextInput 
-            placeholder="imageURL"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
+            value = {description}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -349,6 +506,8 @@ const EditSkillScreen = ({navigation}) => {
             placeholder="status"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setStatus(val)}
+            value = {status}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -366,7 +525,9 @@ const EditSkillScreen = ({navigation}) => {
             placeholder="price"
             placeholderTextColor="#666666"
             keyboardType='decimal-pad'
+            onChangeText={(val) => setPrice(val)}
             autoCorrect={false}
+            value = {price}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -384,6 +545,8 @@ const EditSkillScreen = ({navigation}) => {
             placeholder="country"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setCountry(val)}
+            value = {country}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -401,6 +564,8 @@ const EditSkillScreen = ({navigation}) => {
             placeholder="state"
             placeholderTextColor="#666666"
             autoCorrect={false}
+            onChangeText={(val) => setState(val)}
+            value = {state}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[
@@ -417,6 +582,7 @@ const EditSkillScreen = ({navigation}) => {
           <TextInput 
             placeholder="city"
             placeholderTextColor="#666666"
+            onChangeText={(val) => setCity(val)}
             autoCorrect={false}
             // Some dark theme stuff here
             // style={styles.textInput}
@@ -429,7 +595,11 @@ const EditSkillScreen = ({navigation}) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.commandButton} onPress={async() => {
+          if (pickedImagePath?.uri)
+            uploadProfilePic( data.skillId,  pickedImagePath);
+          connectToEditSkillApi(data.skillId, title, summary, description, status, price, country, state, city);
+        }}>
           <Text style={styles.panelButtonTitle}>Edit Skill</Text>
         </TouchableOpacity>
 

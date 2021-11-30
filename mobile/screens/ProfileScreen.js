@@ -19,7 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import AddSkillScreen from './AddSkillScreen';
+import EditSkillScreen from './EditSkillScreen';
 import moment from "moment";
 import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
@@ -307,7 +307,7 @@ const ProfileScreen = ({navigation}) => {
         <View style={styles.skillContainer}>
           <View style={styles.skillBar}>
             <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
+            <TouchableOpacity onPress={() => {navigation.navigate('EditSkillScreen', {paramKey: post,})}} > 
               <AntDesign name="edit" size={18} color="black" />
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
@@ -485,7 +485,7 @@ const ProfileScreen = ({navigation}) => {
                   <Entypo name="email" size={24} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity 
-                  style = {{display:isEdit ? "block" : 'none'}}
+                  style = {{display:isEdit ? "flex" : 'none'}}
                   onPress={()=>{ addButtonHandler(section.title) }} > 
                   <Entypo name="add-to-list" size={24} color="black" />
                 </TouchableOpacity>

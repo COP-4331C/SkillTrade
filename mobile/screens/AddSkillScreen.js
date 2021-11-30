@@ -36,13 +36,6 @@ const AddSkillScreen = ({navigation}) => {
 //     state: '',
 //     city: '',
 // });
-React.useEffect(() => {
-  const unsubscribe = navigation.addListener('focus', () => {
-    // do something
-  });
-
-  return unsubscribe;
-}, [navigation]);
 
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
@@ -53,25 +46,9 @@ React.useEffect(() => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [pickedImagePath, setPickedImagePath] = useState('');
+  const [pickedImage, setPickedImage] = useState('');
   
 
-  function getId(userToken)
-  {
-        let userId;
-        userId = null;
-        await axios.get('https://cop4331c.herokuapp.com/api/user/id',  {
-              headers: {
-                Authorization: `Bearer ${userToken}`  
-              }
-            })
-          .then(function(response) {
-            userId = response.data.userId
-          })
-          .catch(function(error) {
-              console.warn(error)
-          });
-  }
 
   const createFileFormData = (image, body = {}) => {
     const data = new FormData();
@@ -90,6 +67,7 @@ React.useEffect(() => {
   };
   
   function connectToAddSkillAPI(
+    userToken,
     userId,
     title,
     summary,
@@ -99,16 +77,37 @@ React.useEffect(() => {
     country,
     state,
     city,
-    pickedImagePath
+    image
     ) {
-    const data = createFileFormData(image);
+      console.warn("enters the function")
+    // const data = createFileFormData(image, {
+    //   title: title,
+    //   summary: summary,
+    //   description: description,
+    //   status: status,
+    //   price: price,
+    //   country: country,
+    //   state: state,
+    //   city: city,
+    // });
+    console.warn("body")
     console.log(image);
-    console.log(data);
+    // console.log(data);
+    console.warn("axios connect")
+    console.log(        {
+      title: title,
+      summary: summary,
+      description: description,
+      status: status,
+      price: price,
+      country: country,
+      state: state,
+      city: city,
+    })
     axios
       .post(
-        "https://cop4331c.herokuapp.com/api/skills/create-skill",
+        `https://cop4331c.herokuapp.com/api/skills`, 
         {
-          userId : userId,
           title: title,
           summary: summary,
           description: description,
@@ -118,16 +117,14 @@ React.useEffect(() => {
           state: state,
           city: city,
         },
-        data,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
-            "content-type": "multipart/form-data",
           },
         }
       )
       .then(function (response) {
-        console.warn("skill is added");
+        console.log("skill is added");
         // navigation.goBack()
         // Alert.alert(
         //   "Profile Changed!", // Alert Title
@@ -144,7 +141,7 @@ React.useEffect(() => {
         // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
-        console.log(error.message);
+        // console.log(error.message);
         console.warn("Skill is not added");
       });
   }
@@ -164,7 +161,7 @@ React.useEffect(() => {
     // console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
+      setPickedImage(result); // Marked: changed all uri to url, to avoid empty uri warning
       // console.log(result.url);
     }
   }
@@ -185,8 +182,8 @@ React.useEffect(() => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result);
-      console.log(result.uri);
+      setPickedImage(result);
+      // console.log(result.uri);
     }
   }
 
@@ -252,6 +249,36 @@ React.useEffect(() => {
                 alignItems: 'center',
               }}>
                 <ImageBackground
+                  resizeMode="cover"
+                  source={{
+                    uri: pickedImage.uri,
+                  }}
+                  style={{ height: 100, width: 100 }}
+                  imageStyle={{ borderRadius: 15 }}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      name="camera"
+                      size={35}
+                      color="#fff"
+                      style={{
+                        opacity: 0.7,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderWidth: 1,
+                        borderColor: "#fff",
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
+                </ImageBackground>
+                {/* <ImageBackground
                 resizeMode='cover' 
                 source={{
                   uri: pickedImagePath,
@@ -275,7 +302,7 @@ React.useEffect(() => {
                     }}/>
                   </View>
 
-                </ImageBackground>
+                </ImageBackground> */}
 
               </View>
             </TouchableOpacity>
@@ -448,28 +475,18 @@ React.useEffect(() => {
 
         <TouchableOpacity style={styles.commandButton} onPress={async() => {
           let userToken = null;
+          let userId = null;
           try {
             userToken = await SecureStore.getItemAsync("userToken"); // need to add 'await'
+            userId = await SecureStore.getItemAsync("userId"); 
           } catch (e) {
             console.warn("SecureStore error");
           }
-          let userId;
-          userId = null;
-          await axios.get('https://cop4331c.herokuapp.com/api/user/id',  {
-                headers: {
-                  Authorization: `Bearer ${userToken}`  
-                }
-              })
-            .then(function(response) {
-              userId = response.data.userId
-            })
-            .catch(function(error) {
-                console.warn(error)
-            });
-          // userId = getId(userToken);
+         // userId = getId(userToken);
           // uploadProfilePic(userToken, pickedImagePath);
 
           connectToAddSkillAPI(
+            userToken,
             userId,
             title,
             summary,
@@ -479,7 +496,7 @@ React.useEffect(() => {
             country,
             state,
             city,
-            pickedImagePath
+            pickedImage
           );
         }}>
           <Text style={styles.panelButtonTitle}>Add Skill</Text>

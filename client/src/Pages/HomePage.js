@@ -39,11 +39,10 @@ const HomePage = () => {
       { headers: { Authorization: `Bearer ${token}` } }
     )
       .then(function (response) {
-        // storeData('firstName', response.data["firstName"]);
-        // storeData('lastName', response.data["lastName"]);
-        // storeData('avatar', response.data["profilePic"]);
         setLoggedUserAvatar(response.data["profilePic"]);
         setLoggedUserId(response.data["_id"]);
+        localStorage.setItem("loggedUserFirstName", response.data["firstName"]);
+        localStorage.setItem("loggedUserLastName", response.data["lastName"]);
       })
       .catch(function (error) {
         console.log(error);

@@ -26,13 +26,11 @@ import Testcard from '../components/Testcard';
 import axios from "axios";
 import Skeleton from '@mui/material/Skeleton';
 import { Paper } from '@mui/material';
-import Avatar from '@mui/material/Avatar'
-import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
+
 
 
 export default function ProfilePage(props) {
   const token = retrieveData('token');
-  const configuration = { headers: { Authorization: `Bearer ${token}` } };
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -75,14 +73,13 @@ export default function ProfilePage(props) {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
-  const [profileUserID, setProfileUserID] = useState(""); //"61894e2ab7293c19980829a2"
   const [loggedUser, setLoggedUser] = useState({
-    firstName: "",
-    lastName: "",
-    location: "TODO: [City, State, Country]",
+    firstName: localStorage.getItem("loggedUserFirstName"),
+    lastName: localStorage.getItem("loggedUserLastName"),
+    id: localStorage.getItem("loggedUserId"),
+    location: "TODO: [City, State, Country]"
   });
   const [reviewMessages, setReviewMessages] = useState([]);
-
   const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
@@ -105,6 +102,7 @@ export default function ProfilePage(props) {
     text: ""
   })
   const [loading, setLoading] = useState(true);
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -478,7 +476,7 @@ export default function ProfilePage(props) {
       localStorage.setItem('lastName', response.data["lastName"]);
       localStorage.setItem('userID', response.data["_id"]);
 
-      setProfileUserID(response.data["_id"])
+
       // console.log( response.data);
       // console.log("user ID: " + response.data["_id"]);
 
@@ -630,7 +628,7 @@ export default function ProfilePage(props) {
       <Reviews
         // avatar={"https://mui.com/static/images/avatar/6.jpg"}
         avatar={photo}
-        userID={profileUserID}
+        userID={userId}
         reviewerId={loggedUser.id}
         reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
         rating={5}

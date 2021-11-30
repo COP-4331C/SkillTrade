@@ -18,6 +18,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
 import AppNavBar from '../components/AppNavBar';
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
 import {useLocation} from "react-router-dom";
 import { Divider } from '@mui/material';
 
@@ -220,10 +221,13 @@ const handleClose = () => {
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-          <Avatar alt="User Pic" src={photo}/>
+          <Avatar alt="User Pic" color="secondary"
+>
+            <ManageAccountsTwoToneIcon/>
+            </Avatar>
             <h4> 
-              {firstName +" " + lastName} 
-              </h4>
+              User
+            </h4>
               <Divider variant="middle" style={{color: 'black', border: "1px solid"}}/>
             <h3>Reset Password</h3>
           </Grid>

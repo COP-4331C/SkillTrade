@@ -447,7 +447,7 @@ export default function ProfilePage(props) {
   const getProfileData = async () => {
 
     // const userId = "61894e2ab7293c19980829a2";
-    const userId = "";
+    // const userId = "";
     // setProfileUserID("61887889e62859a35bc0de9c");
     // const userId = "";
     // const URL = `./api/user/profile/${!userId ? "" : userId}`;
@@ -457,7 +457,7 @@ export default function ProfilePage(props) {
       // Fetches the profile data
       // const response = await axios.get(URL, config);
       const response = await axios.get(
-        `./api/user/profile/${!userId ? "" : userId}`,
+        `/api/user/profile/${!userId ? "" : userId}`,
         configuration
       );
 
@@ -472,14 +472,24 @@ export default function ProfilePage(props) {
       setState(response.data["state"]);
       setCountry(response.data["country"]);
       localStorage.setItem('recent-image',response.data["profilePic"]);
+      localStorage.setItem('firstName',response.data["firstName"]);
+      localStorage.setItem('lastName',response.data["lastName"]);
 
       setProfileUserID(response.data["_id"])
       console.log("user ID: " + response.data["_id"]);
 
+        //ridwans code copy/paste for test
+      // const token = localStorage.getItem('token');
+      // const userId = "";
+      // axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
+      //   headers: { 'Authorization': `Bearer ${token}` }
+      // })
 
       // Fetches reviews
       axios.get(
         `./api/review/get-reviews/${response.data["_id"]}}`,
+        // `./api/review/get-reviews/${!userId ? "" : userId}}`,
+
         configuration
       )
         .then(function (response) {
@@ -497,38 +507,18 @@ export default function ProfilePage(props) {
     setLoading(false);
   }
 
-
-  // function fetchReviews() {
-    // console.log(profileUserID);
-    // // Get token from the local storage
-    // const URL = `./api/review/get-reviews/${profileUserID}`;
-    // const config = {
-    //   headers: { Authorization: `Bearer ${token}` }
-    // };
-    //
-    // // Fetches reviews
-    // axios.get(URL, config)
-    //   .then(function (response) {
-    //     setReviewMessages(response.data);
-    //     setNumOfReviews(response.data.length);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-  // }
-
-
+  //fetch the Skills
   const [skillposts, setSkillPosts] = useState([]);
 
   function fetchSkills() {
     const token = localStorage.getItem('token');
-    const userId = "";
+    // const userId = "";
     axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then((res) => {
         setSkillPosts(res.data);
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -590,27 +580,24 @@ export default function ProfilePage(props) {
     </div>
   );
 
-
-
   //Ridwan testing
   const skilllist = () => {
     let content = skillposts.map((fetchedskill, index) => {
       return (
-        <Grid item xs={3} key={index}>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
             skilldescription = {fetchedskill.summary}
             skillname = {fetchedskill.title}
-            // skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
             skillimage = {fetchedskill.imageURL}
             skilluserid = {fetchedskill.userFullName}
             skilluserdirectid = {fetchedskill.userId}
-            // avatar={fetchedReview.price}
             skilluserpic = {fetchedskill.userProfilePic}
             skillprice = {fetchedskill.price}
+            skillcountry = {fetchedskill.country}
           />
         </Grid>
       )
@@ -658,6 +645,8 @@ export default function ProfilePage(props) {
       />
     );
   }
+
+  const userId = props.match.params?.userId ?? ""
 
   return (
     <Box sx={{ flex: 1 }}>

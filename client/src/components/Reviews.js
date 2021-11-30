@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import {styled} from '@mui/material/styles';
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
-import LocationIcon from '@mui/icons-material/LocationOn';
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
@@ -34,7 +33,7 @@ export default function Reviews(props) {
     rating: props.rating,
     message: props.message,
     newReview: props.newReview,
-    reviewerID: props.reviewerID
+    reviewerID: props.reviewerId
   });
 
   const [reviewMessage, setReviewMessage] = useState(props.message);
@@ -49,7 +48,7 @@ export default function Reviews(props) {
 
   const [inEditMode, setInEditMode] = useState(false);
   const [displayEditButton, setDisplayEditButton] = useState("none");
-  const [editPermission, setEditPermission] = useState(true);
+  const [editPermission, setEditPermission] = useState(false);
   const [displayButtons, setDisplayButtons] = useState("none");
   const [fadeIn, setFadeIn] = useState(false);
   const [reviewMessageTemp, setReviewMessageTemp] = useState("");
@@ -104,7 +103,6 @@ export default function Reviews(props) {
     setDisplayEditableRating("none");         // Hides the start Editable Rating
     setDisplayReviewMessage("block");         // Displays the uneditable review text message
     setDisplayRating("inline-flex");          // Displays the Star Rating
-
     setFadeIn(false);                         // Tells the button to fade out
     setReview({
       ...review,  // Leaves the rest of the variables unchanged
@@ -143,7 +141,6 @@ export default function Reviews(props) {
       }
 
       // Saves the review
-      // axios.post(URL, data, config).then(console.log).catch(console.log);
       axios.post(URL, data, config).catch(console.log);
     }
     // If the review is an existing review, then send a edit request
@@ -158,12 +155,10 @@ export default function Reviews(props) {
       }
 
       // Saves the review
-      // axios.patch(URL, data, config).then(console.log).catch(console.log);
       axios.patch(URL, data, config).catch(console.log);
     }
 
     exitEditMode();
-    // props.onClick();
   }
 
   function handleOnMouseOver() {
@@ -182,30 +177,11 @@ export default function Reviews(props) {
     setReviewMessageTemp(e.target.value);
   }
 
-  // function handleOnClickRating(e) {
-  //   // setReviewRatingTemp(e.target.value);
-  //
-  //   // Saves the new rating
-  //   setReview({
-  //     ...review,
-  //     rating: e.target.value
-  //   });
-  // }
-
   useEffect(() => {
 
-    // TODO: Add code to setEditPermission = true if the logged user is
-    //  the owner of the profile page. For now, we'll keep the
-    //  setEditPermission = true below. (Note: we can't set editPermission,
-    //  to then read its state immediately; it does not work.
-
-    // if (editPermission) {
-    //   setDisableImageUpload(false);
-    //   setMousePointer("pointer");
-    // } else {
-    //   setDisableImageUpload(true);
-    //   setMousePointer("");
-    // }
+    if(props.loggedUserId === props.reviewerId) {
+      setEditPermission(true);
+    }
 
     if(newReview) {
       enterEditMode()
@@ -231,12 +207,10 @@ export default function Reviews(props) {
     const config = {headers: {Authorization: `Bearer ${token}`}};
 
     // Saves the review
-    // axios.post(URL, data, config).then(console.log).catch(console.log);
     axios.delete(URL, config).catch(console.log);
 
     setOpen(false);
     exitEditMode();
-    // console.log("Review.js - handleDeleteReview: " + props.reviewId);
     props.onClick(props.reviewId);
   }
 
@@ -278,29 +252,21 @@ export default function Reviews(props) {
                 {/*********************************** Rating  ************************************/}
                 <Box sx={{marginTop: 5, justifyContent: "center", display: displayRating}} >
                   <StyledRating
-                    // defaultValue={review.rating}
-                    // value={review.rating}
                     value={rating}
                     precision={1}
                     icon={<StarIcon fontSize="inherit"/>}
                     emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
-                    // readOnly={review.ratingReadOnly}
                     readOnly={true}
-                    // onClick={handleOnClickRating}
-                    // onChange={(event, newValue) => {setReview({...review, rating: newValue});}}
                   />
                 </Box>
 
                 {/*********************************** Rating Editable  ************************************/}
                 <Box sx={{marginTop: 5, justifyContent: "right", display: displayEditableRating}} >
                   <StyledRating
-                    // defaultValue={review.rating}
                     value={reviewRatingTemp}
                     precision={1}
                     icon={<StarIcon fontSize="inherit"/>}
                     emptyIcon={<StarBorderOutlinedIcon fontSize="inherit"/>}
-                    // readOnly={review.readOnly}
-                    // onChange={handleOnChangeRating}
                     onChange={(event, newValue) => {setReviewRatingTemp(newValue)}}
                   />
                 </Box>
@@ -320,8 +286,6 @@ export default function Reviews(props) {
 
               {/*********************************** Message  ************************************/}
               <Typography variant="body2" color="text.secondary" sx={{textAlign: "left", display:displayReviewMessage}}>
-                {/*{props.message}*/}
-                {/*{review.message}*/}
                 {reviewMessage}
               </Typography>
 
@@ -342,8 +306,6 @@ export default function Reviews(props) {
               <Stack
                 direction="row"
                 justifyContent="space-evenly"
-                // alignItems="stretch"
-                // spacing={2}
               >
 
                 {/******************** Delete Review Button *********************/}
@@ -351,9 +313,7 @@ export default function Reviews(props) {
                   <Button
                     variant="contained"
                     color="error"
-                    // onClick={handleDeleteButton}
                     onClick={handleClickOpen}
-                    // sx={{marginTop:2, padding: "6px 35px", display: displayButtons}}
                     sx={{marginTop:2, padding: "6px 35px", display: displayDeleteButton}}
                   > Delete Review
                   </Button>
@@ -376,7 +336,6 @@ export default function Reviews(props) {
                     color="secondary"
                     startIcon={<SaveIcon/>}
                     variant="contained"
-                    // onClick={handleSave}
                     onClick={() => handleSave()}
                     sx={{marginTop:2, padding: "6px 64px", display: displayButtons}}
                   >

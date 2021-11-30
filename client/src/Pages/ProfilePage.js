@@ -98,7 +98,9 @@ export default function ProfilePage(props) {
     text: ""
   })
   const [loading, setLoading] = useState(true);
-  const userId = props.match.params?.userId ?? ""
+  const userId = props.match.params?.userId ?? ""   // Gets user Id from URL
+  const [loggedUserIdForReviews, setLoggedUserIdForReviews] = useState("");
+
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -313,7 +315,6 @@ export default function ProfilePage(props) {
   }
 
   function handleOnMouseOver() {
-    // if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))) {
     if (!inEditMode && editPermission) {
       setDisplayEditButton("inline-flex");
     }
@@ -452,6 +453,7 @@ export default function ProfilePage(props) {
       );
       // setLoggedUserId(response.data["userId"]);
       loggedUserId = response.data["userId"];
+      setLoggedUserIdForReviews(response.data["userId"]);
       userIdToFetchReviewsFor = response.data["userId"];
 
       // userId = "" means no id was passed to the profile page
@@ -465,14 +467,6 @@ export default function ProfilePage(props) {
         setDisableImageUpload(true);
         setMousePointer("");
       }
-
-      // if (editPermission) {
-      //   setDisableImageUpload(false);
-      //   setMousePointer("pointer");
-      // } else {
-      //   setDisableImageUpload(true);
-      //   setMousePointer("");
-      // }
 
     } catch (error) {
       console.log(error);
@@ -522,7 +516,6 @@ export default function ProfilePage(props) {
       )
         .then(function (response) {
           setReviewMessages(response.data);
-          // setNumOfReviews(response.data.length);
         })
         .catch(console.log);
 
@@ -556,10 +549,6 @@ export default function ProfilePage(props) {
 
   useEffect(() => {
     try {
-      // TODO: Add code to setEditPermission = true if the logged user is
-      //  the owner of the profile page. For now, we'll keep the
-      //  setEditPermission = true below. (Note: we can't set editPermission,
-      //  to then read its state immediately; it does not work.
 
       setInstagramLink("https://www.instagram.com/" + instagram);
       setTwitterLink("https://twitter.com/" + twitter);
@@ -579,23 +568,24 @@ export default function ProfilePage(props) {
   // Creates a list of reviews. For each review in reviewList
   // Render the Review component with the data passed to it.
   // reviewMessages is an array manually declared at the end of this file.
-  const reviewList = reviewMessages.map((fetchedReview) =>
-
-    <div key={fetchedReview._id} id={fetchedReview._id}>
-      <Reviews
-        avatar={fetchedReview.authorProfilePic}
-        reviewerName={fetchedReview.authorFullName}
-        rating={fetchedReview.rating}
-        message={fetchedReview.content}
-        newReview={false}
-        reviewId={fetchedReview._id}
-        // ratingReadOnly={true}
-        // ratingReadOnly={reviewElement.userId === pr}
-        onClick={(reviewIdToDelete) => {
-          handleDeleteReview(reviewIdToDelete)
-        }}
-      />
-    </div>
+  const reviewList = reviewMessages.map((fetchedReview) => {
+    return(
+      <div key={fetchedReview._id} id={fetchedReview._id}>
+        <Reviews
+          avatar={fetchedReview.authorProfilePic}
+          reviewerName={fetchedReview.authorFullName}
+          reviewerId={fetchedReview.authorId}
+          rating={fetchedReview.rating}
+          message={fetchedReview.content}
+          newReview={false}
+          reviewId={fetchedReview._id}
+          loggedUserId={loggedUserIdForReviews}
+          onClick={(reviewIdToDelete) => {
+            handleDeleteReview(reviewIdToDelete)
+          }}
+        />
+      </div>
+    )}
   );
 
   //Ridwan testing

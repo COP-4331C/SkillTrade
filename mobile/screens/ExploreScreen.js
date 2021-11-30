@@ -1,11 +1,10 @@
-import Icon from "react-native-vector-icons/Ionicons";// 
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
   responsiveScreenFontSize,
 } from "react-native-responsive-dimensions";// 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -28,6 +27,30 @@ import { Image, withBadge } from 'react-native-elements'; //
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ExploreScreen = ({ navigation }) => {
+
+  const [skillData, setSkillData] = React.useState([]);
+
+  async function connectToGetSkillsApi(){
+    // console.warn("test",skillData) // test
+    let search = "";
+    let page = 1;
+    let limit = 8;
+    await axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`, // can not connect? FIXME
+          ) 
+        .then(function(response) {
+            // console.warn("test0",response.data.data) // test
+            setSkillData(response.data.data)
+        })
+        .catch(function(error) {
+            console.warn(error)
+            // console.warn("test00",response.data.data) // test
+
+        });
+  }
+
+  useEffect(async() => { connectToGetSkillsApi() }, []) // renew everything when any compontent renew??
+  // console.warn("test1",skillData) // test
+
   const image = {uri:"https://m.media-amazon.com/images/I/817mtl1sqhL._AC_SL1500_.jpg"};// how to import from asset document??
   // uri:"https://images.pexels.com/photos/227417/pexels-photo-227417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
 
@@ -35,28 +58,28 @@ const ExploreScreen = ({ navigation }) => {
   
   const venice ="Venice the capital  of the northern Italy's Veneto Region in the Adriatic Sea"; //
 
-  const [gallery, setgallery] = useState([
-    {
-      image: {uri:"https://im0-tub-tr.yandex.net/i?id=0372e7559ea4bb9b277926921e8ca1fd&n=13",},
-      title: "Switzerland",
-      key: "1",
-    },
-    {
-      image: {uri:"https://portal.andina.pe/EDPfotografia3/Thumbnail/2017/11/09/000462113W.jpg",},
-      title: "New Zeland",
-      key: "2",
-    },
-    {
-      image: {uri:"https://im0-tub-tr.yandex.net/i?id=4c667d83715020671fb6bae379bafd1b&n=13",},
-      title: "Rome",
-      key: "3",
-    },
-    {
-      image: {uri:"https://blog.educaistanbul.com/wp-content/uploads/2018/03/tahiti-1.jpg",},
-      title: "Tahiti",
-      key: "4",
-    },
-  ]);
+  // const [gallery, setgallery] = useState([
+  //   {
+  //     image: {uri:"https://im0-tub-tr.yandex.net/i?id=0372e7559ea4bb9b277926921e8ca1fd&n=13",},
+  //     title: "Switzerland",
+  //     key: "1",
+  //   },
+  //   {
+  //     image: {uri:"https://portal.andina.pe/EDPfotografia3/Thumbnail/2017/11/09/000462113W.jpg",},
+  //     title: "New Zeland",
+  //     key: "2",
+  //   },
+  //   {
+  //     image: {uri:"https://im0-tub-tr.yandex.net/i?id=4c667d83715020671fb6bae379bafd1b&n=13",},
+  //     title: "Rome",
+  //     key: "3",
+  //   },
+  //   {
+  //     image: {uri:"https://blog.educaistanbul.com/wp-content/uploads/2018/03/tahiti-1.jpg",},
+  //     title: "Tahiti",
+  //     key: "4",
+  //   },
+  // ]);
 
   // const gpToPost = () => {
   //   navigation.navigate('Post');
@@ -106,19 +129,21 @@ const ExploreScreen = ({ navigation }) => {
           <View>
             <FlatList
               showsHorizontalScrollIndicator={false} //
-              data={gallery}
+              data={skillData}
               horizontal={true} 
+              keyExtractor={(item) => item._id}
               renderItem={({ item }) => {
+                // console.warn(item) //test
                 return (
                   <View style={{paddingVertical: hp("1%"), paddingHorizontal: wp("0.5%"), }}> 
                     <TouchableOpacity
-                      onPress={() => navigation.navigate("SkillDetailScreen", { item, gallery } )} // onPress={goToPost} 
+                      onPress={() => navigation.navigate("SkillDetailScreen", { item, skillData } )} // onPress={goToPost} 
                       style={{ shadowColor:"#000", shadowOffset: {width:0, height:20}, shadowOpacity:0.34, shadowRadius:6.27, levation:10}} //
                       > 
                           <Image
-                            source={item.image}
+                            source={{uri:item.imageURL}} // item.image //
                             style={{width:responsiveScreenWidth(40), marginRight:wp("2%"), height:responsiveScreenHeight(30), borderRadius:10}}
-                            image={item.image} //
+                            // image={{uri:item.imageURL}} // item.image
                             PlaceholderContent={<ActivityIndicator size="small" color="#0000ff" />} //
                           />
                           <View style={styles.imageOverlay}></View>

@@ -38,24 +38,22 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(async() => { connectToGetSkillsApi() }, [])
 
-  const renderItem = ({ item }) => (
-    <Item title={item.reviewerName} />
-  );
+  // const renderItem = ({ item }) => (
+  //   <Item title={item.reviewerName} />
+  // );
 
-  //  function renderPost(item) {
   const renderPost = item =>  { 
       return (
           <View style={styles.feedItem}> 
               <Image source={{uri:item.userProfilePic}} style={styles.avatar} /> 
               <View style={{ flex: 1 }}>
-                  <TouchableOpacity  onPress = { async() => {
-                        try {
-                          await SecureStore.setItemAsync('hostId', item.userId); //update hostId in SecureStore
-                        } catch (e) {
-                          console.log(e);
-                        }
-                        navigation.navigate('ProfileScreen') // when jump to Profile Screen, the navigation bars did not show up?? FIXME
-                  } }>
+                  <TouchableOpacity  
+                  onPress = { async() => { 
+                    let hostId = item.userId
+                    // console.log("from home", hostId) // test good
+                    navigation.navigate('VisitorProfileScreen', {hostId}) 
+                  } } // might have issue in passing item.userId, CHECK
+                  >  
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}> 
                         <View>
                             <Text style={styles.name}>{item.userFullName}</Text>

@@ -23,6 +23,7 @@ import AddSkillScreen from './AddSkillScreen';
 import moment from "moment";
 import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
+import {useIsFocused} from "@react-navigation/native"
 // import { DirectConnect } from 'aws-sdk';
 
 const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
@@ -31,10 +32,34 @@ const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
   </View>
 );
 
-const ProfileScreen = ({navigation}) => {
+const VisitorProfileScreen = ({navigation, route}) => {
+
+  // const hostId = route.params.hostId 
+
+  const [hostId, setHostId] = React.useState(route.params.hostId);
+  const isFocused = useIsFocused() 
+
+  useEffect(async()=>{
+    if (isFocused){
+      console.log('into profile', route.params.hostId) // check empty
+      setHostId( route.params.hostId )
+      let userToken = null;
+      try {
+          userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+      } catch (e) {
+          console.warn(e);
+      }
+      connectToProfileApi(userToken)
+    }
+    
+
+  },[isFocused]) 
+
+  // if hostId == userId(inStorage) => show button, else not (status variable)
+
+  const [isEdit, setIsEdit] = React.useState(false);
 
 
-  // const [isEdit, setIsEdit] = React.useState(false);
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -80,63 +105,59 @@ const ProfileScreen = ({navigation}) => {
     },
   ]
 
-  useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToProfileApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
-      connectToProfileApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(async() => {
+  //   if (isFocused){
+  //     let userToken = null;
+  //     try {
+  //         userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+  //     } catch (e) {
+  //         console.warn(e);
+  //     }
+  //     connectToProfileApi(userToken)
+  //   }
+    // const unsubscribe = navigation.addListener('focus', () => {
+    //   connectToProfileApi(userToken)
+    // });
+    // return unsubscribe;
+  // }, [isFocused]);//navigation
 
   useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToUserSkillsApi(userToken)
-    connectToLearnSkillsApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
+    if (isFocused){
+      let userToken = null;
+      try {
+          userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+      } catch (e) {
+          console.warn(e);
+      }
       connectToUserSkillsApi(userToken)
       connectToLearnSkillsApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }
+
+    // const unsubscribe = navigation.addListener('focus', () => {
+    //   connectToUserSkillsApi(userToken)
+    //   connectToLearnSkillsApi(userToken)
+    // });
+    // return unsubscribe;
+  }, [isFocused]); // navigation, 
   
   useEffect(async() => {
-    let userId = null; 
-    try {
-        userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
+    if (isFocused){
+      connectToGetReviewApi(hostId)
     }
-    connectToGetReviewApi(userId)
-    const unsubscribe = navigation.addListener('focus', () => {
-      connectToGetReviewApi(userId)
-    });
-    return unsubscribe;
-  }, [navigation]);
+    // const unsubscribe = navigation.addListener('focus', () => {
+    //   connectToGetReviewApi(hostId)
+    // });
+    // return unsubscribe;
+  }, [isFocused]); // navigation, 
 
   async function connectToProfileApi(userToken){
-    let userId = null;
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${userId}`,  {
+    axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${hostId}`,  {
             headers: {
               Authorization: `Bearer ${userToken}`  
             }
           })
         .then(function(response) {
+            console.log("test")
             setProfileData(response.data)
         })
         .catch(function(error) {
@@ -145,14 +166,8 @@ const ProfileScreen = ({navigation}) => {
   }
 
   async function connectToUserSkillsApi(userToken){
-    let userId = null;
     let status = 'Teaching';
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${userId}`,  { 
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/${hostId}?status=${status}`, { 
             headers: { 
               Authorization: `Bearer ${userToken}`  
             }
@@ -166,14 +181,8 @@ const ProfileScreen = ({navigation}) => {
   }
 
   async function connectToLearnSkillsApi(userToken){
-    let userId = null;
     let status = 'Learning';
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${userId}`,  { 
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/${hostId}?status=${status}`,  { 
             headers: { 
               Authorization: `Bearer ${userToken}`  
             }
@@ -186,8 +195,8 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
-  function connectToGetReviewApi(userId){
-    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${userId}`,  {
+  function connectToGetReviewApi(){
+    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${hostId}`,  {
             
           })
         .then(function(response) {
@@ -318,6 +327,7 @@ const ProfileScreen = ({navigation}) => {
             <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
               <AntDesign name="delete" size={18} color="black" />
             </TouchableOpacity>
+
           </View> 
           <Text style={[styles.about, {fontWeight:"600"}]}>Summary: </Text>
           <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.summary}</Text>
@@ -344,21 +354,7 @@ const ProfileScreen = ({navigation}) => {
           <View style={styles.recentItem}>
               <View style={styles.recentItemIndicator}></View>
               <View style={{width:270}}>
-
-              <View style={styles.skillBar}>
                 <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
-                {/* <View style={styles.skillBar}> */}
-                  {/* <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text> */}
-                  <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-                    <AntDesign name="edit" size={18} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
-                    <AntDesign name="delete" size={18} color="black" />
-                  </TouchableOpacity>
-                {/* </View>  */}
-              </View>
-
-
                 {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
                 <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
                 <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
@@ -404,16 +400,20 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
-  const renderHeader = () => { 
+  const renderHeader = () => { // style={{justifyContent:'space-between', paddingHorizontal:20, marginTop: 16,}}
     return (
-      <SafeAreaView style={styles.container}>
-
-        <View style={styles.titleBar}>
-          <Ionicons name="location-sharp" size={24} color="black">
-            <Text style={{fontSize:24}}>{profileData.city}, </Text>
-          </Ionicons>
-          <Text style={{fontSize:24}}>{profileData.state}</Text>
-          {/* <Text style={{fontSize:24}}>{profileData.country}</Text> */}
+      <SafeAreaView style={styles.container}> 
+        <View flexDirection="row" style={{justifyContent:'space-between', marginBottom:10}}> 
+          <TouchableOpacity onPress={() => {navigation.goBack()}}>
+            <Entypo name="back" size={32} color="black" style={{paddingLeft:20, marginTop: 16,}}/>
+          </TouchableOpacity>
+          <View flexDirection="row" style={{paddingRight:20, paddingTop:2}}>
+            <Ionicons name="location-sharp" size={24} color="black" style={{fontSize:24, marginTop: 16,}}>
+              <Text style={{fontSize:24, marginTop: 16,}}>{profileData.city}, </Text>
+            </Ionicons>
+            <Text style={{fontSize:24, marginTop: 16,}}>{profileData.state}</Text>
+            {/* <Text style={{fontSize:24}}>{profileData.country}</Text> */}
+          </View>
         </View>
 
         <View style={{alignSelf:"center"}}>
@@ -478,23 +478,12 @@ const ProfileScreen = ({navigation}) => {
 
   }
 
-  const addButtonHandler = async(title) => {
+  const addButtonHandler = (title) => {
     if ( title == "MY SKILLS"){
       navigation.navigate('AddSkillScreen')
     } else if ( title == "WANT TO LEARN" ){
       navigation.navigate('AddSkillScreen')
     } else if ( title == "REVIEWS" ){
-      let userId = null;
-      try {
-        userId = await SecureStore.getItemAsync('userId'); 
-      } catch (e) {
-          console.warn(e);
-      };
-      try {
-        await SecureStore.setItemAsync('hostId', userId); //update hostId in SecureStore
-      } catch (e) {
-        console.log(e);
-      }
       navigation.navigate('AddReviewScreen')
     }
 
@@ -510,11 +499,11 @@ const ProfileScreen = ({navigation}) => {
             <View style={styles.sectionContainer}>
               <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
                 <Text style={styles.sectionTitle}> {section.title} </Text>
-                {/* <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
+                <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
                   <Entypo name="email" size={24} color="black" />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <TouchableOpacity 
-                  // style = {{display:isEdit ? "block" : 'none'}}
+                  style = {{display:isEdit ? "block" : 'none'}}
                   onPress={()=>{ addButtonHandler(section.title) }} > 
                   <Entypo name="add-to-list" size={24} color="black" />
                 </TouchableOpacity>
@@ -532,7 +521,7 @@ const ProfileScreen = ({navigation}) => {
   );
 };
 
-export default ProfileScreen;
+export default VisitorProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -549,8 +538,8 @@ const styles = StyleSheet.create({
       width: undefined
   },
   titleBar: {
-      flexDirection: "row",
-      justifyContent: "center",
+      // flexDirection: "row",
+      // justifyContent: "space-between",
       marginTop: 24,
       marginHorizontal: 16
   },

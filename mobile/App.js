@@ -21,7 +21,8 @@ import AddReviewScreen from './screens/AddReviewScreen';
 import EditReviewScreen from './screens/EditReviewScreen';
 import ExploreScreen from './screens/ExploreScreen';
 import SkillDetailScreen from './screens/SkillDetailScreen';
-// import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen';
+import VisitorProfileScreen from './screens/VisitorProfileScreen';
 
 const Drawer = createDrawerNavigator(); 
 
@@ -170,7 +171,8 @@ const App = () => {
         <Drawer.Screen name="EditReviewScreen" component={EditReviewScreen} />
         <Drawer.Screen name="ExploreScreen" component={ExploreScreen} />
         <Drawer.Screen name="SkillDetailScreen" component={SkillDetailScreen} />
-        {/* <Drawer.Screen name="HomeScreen" component={HomeScreen} /> */}
+        <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+        <Drawer.Screen name="VisitorProfileScreen" component={VisitorProfileScreen} />
       </Drawer.Navigator>
     )
     :

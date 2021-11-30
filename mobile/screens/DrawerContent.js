@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // , {useEffect}
 import { View, StyleSheet } from 'react-native';
 import {
     Avatar,
@@ -10,14 +10,12 @@ import {
     TouchableRipple,
     Switch
 } from 'react-native-paper';
-
-import {
-    DrawerContentScrollView,
-    DrawerItem
-} from '@react-navigation/drawer';
-
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AuthContext } from '../components/context';
+import { useIsFocused } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
 
 export function DrawerContent(props) {
 
@@ -28,6 +26,48 @@ export function DrawerContent(props) {
         setIsDarkTheme(!isDarkTheme)
     }
 
+    const [profileData, setProfileData] = React.useState([]);
+
+    connectToProfileApi();
+
+    async function connectToProfileApi(){
+        let userToken = null;
+        try {
+            userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+        } catch (e) {
+            console.warn(e);
+        }
+        let hostId = null;
+        try {
+            hostId = await SecureStore.getItemAsync('userId'); 
+        } catch (e) {
+            console.warn(e);
+        };
+        // console.warn(hostId) // test issue ; FIXME
+    await axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${hostId}`,  {
+            headers: {
+                Authorization: `Bearer ${userToken}`  
+            }
+            })
+        .then(function(response) {
+            setProfileData(response.data)
+        })
+        .catch(function(error) {
+            console.warn(error)
+        });
+    }
+
+    // async function goToProfile() {
+    //     let hostId = null;
+    //     try {
+    //         hostId = await SecureStore.getItemAsync('userId'); 
+    //     } catch (e) {
+    //         console.warn(e);
+    //     };
+    //     props.navigation.navigate('Profile', hostId)
+
+    // } 
+    
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
@@ -41,7 +81,7 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>Weiyuan Wu</Title>
+                                <Title style={styles.title}>{profileData.firstName} {profileData.lastName}</Title>
                                 <Caption style={styles.caption}>@wwu</Caption>
                             </View>
                         </View>
@@ -79,7 +119,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label = "Profile"
-                            onPress={() => {props.navigation.navigate('Profile')}}
+                            onPress={() => { props.navigation.navigate('Profile')  }} //   goToProfile() 
                         />
                         <DrawerItem
                             icon = {({color, size}) => (
@@ -100,8 +140,8 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Settings" 
-                            onPress={() => {props.navigation.navigate('SettingScreen')}} // error: not handle by any navigator ??
+                            label="Change Pass word" 
+                            onPress={() => {props.navigation.navigate('ChangePasswordScreen')}} // error: not handle by any navigator ??
                         />
                         <DrawerItem
                             icon = {({color, size}) => (

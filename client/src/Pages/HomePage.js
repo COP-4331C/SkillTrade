@@ -35,15 +35,11 @@ const HomePage = () => {
   useEffect(() => {
     // Fetches the profile data
     axios.get(
-      "./api/user/profile",
+      "/api/user/profile",
       { headers: { Authorization: `Bearer ${token}` } }
     )
       .then(function (response) {
         setLoggedUserAvatar(response.data["profilePic"]);
-        setLoggedUserId(response.data["_id"]);
-        localStorage.setItem("loggedUserFirstName", response.data["firstName"]);
-        localStorage.setItem("loggedUserLastName", response.data["lastName"]);
-        localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
       })
       .catch(function (error) {
         console.log(error);
@@ -56,7 +52,6 @@ const HomePage = () => {
     )
       .then(function (response) {
         setLoggedUserId(response.data["userId"]);
-        localStorage.setItem('loggedUserId', response.data["userId"]);
       })
       .catch(console.log)
 
@@ -123,7 +118,6 @@ const HomePage = () => {
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}
             skillcountry={fetchedSkill.country}
-
           />
         </Grid>
       )

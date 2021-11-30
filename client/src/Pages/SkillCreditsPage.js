@@ -17,12 +17,11 @@ import axios from "axios";
 
 export default function ProfilePage(props) {
   const token = retrieveData("token");
-
   const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
 
   useEffect(() => {
     axios
-      .get("./api/user/profile", {
+      .get("/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(function (response) {

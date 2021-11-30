@@ -16,9 +16,14 @@ import ProfileIcon from "@mui/icons-material/AccountBox";
 import Button from "@mui/material/Button";
 import KeyIcon from "@mui/icons-material/VpnKey";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {retrieveData} from "./DataStorage";
 
 export default function AccountMenuMobile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
+  const token = retrieveData("token");
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -57,12 +62,24 @@ export default function AccountMenuMobile(props) {
     }
   }
 
-  let loggedUserAvatar;
-  if(props.loggedUserAvatar === undefined){
-    loggedUserAvatar = localStorage.getItem("loggedUserAvatar");
-  } else {
-    loggedUserAvatar = props.loggedUserAvatar;
-  }
+
+  useEffect(() => {
+
+    if ((props.loggedUserAvatar === undefined) || (props.loggedUserAvatar === "")) {
+      axios
+        .get("/api/user/profile", {
+          headers: {Authorization: `Bearer ${token}`},
+        })
+        .then(function (response) {
+          setLoggedUserAvatar(response.data["profilePic"]);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      setLoggedUserAvatar(props.loggedUserAvatar);
+    }
+  }, [props.loggedUserAvatar]);
 
   return (
     <React.Fragment>
@@ -78,6 +95,7 @@ export default function AccountMenuMobile(props) {
         {displayBackToHomePageButtonIfNeeded()}
         <IconButton onClick={handleClick} size="small" sx={{ marginLeft: 2 }}>
           <Avatar alt="User Avatar" src={loggedUserAvatar} />
+          {/*<Avatar alt="User Avatar" src={props.loggedUserAvatar ? props.loggedUserAvatar : getAvatar()} />*/}
         </IconButton>
       </Box>
       <Menu

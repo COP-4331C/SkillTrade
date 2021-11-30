@@ -27,12 +27,8 @@ import { Divider } from '@mui/material';
 
 export default function Resetpassword() {
 
-  const [firstName, setName] = useState(localStorage.getItem('loggedUserFirstName'));
-  const [lastName, setPwd] = useState(localStorage.getItem('loggedUserLastName'));
-  const [photo, setPhoto] = useState(localStorage.getItem("loggedUserAvatar"));
 
-
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     password:'',
     showPassword: false,
     confirm: '',

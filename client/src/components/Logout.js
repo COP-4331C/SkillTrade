@@ -1,7 +1,7 @@
 
 export function logoutUser() {
     try {
-        localStorage.removeItem('token_data');
+        localStorage.removeItem("token");
     }
     catch (e) {
         console.log(e.message);

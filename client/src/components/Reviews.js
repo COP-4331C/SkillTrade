@@ -32,7 +32,6 @@ export default function Reviews(props) {
     userID: props.userID,
     reviewerName: props.reviewerName,
     rating: props.rating,
-    location: props.location,
     message: props.message,
     newReview: props.newReview,
     reviewerID: props.reviewerID
@@ -228,7 +227,7 @@ export default function Reviews(props) {
   };
 
   const handleDeleteReview = () => {
-    const URL = `./api/review/delete-review/${props.reviewId}`;
+    const URL = `/api/review/delete-review/${props.reviewId}`;
     const config = {headers: {Authorization: `Bearer ${token}`}};
 
     // Saves the review
@@ -317,15 +316,6 @@ export default function Reviews(props) {
                   </IconButton>
                 </Box>
 
-              </Stack>
-
-              {/*********************************** Location  ************************************/}
-              <Stack direction={"row"} spacing={0.5} sx={{alignItems:"flex-end"}}>
-                <LocationIcon sx={{color:"secondary.light"}}/>
-                <Typography variant="body2" gutterBottom>
-                  {/*{props.location}*/}
-                  {review.location}
-                </Typography>
               </Stack>
 
               {/*********************************** Message  ************************************/}

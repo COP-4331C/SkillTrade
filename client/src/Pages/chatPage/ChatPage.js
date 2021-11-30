@@ -57,7 +57,7 @@ export default function ChatPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      let profileRes = await axios.get("./api/user/profile", {
+      let profileRes = await axios.get("/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLoggedUserAvatar(profileRes.data["profilePic"]);

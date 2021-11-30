@@ -11,7 +11,7 @@ import LoginPage from "./Pages/LoginPage";
 import Testcard from "./components/Testcard";
 import Addskills from "./components/Addskills";
 import Resetpassword from "./Pages/Resetpassword";
-import Changepassword from "./components/Changepassword";
+import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import SkillCreditsPage from "./Pages/SkillCreditsPage";
 import ChatPage from "./Pages/chatPage/ChatPage";
 // import Resetpassword from "./Pages/Resetpassword";
@@ -31,7 +31,7 @@ function App() {
             <Route path="/cards/:userId?" component={Addskills} />
             <Route path="/skillpage/:userId?" component={Skills} />
             <Route path="/Resetpassword" component={Resetpassword} />
-            <Route path="/change" component={Changepassword} />
+            <Route path="/change" component={ChangePasswordPage} />
             <Route path="/BuyCredits" component={SkillCreditsPage} />
             <Route path="/Chat" component={ChatPage} />
 

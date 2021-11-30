@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
@@ -11,31 +11,33 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import InputLabel from "@mui/material/InputLabel";
-import {Alert, Collapse, FormHelperText, Typography} from "@mui/material";
+import {Alert, Collapse, FormHelperText} from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Divider } from '@mui/material';
-import HomeNavBar from './HomeNavBar';
+import {Divider} from '@mui/material';
+import HomeNavBar from '../components/HomeNavBar';
+import {retrieveData} from "../components/DataStorage";
 
-export default function Changepassword(props) {
+export default function ChangePasswordPage() {
 
-  const [firstName, setName] = useState(localStorage.getItem('loggedUserFirstName'));
-  const [lastName, setPwd] = useState(localStorage.getItem('loggedUserLastName'));
-  const [photo, setPhoto] = useState(localStorage.getItem('loggedUserAvatar'));
+  const token = retrieveData('token');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [photo, setPhoto] = useState("");
 
 
   const [values, setValues] = React.useState({
-    password:'',
+    password: '',
     showPassword: false,
     confirm: '',
     showConfirm: false
   });
 
   const [values2, setValues2] = React.useState({
-    password2:'',
+    password2: '',
     showPassword2: false,
     confirm2: '',
     showConfirm2: false
@@ -44,7 +46,7 @@ export default function Changepassword(props) {
 //error message
   const [openMessage, setOpenMessage] = useState(false);
 
-  
+
 //show password for the password field
   const handleClickShowPassword = () => {
     setValues({
@@ -77,7 +79,7 @@ export default function Changepassword(props) {
     });
   };
 
-//
+
   const [agree, setAgree] = useState(false);
 
   const checkboxHandler = () => {
@@ -85,54 +87,59 @@ export default function Changepassword(props) {
   }
 
   const handleMouseDown = (event) => {
-    event.preventDefault();};
+    event.preventDefault();
+  };
 
   // const handleMouseDownConfirm = (event) => {
   //   event.preventDefault();};
 
-    const handleMouseDown2 = (event) => {
-      event.preventDefault();};
+  const handleMouseDown2 = (event) => {
+    event.preventDefault();
+  };
 
-      const handleMouseDownConfirm2 = (event) => {
-        event.preventDefault();};
+  const handleMouseDownConfirm2 = (event) => {
+    event.preventDefault();
+  };
 
 
   // Stores the password in the password variable
   const handleChangePasswordField = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });};
+    setValues({...values, [prop]: event.target.value});
+  };
 
-    const handleChangePasswordField2 = (prop) => (event) => {
-      setValues2({ ...values2, [prop]: event.target.value });};
+  const handleChangePasswordField2 = (prop) => (event) => {
+    setValues2({...values2, [prop]: event.target.value});
+  };
 
-      
 
   // Verification for eveything
   // const verification_length = 8
 
-  function valid(){
-    if(values2.password2 !== values2.confirm2)
+  function valid() {
+    if (values2.password2 !== values2.confirm2)
       return false;
-    else if(values2.password2 === values2.confirm2)
-      return 1;}
+    else if (values2.password2 === values2.confirm2)
+      return 1;
+  }
 
   //error messages
   //password valiadation variable
-  const [pwdError, setPwdError] = useState( {
-      state: false,
-      text: ""
-      });
-
-  const [confirmError, setconfirmError] = useState( {
+  const [pwdError, setPwdError] = useState({
     state: false,
     text: ""
   });
 
-  const [confirmName, setConfirmName] = useState( {
+  const [confirmError, setconfirmError] = useState({
     state: false,
     text: ""
   });
 
-  const [complexity, setComplexity] = useState( {
+  const [confirmName, setConfirmName] = useState({
+    state: false,
+    text: ""
+  });
+
+  const [complexity, setComplexity] = useState({
     state: false,
     text: ""
   });
@@ -145,7 +152,7 @@ export default function Changepassword(props) {
 
   const handleClose = () => {
     setOpen(false);
-    window.location.href='/profile';
+    window.location.href = '/profile';
   };
 
   function handleSubmitButton(event) {
@@ -154,8 +161,8 @@ export default function Changepassword(props) {
     setOpenMessage(false);
 
     setPwdError({
-        state: false,
-        text: ""
+      state: false,
+      text: ""
     });
 
     setconfirmError({
@@ -177,44 +184,32 @@ export default function Changepassword(props) {
     const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     const isOk = re.test(values2.password2);
 
-    console.log(isOk);
+    if (valid() && isOk) {
 
-    if (valid()&&isOk ) {
+      const token = localStorage.getItem('token');
+      const changedPayload = {
+        oldPassword: values.password,
+        newPassword: values2.password2
+      };
 
-    const token = localStorage.getItem('token');
-    const userId = "";
-    const chnagePayload = {
-          oldPassword: values.password,
-          newPassword: values2.password2
-        };
-    
-    // axios.patch(`/api/user/forgot-password/${!userId ? "" : userId}`,chnagePayload, {
-          axios.patch(`/api/user/change-password/${!userId ? "" : userId}`,chnagePayload, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-      .then((res) => {
-
-        console.log(res.data);
-        setOpen(true);
-
-        
+      axios.patch("/api/user/change-password", changedPayload, {
+        headers: {'Authorization': `Bearer ${token}`}
       })
-      .catch((err) => {
-        console.log(err);
-      })
+        .then((res) => {
+          setOpen(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
 
       //If any of the validation function fails
-    }
-     
-    else if (valid()!==1){
+    } else if (valid() !== 1) {
       // alert("Registration 1!" );
       setconfirmError({
         state: true,
         text: "Passwords do not match, please check again!"
       });
-    }
-
-    else if(!isOk){
+    } else if (!isOk) {
       // alert("Registration 2!" );
       setComplexity({
         state: true,
@@ -222,27 +217,40 @@ export default function Changepassword(props) {
       });
     }
 
-  
-  }
-  
 
+  }
+
+  useEffect(() => {
+
+    // Gets logged user's avatar, first & last name
+    axios.get(
+      "/api/user/profile",
+      {headers: {Authorization: `Bearer ${token}`}}
+    )
+      .then(function (response) {
+        setPhoto(response.data["profilePic"]);
+        setFirstName(response.data["firstName"]);
+        setLastName(response.data["lastName"]);
+      })
+      .catch(console.log)
+  }, []);
 
 /////////////////Interface/////////////////
 
   return (
     <Grid>
-      {/* <HomeNavBar/> */}
-      {/* <NavBar/> */}
+       <HomeNavBar/>
+
       <form onSubmit={handleSubmitButton}>
         <Paper elevation={3} style={{padding: 40, height: 'auto', width: 280, margin: '20px auto'}}>
 
           {/********************* Icon and title *********************/}
           <Grid align='center'>
-          <Avatar alt="User Pic" src={photo}/>
-            <h4> 
-              {firstName +" " + lastName} 
-              </h4>
-              <Divider variant="middle" style={{color: 'black', border: "1px solid"}}/>
+            <Avatar alt="User Pic" src={photo}/>
+            <h4>
+              {firstName + " " + lastName}
+            </h4>
+            <Divider variant="middle" style={{color: 'black', border: "1px solid"}}/>
             <h3>Change Password</h3>
           </Grid>
 
@@ -251,14 +259,14 @@ export default function Changepassword(props) {
           <Collapse in={openMessage}>
             <Alert
               severity="error"
-              sx={{ mb: 2 }}
+              sx={{mb: 2}}
             >
               <strong>Please check information provided!</strong>
             </Alert>
           </Collapse>
 
           {/********************* Old Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required  >
+          <FormControl sx={{width: "100%"}} variant="standard" required>
             {/* required error={ complexity.state} */}
             <InputLabel htmlFor="standard-adornment-password">Old Password</InputLabel>
             <Input
@@ -276,16 +284,16 @@ export default function Changepassword(props) {
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDown}
                   >
-                    {values.showPassword ? <Visibility />:<VisibilityOff />  }
+                    {values.showPassword ? <Visibility/> : <VisibilityOff/>}
                   </IconButton>
                 </InputAdornment>
               }
             />
-            
+
           </FormControl>
 
           {/********************* New Password field *********************/}
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={complexity.state} >
+          <FormControl sx={{width: "100%"}} variant="standard" required error={complexity.state}>
             <InputLabel htmlFor="standard-adornment-password2">New Password</InputLabel>
             <Input
               id="standard-adornment-password2"
@@ -302,7 +310,7 @@ export default function Changepassword(props) {
                     onClick={handleClickShowPassword2}
                     onMouseDown={handleMouseDown2}
                   >
-                    {values2.showPassword2 ? <Visibility />:<VisibilityOff />  }
+                    {values2.showPassword2 ? <Visibility/> : <VisibilityOff/>}
                   </IconButton>
                 </InputAdornment>
               }
@@ -310,7 +318,7 @@ export default function Changepassword(props) {
             <FormHelperText id="component-error-text">{complexity.text}</FormHelperText>
           </FormControl>
 
-          <FormControl sx={{  width: "100%"  }} variant="standard" required error={confirmError.state}>
+          <FormControl sx={{width: "100%"}} variant="standard" required error={confirmError.state}>
             <InputLabel htmlFor="standard-adornment-confirm2">Confirm New Password</InputLabel>
             <Input
               id="standard-adornment-confirm2"
@@ -326,7 +334,7 @@ export default function Changepassword(props) {
                     onClick={handleClickShowConfirm2}
                     onMouseDown={handleMouseDownConfirm2}
                   >
-                    {values2.showConfirm2 ? <Visibility />:<VisibilityOff /> }
+                    {values2.showConfirm2 ? <Visibility/> : <VisibilityOff/>}
                   </IconButton>
                 </InputAdornment>
               }
@@ -341,7 +349,7 @@ export default function Changepassword(props) {
             color='secondary'
             variant='contained'
             fullWidth
-            style={{ margin: '20px 0' }}
+            style={{margin: '20px 0'}}
           >
             Submit
           </Button>
@@ -351,7 +359,8 @@ export default function Changepassword(props) {
               <DialogTitle>Password Changed!</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                Please know that your account password has been changed. Do not Share the password with anyone since it may be a Security Hazard!
+                  Please know that your account password has been changed. Do not Share the password with anyone since
+                  it may be a Security Hazard!
                 </DialogContentText>
               </DialogContent>
               <DialogActions>

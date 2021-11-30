@@ -28,7 +28,6 @@ import Skeleton from '@mui/material/Skeleton';
 import { Paper } from '@mui/material';
 
 
-
 export default function ProfilePage(props) {
   const token = retrieveData('token');
   const [aboutMeText, setAboutMeText] = useState("");
@@ -73,15 +72,12 @@ export default function ProfilePage(props) {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
-  const [loggedUser, setLoggedUser] = useState({
-    firstName: localStorage.getItem("loggedUserFirstName"),
-    lastName: localStorage.getItem("loggedUserLastName"),
-    avatar: localStorage.getItem("loggedUserAvatar"),
-    id: localStorage.getItem("loggedUserId"),
-    location: "TODO: [City, State, Country]"
-  });
+  const [loggedUserId, setLoggedUserId] = useState("");
+  const [loggedUserFirstName, setLoggedFirstName] = useState("");
+  const [loggedUserLastName, setLoggedLastName] = useState("");
+  const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
   const [reviewMessages, setReviewMessages] = useState([]);
-  const [mumOfReviews, setNumOfReviews] = useState(0);
+  // const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
   const [city, setCity] = useState("");
@@ -103,7 +99,7 @@ export default function ProfilePage(props) {
     text: ""
   })
   const [loading, setLoading] = useState(true);
-
+  const userId = props.match.params?.userId ?? ""
 
   function enterEditMode() {
     setEditMode(true);                      // Turns edit mode mode (set variable to true)
@@ -318,7 +314,8 @@ export default function ProfilePage(props) {
   }
 
   function handleOnMouseOver() {
-    if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))) {
+    // if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))) {
+    if (!inEditMode && editPermission) {
       setDisplayEditButton("inline-flex");
     }
   }
@@ -429,7 +426,7 @@ export default function ProfilePage(props) {
 
     if (editPermission) {
 
-      const URL = "./api/user/upload-profile-pic";
+      const URL = "/api/user/upload-profile-pic";
       const config = {
         headers: { Authorization: `Bearer ${token}`, 'content-type': 'multipart/form-data' }
       };
@@ -438,25 +435,55 @@ export default function ProfilePage(props) {
       axios.post(URL, formData, config)
         .then(function (response) {
           setPhoto(response.data.URL);
-          localStorage.setItem("loggedUserAvatar", response.data.URL);
-          setLoggedUser({
-            ...loggedUser,
-            avatar: response.data.URL
-          })
+          setLoggedUserAvatar(response.data.URL);
+          // localStorage.setItem("loggedUserAvatar", response.data.URL);
+          // setLoggedUser({
+          //   ...loggedUser,
+          //   avatar: response.data.URL
+          // })
         })
         .catch(console.log);
     }
   }
 
-  // function getProfileData() {
+
   const getProfileData = async () => {
+    let userIdToFetchReviewsFor;
+
+    // Fetches the logged user's Id
+    try {
+      const response = await axios.get(
+        "/api/user/id",
+        {headers: {Authorization: `Bearer ${token}`}}
+      );
+      setLoggedUserId(response.data["userId"]);
+      userIdToFetchReviewsFor = response.data["userId"];
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      // Gets logged user's avatar, first & last name
+      const response = await axios.get(
+        "/api/user/profile",
+        { headers: { Authorization: `Bearer ${token}` }}
+      )
+      setLoggedUserAvatar(response.data["profilePic"]);
+      setLoggedFirstName(response.data["firstName"]);
+      setLoggedLastName(response.data["lastName"]);
+
+    } catch (error){
+      console.log(error);
+    }
+
+
 
     try {
       // Fetches the profile data
       // const response = await axios.get(URL, config);
       const response = await axios.get(
         `/api/user/profile/${!userId ? "" : userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` }}
       );
 
       setFirstName(response.data["firstName"]);
@@ -469,23 +496,25 @@ export default function ProfilePage(props) {
       setCity(response.data["city"]);
       setState(response.data["state"]);
       setCountry(response.data["country"]);
-      if(!userId) {
-        localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
+
+
+
+      if(userId !== "") {
+        // localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
+        userIdToFetchReviewsFor = userId;
+        console.log(userIdToFetchReviewsFor);
       }
 
       // Fetches reviews
       axios.get(
-        `/api/review/get-reviews/${userId}`,
+        `/api/review/get-reviews/${userIdToFetchReviewsFor}`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
         .then(function (response) {
           setReviewMessages(response.data);
-          setNumOfReviews(response.data.length);
+          // setNumOfReviews(response.data.length);
         })
-        .catch(function (error) {
-          console.log(error);
-        });
-
+        .catch(console.log);
 
     } catch (error) {
       console.log(error);
@@ -505,7 +534,7 @@ export default function ProfilePage(props) {
       .then((res) => {
         setSkillPosts(res.data);
 
-        localStorage.setItem('skilledUserID', res.data[0]["userId"]);
+        // localStorage.setItem('skilledUserID', res.data[0]["userId"]);
         // console.log(res.data["country"]);
         // console.log("userid"+ userId)
 
@@ -521,6 +550,8 @@ export default function ProfilePage(props) {
       //  the owner of the profile page. For now, we'll keep the
       //  setEditPermission = true below. (Note: we can't set editPermission,
       //  to then read its state immediately; it does not work.
+
+      // if(localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))
 
       if (editPermission) {
         setDisableImageUpload(false);
@@ -556,7 +587,6 @@ export default function ProfilePage(props) {
         avatar={fetchedReview.authorProfilePic}
         reviewerName={fetchedReview.authorFullName}
         rating={fetchedReview.rating}
-        location={"[Not provided]"}
         message={fetchedReview.content}
         newReview={false}
         reviewId={fetchedReview._id}
@@ -620,10 +650,10 @@ export default function ProfilePage(props) {
     setNewReviewForm(
       <Reviews
         // avatar={"https://mui.com/static/images/avatar/6.jpg"}
-        avatar={photo}
+        avatar={loggedUserAvatar}
         userID={userId}
-        reviewerId={loggedUser.id}
-        reviewerName={loggedUser.firstName.concat(" ", loggedUser.lastName)}
+        reviewerId={loggedUserId}
+        reviewerName={loggedUserFirstName.concat(" ", loggedUserLastName)}
         rating={5}
         message=""
         newReview={newReview}
@@ -635,11 +665,11 @@ export default function ProfilePage(props) {
     );
   }
 
-  const userId = props.match.params?.userId ?? ""
+  // const userId = props.match.params?.userId ?? ""
 
   return (
     <Box sx={{ flex: 1 }}>
-      <HomeNavBar loggedUserAvatar={loggedUser.avatar} />
+      <HomeNavBar loggedUserAvatar={loggedUserAvatar} />
 
       {/************************* Main Box ***********************/}
       <Box

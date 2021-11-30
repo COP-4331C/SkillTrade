@@ -76,6 +76,7 @@ export default function ProfilePage(props) {
   const [loggedUser, setLoggedUser] = useState({
     firstName: localStorage.getItem("loggedUserFirstName"),
     lastName: localStorage.getItem("loggedUserLastName"),
+    avatar: localStorage.getItem("loggedUserAvatar"),
     id: localStorage.getItem("loggedUserId"),
     location: "TODO: [City, State, Country]"
   });
@@ -317,8 +318,7 @@ export default function ProfilePage(props) {
   }
 
   function handleOnMouseOver() {
-    if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('currentID'))) {
-
+    if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))) {
       setDisplayEditButton("inline-flex");
     }
   }
@@ -438,6 +438,11 @@ export default function ProfilePage(props) {
       axios.post(URL, formData, config)
         .then(function (response) {
           setPhoto(response.data.URL);
+          localStorage.setItem("loggedUserAvatar", response.data.URL);
+          setLoggedUser({
+            ...loggedUser,
+            avatar: response.data.URL
+          })
         })
         .catch(console.log);
     }
@@ -445,13 +450,6 @@ export default function ProfilePage(props) {
 
   // function getProfileData() {
   const getProfileData = async () => {
-
-    // const userId = "61894e2ab7293c19980829a2";
-    // const userId = "";
-    // setProfileUserID("61887889e62859a35bc0de9c");
-    // const userId = "";
-    // const URL = `./api/user/profile/${!userId ? "" : userId}`;
-    // const config = { headers: {Authorization: `Bearer ${token}`}};
 
     try {
       // Fetches the profile data
@@ -471,14 +469,9 @@ export default function ProfilePage(props) {
       setCity(response.data["city"]);
       setState(response.data["state"]);
       setCountry(response.data["country"]);
-      localStorage.setItem('recent-image', response.data["profilePic"]);
-      localStorage.setItem('firstName', response.data["firstName"]);
-      localStorage.setItem('lastName', response.data["lastName"]);
-      localStorage.setItem('userID', response.data["_id"]);
-
-
-      // console.log( response.data);
-      // console.log("user ID: " + response.data["_id"]);
+      if(!userId) {
+        localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
+      }
 
       // Fetches reviews
       axios.get(
@@ -646,8 +639,7 @@ export default function ProfilePage(props) {
 
   return (
     <Box sx={{ flex: 1 }}>
-      <HomeNavBar loggedUserAvatar={photo} />
-      {/*<HomeNavBar />*/}
+      <HomeNavBar loggedUserAvatar={loggedUser.avatar} />
 
       {/************************* Main Box ***********************/}
       <Box

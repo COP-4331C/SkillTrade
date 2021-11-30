@@ -43,6 +43,7 @@ const HomePage = () => {
         setLoggedUserId(response.data["_id"]);
         localStorage.setItem("loggedUserFirstName", response.data["firstName"]);
         localStorage.setItem("loggedUserLastName", response.data["lastName"]);
+        localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
       })
       .catch(function (error) {
         console.log(error);
@@ -55,7 +56,7 @@ const HomePage = () => {
     )
       .then(function (response) {
         setLoggedUserId(response.data["userId"]);
-        localStorage.setItem('currentID', response.data["userId"]);
+        localStorage.setItem('loggedUserId', response.data["userId"]);
       })
       .catch(console.log)
 

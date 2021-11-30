@@ -22,9 +22,9 @@ import HomeNavBar from './HomeNavBar';
 
 export default function Changepassword(props) {
 
-  const [firstName, setName] = useState(localStorage.getItem('firstName'));
-  const [lastName, setPwd] = useState(localStorage.getItem('lastName'));
-  const [photo, setPhoto] = useState(localStorage.getItem('recent-image'));
+  const [firstName, setName] = useState(localStorage.getItem('loggedUserFirstName'));
+  const [lastName, setPwd] = useState(localStorage.getItem('loggedUserLastName'));
+  const [photo, setPhoto] = useState(localStorage.getItem('loggedUserAvatar'));
 
 
   const [values, setValues] = React.useState({

@@ -20,6 +20,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 export default function AccountMenuMobile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,6 +57,13 @@ export default function AccountMenuMobile(props) {
     }
   }
 
+  let loggedUserAvatar;
+  if(props.loggedUserAvatar === undefined){
+    loggedUserAvatar = localStorage.getItem("loggedUserAvatar");
+  } else {
+    loggedUserAvatar = props.loggedUserAvatar;
+  }
+
   return (
     <React.Fragment>
       <Box
@@ -69,10 +77,7 @@ export default function AccountMenuMobile(props) {
       >
         {displayBackToHomePageButtonIfNeeded()}
         <IconButton onClick={handleClick} size="small" sx={{ marginLeft: 2 }}>
-          {/*<Avatar alt={firstName.charAt(0) + " " + lastName.charAt(0)} src={props.loggedUserAvatar} >*/}
-          <Avatar alt="User Avatar" src={props.loggedUserAvatar}>
-            {/*{firstName.charAt(0) + " " + lastName.charAt(0)}*/}
-          </Avatar>
+          <Avatar alt="User Avatar" src={loggedUserAvatar} />
         </IconButton>
       </Box>
       <Menu

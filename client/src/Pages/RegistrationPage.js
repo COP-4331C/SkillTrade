@@ -16,6 +16,11 @@ import TextField from '@mui/material/TextField';
 import { Link as RouterLink } from 'react-router-dom';
 import InputLabel from "@mui/material/InputLabel";
 import {Alert, Collapse, FormHelperText} from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import AppNavBar from '../components/AppNavBar';
 import { Theme } from '../components/Theme';
 
@@ -113,12 +118,16 @@ export default function Registration() {
     text: ""
   });
 
-  // const styles = {
-  //   helper: {
-  //     color: 'red',
-  //     fontSize: '.8em',
-  //   }
-  // }
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  
+  const handleClose = () => {
+    setOpen(false);
+    window.location.href='/Login';
+  };
 
 //submit handeler
   function handleSubmitButton(event) {
@@ -166,7 +175,7 @@ export default function Registration() {
       axios.post(URL, registerPayload)
         .then(function (response) {
           console.log(response);
-          window.location.href='/Login';
+          setOpen(true);
         })
 
 
@@ -175,12 +184,6 @@ export default function Registration() {
 
       //If any of the validation function fails
     }
-      // else if(validateInputLength()!==1) {
-      //   setPwdError({
-      //     state: true,
-      //     text: "Minimum password is 8 characters"
-      //   });
-    // }
 
     else if (valid()!==1){
       // alert("Registration 1!" );
@@ -350,6 +353,22 @@ export default function Registration() {
           >
             Register
           </Button>
+
+          <div>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>User Registered!</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Welcome to SkillTrade!. Please verify your email via the link we just sent you to your email address, to enjoy our App to our fullest extent!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                {/* <Button onClick={handleClose}>Subscribe</Button> */}
+              </DialogActions>
+            </Dialog>
+          </div>
+
           {/* </Link> */}
 
           {/********************* already have an account  *********************/}

@@ -145,7 +145,7 @@ export default function Changepassword(props) {
 
   const handleClose = () => {
     setOpen(false);
-    window.location.href='/Login';
+    window.location.href='/profile';
   };
 
   function handleSubmitButton(event) {
@@ -196,6 +196,7 @@ export default function Changepassword(props) {
 
         console.log(res.data);
         setOpen(true);
+
         
       })
       .catch((err) => {
@@ -230,7 +231,7 @@ export default function Changepassword(props) {
 
   return (
     <Grid>
-      <HomeNavBar/>
+      {/* <HomeNavBar/> */}
       {/* <NavBar/> */}
       <form onSubmit={handleSubmitButton}>
         <Paper elevation={3} style={{padding: 40, height: 'auto', width: 280, margin: '20px auto'}}>
@@ -346,19 +347,19 @@ export default function Changepassword(props) {
           </Button>
           {/* Test */}
           <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Password Changed!</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please know that your account password has been changed. Do not Share the password with anyone since it may be a Security Hazard!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          {/* <Button onClick={handleClose}>Subscribe</Button> */}
-        </DialogActions>
-      </Dialog>
-    </div>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Password Changed!</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                Please know that your account password has been changed. Do not Share the password with anyone since it may be a Security Hazard!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                {/* <Button onClick={handleClose}>Subscribe</Button> */}
+              </DialogActions>
+            </Dialog>
+          </div>
         </Paper>
       </form>
     </Grid>

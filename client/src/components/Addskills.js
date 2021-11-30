@@ -5,12 +5,14 @@ import React, {useEffect, useState} from 'react';
 import Grid from '@mui/material/Grid'
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import {Divider, Fade} from "@mui/material";
-import {styled} from '@mui/material/styles';
 import SaveIcon from "@mui/icons-material/Save";
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
-import axios from 'axios';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';import axios from 'axios';
 import { Avatar } from '@mui/material';
 import { Modal } from '@mui/material';
 import { Paper } from '@mui/material';
@@ -21,8 +23,8 @@ const loginModalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
-  // width: "auto",
+  // width: 400,
+  width: "auto",
   overflow: "scroll"
 };
 
@@ -76,6 +78,17 @@ function refreshPage() {
   window.location.reload(false);
 }
 
+const [openMod, setopenMod] = React.useState(false);
+
+const handleClickOpen = () => {
+  setopenMod(true);
+};
+
+const handleCloseMod = () => {
+  setopenMod(false);
+  refreshPage();
+};
+
 // Handles the onClick event of the Save button
 function handleSave() {
   let okToSaveData = true;
@@ -122,6 +135,7 @@ function handleSave() {
     })
     .then((res) => {
       console.log("success")
+      setopenMod(false)
     })
     .catch((err) => {
       console.log(err);
@@ -181,6 +195,7 @@ function handleOnChangePrice(e) {
 
   return (
     <div >
+      {/* <form onSubmit={handleSave}> */}
       <Paper variant="outlined" 
             square 
             style={{ borderWidth:"0px"}}
@@ -194,6 +209,7 @@ function handleOnChangePrice(e) {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        // alignItems="center"
       >
       <Box sx={loginModalStyle} style={{overflow:"hidden"}} >
 
@@ -210,7 +226,7 @@ function handleOnChangePrice(e) {
           </Grid>
 
         {/*************************** What Skills can be taught (Edit Mode) ************************************/}
-            <TextField
+            <TextField required
               label="How to ..."
               multiline
               variant="filled"
@@ -224,7 +240,7 @@ function handleOnChangePrice(e) {
             />
 
         {/*************************** Explanation on what can be taught (Edit Mode) ************************************/}
-            <TextField
+            <TextField required
               label="Brief explanation of the skill"
               // color="secondary"
               // className={classes.root}
@@ -246,7 +262,7 @@ function handleOnChangePrice(e) {
           <Grid container>
 
             <Grid item xs={5}>
-              <TextField
+              <TextField required
                 label="City"
                 variant="filled"
                 rows={1}
@@ -260,7 +276,7 @@ function handleOnChangePrice(e) {
             </Grid>
 
             <Grid item xs={4}>
-              <TextField
+              <TextField required
                 label="State"
                 variant="filled"
                 rows={1}
@@ -274,7 +290,7 @@ function handleOnChangePrice(e) {
             </Grid>
 
             <Grid item xs={3}>
-              <TextField
+              <TextField required
                 label="Price"
                 variant="filled"
                 rows={1}
@@ -296,8 +312,8 @@ function handleOnChangePrice(e) {
               alignItems: 'safe center',
               flexWrap: "wrap-reverse"
             }}>
-              <Grid container justifycontent="center" >
-                
+              <Grid container alignItems="center" >
+
                 <Grid item xs={3}>
                   {/* <Fade in={fade}> */}
                     <Button
@@ -315,12 +331,25 @@ function handleOnChangePrice(e) {
                     <Button
                       color="secondary"
                       variant="contained"
-                      onClick={handleSave }
-                      // type="submit"
-                      // onClick={editSkills }
-                      // sx={{display: displayButton}}
+                      // type='submit'
+                      onClick={handleClickOpen}
+                      // handleClickOpen
                     ><SaveIcon/>
                     </Button>
+                    <div>
+                      <Dialog open={openMod} onClose={handleCloseMod}>
+                        <DialogTitle>Add Skill!</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Please make sure the the input information is correct for your skill. Hit save once confirmed to add your Brand New Skill!
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleSave}>Save</Button>
+                          {/* <Button onClick={handleClose}>Subscribe</Button> */}
+                        </DialogActions>
+                      </Dialog>
+                    </div>
 
                   {/* </Fade> */}
                 </Grid>
@@ -334,6 +363,7 @@ function handleOnChangePrice(e) {
     </Grid>
     </Box>
     </Modal>
+    {/* </form> */}
     </div>
   );
 }

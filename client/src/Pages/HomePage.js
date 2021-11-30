@@ -101,13 +101,11 @@ const HomePage = () => {
             skillid={fetchedSkill._id}
             skilldescription = {fetchedSkill.summary}
             skillname = {fetchedSkill.title}
-            // skilldescription = {fetchedSkill.description}
             skillcity = {fetchedSkill.city}
             skillstate = {fetchedSkill.state}
             skillimage = {fetchedSkill.imageURL}
             skilluserid = {fetchedSkill.userFullName}
             skilluserdirectid = {fetchedSkill.userId}
-            // avatar={fetchedReview.price}
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}
           />
@@ -210,8 +208,11 @@ const HomePage = () => {
 
       {/******************************** Skill Posts *************************************************/}
       {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
-      {loading && skillListSkeleton()}
-      {!loading && skillList()}
+      <Grid container sx={{marginLeft:"5"}}>
+        {loading && skillListSkeleton()}
+        {!loading && skillList()}
+      </Grid>
+      
 
 
       {/******************************** Pagination *************************************************/}

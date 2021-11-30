@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import { Divider, Fade } from "@mui/material";
+import { Divider, Fade, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SaveIcon from "@mui/icons-material/Save";
 import {Theme} from "../components/Theme";
@@ -20,10 +20,15 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Paper } from '@mui/material';
 import { Avatar } from '@mui/material';
 import axios from 'axios';
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import {Link as RouterLink} from "react-router-dom";
-import ProfilePage from '../Pages/ProfilePage';
-import { Redirect } from 'react-router';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+// import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+// import {Link as RouterLink} from "react-router-dom";
+// import ProfilePage from '../Pages/ProfilePage';
+// import { Redirect } from 'react-router';
 
 
 export default function Testcard(props) {
@@ -48,6 +53,9 @@ export default function Testcard(props) {
   //City and State
   const [cityAdd, setCityAdd] = useState(props.skillcity);
   const [stateAdd, setStateAdd] = useState(props.skillstate);
+  const [cAdd, setcAdd] = useState(props.skillcountry);
+
+
 
   //Skills explanation display/edit mode variable
   const [displayAboutMeText2, setDisplayAboutMeText2] = useState("block");
@@ -63,6 +71,7 @@ export default function Testcard(props) {
   //
   const [cityAddTemp, setcityAddTemp] = useState("");
   const [stateAddTemp, setstateAddTemp] = useState("");
+  const [cAddTemp, setcAddTemp] = useState("");
 
   const [editPermission, setEditPermission] = useState(true);
   const [mousePointer, setMousePointer] = useState("");
@@ -97,7 +106,7 @@ export default function Testcard(props) {
 
     setcityAddTemp(cityAdd); // Copies city name to editable text fields
     setstateAddTemp(stateAdd); // Copies state name to editable text fields
-
+    // setcAddTemp(cAdd);
     setpriceTemp(price);
 
     setAboutMeTextTemp(aboutMeText); // Copies Skills text to editable text field
@@ -177,6 +186,7 @@ export default function Testcard(props) {
       setAboutMeText(aboutMeTextTemp);
       setAboutMeText2(aboutMeText2Temp);
       setPrice(priceTemp);
+      setcAdd(cAddTemp);
 
       const token = localStorage.getItem("token");
       //value to commit to Backend changable_fields
@@ -188,6 +198,7 @@ export default function Testcard(props) {
         status: "Teaching",
         city: cityAddTemp,
         state: stateAddTemp,
+        country: cAddTemp,
       };
 
       console.log(token);
@@ -211,6 +222,17 @@ export default function Testcard(props) {
     exitEditMode();
   }
 
+  const [openDel, setOpenDel] = React.useState(false);
+
+  const handleClickOpenDel = () => {
+    setOpenDel(true);
+  };
+
+  const handleCloseDel = () => {
+    setOpenDel(false);
+    refreshPage() ;
+};
+
   //Delete Skill Axios Delete
   function handleDeleteButton() {
     const token = localStorage.getItem("token");
@@ -222,6 +244,7 @@ export default function Testcard(props) {
       })
       .then((res) => {
         console.log("success");
+        setOpenDel(true);
       })
       .catch((err) => {
         console.log(err);
@@ -289,6 +312,10 @@ export default function Testcard(props) {
     setstateAddTemp(e.target.value);
   }
 
+  function handleOnChangeCAddress(e) {
+    setcAddTemp(e.target.value);
+  }
+
   const Input = styled("input")({
     display: "none",
   });
@@ -306,12 +333,10 @@ export default function Testcard(props) {
           "content-type": "multipart/form-data",
         },
       })
-      // axios.post(URL, formData, config)
       .then(function (response) {
         setPhoto(response.data.URL);
       })
       .catch("error" + console.log);
-    // }
   }
 
   useEffect(() => {
@@ -337,6 +362,7 @@ export default function Testcard(props) {
           borderRadius: 5,
           borderColor: "black",
           width: "350px",
+          paddingRight:"2"
         }}
       >
         {/* //start of the image-header// */}
@@ -466,14 +492,14 @@ export default function Testcard(props) {
               variant="outlined"
               square
               style={{ position: "relative", borderWidth: "0px" }}
-              sx={{ height: "108px", display: displayContainer }}
+              sx={{ height: "120px", display: displayContainer }}
             >
               <Grid container>
                 <Grid item xs={2}>
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer }}
+                    sx={{ display: displayContainer, marginTop:1 }}
                   >
                     <DescriptionIcon />
                   </IconButton>
@@ -481,8 +507,9 @@ export default function Testcard(props) {
 
                 <Grid item xs={10}>
                   <Typography
-                    padding="8px"
+                    paddingTop="8px"
                     style={{
+                      
                       alignItems: "center",
                       // position: "absolute",
                       textAlign: "left",
@@ -498,6 +525,7 @@ export default function Testcard(props) {
                       display: displayAboutMeText2,
                       flexWrap: "wrap",
                       alignContent: "center",
+                      marginTop:1
                     }}
                   >
                     {aboutMeText2}
@@ -555,7 +583,7 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer }}
+                    sx={{ display: displayContainer, paddingTop:0, marginTop:2 }}
                   >
                     <PersonPinCircleIcon />
                   </IconButton>
@@ -564,7 +592,7 @@ export default function Testcard(props) {
                 {/* //City// */}
                 <Grid item xs={3}>
                   <Typography
-                    padding="8px"
+                    // padding="8px"
                     style={{
                       alignItems: "center",
                       // position: "absolute",
@@ -580,16 +608,17 @@ export default function Testcard(props) {
                       display: displayAddress,
                       flexWrap: "wrap",
                       alignContent: "center",
+                      marginTop:2
                     }}
                   >
                     {cityAdd + " "}
                   </Typography>
                 </Grid>
 
-                {/* //Address// */}
-                <Grid item xs={4}>
+                {/* //State// */}
+                <Grid item xs={3}>
                   <Typography
-                    padding="8px"
+                    // padding="8px"
                     style={{
                       alignItems: "center",
                       // position: "absolute",
@@ -605,11 +634,39 @@ export default function Testcard(props) {
                       display: displayAddress,
                       flexWrap: "wrap",
                       alignContent: "center",
+                      marginTop:2
                     }}
                   >
                     {stateAdd}
                   </Typography>
                 </Grid>
+
+                {/* //Country// */}
+                <Grid item xs={3}>
+                  <Typography
+                    // padding="8px"
+                    style={{
+                      alignItems: "center",
+                      // position: "absolute",
+                      textAlign: "left",
+                      width: "100%",
+                      left: "50%",
+                      top: "50%",
+                      // transform:"translate(-50%,-50%)"
+                    }}
+                    variant="body4"
+                    sx={{
+                      fontWeight: 600,
+                      display: displayAddress,
+                      flexWrap: "wrap",
+                      alignContent: "center",
+                      marginTop:2
+                    }}
+                  >
+                    {cAdd}
+                  </Typography>
+                </Grid>
+
               </Grid>
             </Paper>
           </div>
@@ -619,7 +676,7 @@ export default function Testcard(props) {
           {/*************************** LOCATION (Edit Mode) ************************************/}
 
           <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 label="City"
                 variant="filled"
@@ -636,7 +693,7 @@ export default function Testcard(props) {
                 // error={aboutMeText2Error.state}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 label="State"
                 variant="filled"
@@ -644,6 +701,23 @@ export default function Testcard(props) {
                 value={stateAddTemp}
                 fullWidth
                 onChange={handleOnChangeStateAddress}
+                sx={{
+                  display: displayEditFields,
+                  color: "black",
+                  marginTop: "10px",
+                }}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Country"
+                variant="filled"
+                rows={1}
+                value={cAddTemp}
+                fullWidth
+                onChange={handleOnChangeCAddress}
                 sx={{
                   display: displayEditFields,
                   color: "black",
@@ -744,19 +818,19 @@ export default function Testcard(props) {
               flexWrap: "wrap-reverse",
             }}
           >
-            <Grid container justifyContent="center">
+            <Grid container justifyContent="center" >
               <Grid
                 item
                 xs={3}
                 sx={{ paddingBottom: 0, paddingTop: 0 }}
                 style={{ paddingBottom: 0, paddingTop: 0 }}
-              >
+                >
                 <Fade in={fade}>
                   <Button
                     variant="outlined"
                     style={{ backgroundColor: Theme.palette.third.notmain }}
-                    onClick={handleDeleteButton}
-                    sx={{ display: displayButton }}
+                    onClick={handleClickOpenDel}
+                    sx={{ display: displayButton, marginTop:1 }}
                   >
                     {" "}
                     <DeleteForeverIcon />
@@ -764,13 +838,13 @@ export default function Testcard(props) {
                 </Fade>
               </Grid>
 
-              <Grid item xs={3}>
+              <Grid item xs={3} l={1}>
                 <Fade in={fade}>
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={handleCancelButton}
-                    sx={{ display: displayButton }}
+                    sx={{ display: displayButton, marginTop:1 }}
                   >
                     {" "}
                     <CancelPresentationIcon />
@@ -786,12 +860,28 @@ export default function Testcard(props) {
                     onClick={handleSave}
                     // type="submit"
                     // onClick={editSkills }
-                    sx={{ display: displayButton }}
+                    sx={{ display: displayButton, marginTop:1 }}
                   >
                     <SaveIcon />
                   </Button>
                 </Fade>
               </Grid>
+
+              <div>
+                <Dialog open={openDel} onClose={handleCloseDel}>
+                  <DialogTitle>Delete Skill!</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                    Are you sure you want to delete this skill? Rememeber this change can not be undone!
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDel}>Cancel</Button>
+                    <Button onClick={handleDeleteButton}>Delete</Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+
             </Grid>
 
             {/******************** Cancel+SAVE Button DONE *********************/}
@@ -813,32 +903,26 @@ export default function Testcard(props) {
           onMouseLeave={handleOnMouseLeave}
         >
           <Grid item xs={3} justifyContent="left">
+          <Link href={'profile/'+props.skilluserdirectid}
+                style={{ textDecoration: 'none' }} >
             <Avatar alt="User Pic" src={props.skilluserpic} />
+          </Link>
           </Grid>
 
         <Grid item xs={6} justifyContent="left">
-          {/* <Typography
-              variant={"body5"}
-              sx={{
-                textAlign: "left",
-                marginTop: "20px",
-                color: "black",
-                fontWeight: 600,
-              }}
-            >
-              {props.skilluserid}
-          </Typography> */}
-          <Button
-              // onClick={handleGoProfile}
-              sx={{
+          
+          <Link href={'profile/'+props.skilluserdirectid}
+            style={{ textDecoration: 'none' }} 
+                sx={{
                 textAlign: "left",
                 marginTop: "20px",
                 color: "black",
                 fontWeight: 600
-              }}
-            >
+              }}>
+
               {props.skilluserid}
-          </Button>
+
+        </Link>
         </Grid>
 
           <Grid item xs={3} justifyContent="right">

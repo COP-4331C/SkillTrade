@@ -46,7 +46,15 @@ const HomePage = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, [])
+
+      axios.get(
+        "api/user/id",{headers: {Authorization: `Bearer ${token}`}})
+        .then(function (response) {
+          console.log(response)
+          localStorage.setItem('currentID',response.data["userId"]);
+
+        })
+      } , [])
 
 
   useEffect(() => {
@@ -108,6 +116,8 @@ const HomePage = () => {
             skilluserdirectid = {fetchedSkill.userId}
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}
+            skillcountry = {fetchedSkill.country}
+
           />
         </Grid>
       )

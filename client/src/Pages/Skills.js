@@ -53,6 +53,8 @@ export default function Skills(props) {
             skilluserdirectid = {fetchedskill.userId}
             skillprice = {fetchedskill.price}
             skilluserpic = {fetchedskill.userProfilePic}
+            skillcountry = {fetchedskill.country}
+
           />
         </Grid>
       )

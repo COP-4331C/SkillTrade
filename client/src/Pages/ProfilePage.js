@@ -326,11 +326,11 @@ export default function ProfilePage(props) {
     }
   }
 
-  function handleContactMe() {
-    alert("Coming Soon! \n\n" +
-      "BTW: There are 10 types of people in the world...\n" +
-      "Those who understand binary, and those who don't!")
-  }
+  // function handleContactMe() {
+  //   alert("Coming Soon! \n\n" +
+  //     "BTW: There are 10 types of people in the world...\n" +
+  //     "Those who understand binary, and those who don't!")
+  // }
 
   function handleOnChangeAboutMeText(e) {
     setAboutMeTextTemp(e.target.value);
@@ -757,20 +757,20 @@ export default function ProfilePage(props) {
               {loading ? <Skeleton variant="h3" width={200} sx={{ bgcolor: 'grey.500' }} /> : lastName}
             </Typography>
 
-            {/********************* Edit Button *********************************/}
-            <Fade in={!fade}>
-              <Button
-                color='secondary'
-                variant='contained'
-                // style={{marginTop: 30}}
-                style={{ marginTop: 30, marginLeft: 20, display: displayEditButton, height: "36px" }}
-                startIcon={<EditIcon />}
-                sx={{ whiteSpace: 'nowrap' }}
-                onClick={enterEditMode}
-              >
-                Edit Profile
-              </Button>
-            </Fade>
+          {/*  /!********************* Edit Button *********************************!/*/}
+          {/*  <Fade in={!fade}>*/}
+          {/*    <Button*/}
+          {/*      color='secondary'*/}
+          {/*      variant='contained'*/}
+          {/*      // style={{marginTop: 30}}*/}
+          {/*      style={{ marginTop: 30, marginLeft: 20, display: displayEditButton, height: "36px" }}*/}
+          {/*      startIcon={<EditIcon />}*/}
+          {/*      sx={{ whiteSpace: 'nowrap' }}*/}
+          {/*      onClick={enterEditMode}*/}
+          {/*    >*/}
+          {/*      Edit Profile*/}
+          {/*    </Button>*/}
+          {/*  </Fade>*/}
           </Box>
 
           {/** ****************** First and Last Names (Edit Mode) *************************** **/}
@@ -1099,19 +1099,33 @@ export default function ProfilePage(props) {
               </Box>
 
               {/******************** Contact Me Button *********************/}
+              {/*<Fade in={!fade}>*/}
+              {/*  {loading ? <Skeleton variant="h3" width={120} sx={{ bgcolor: 'grey.500' }} /> :*/}
+              {/*    <Button*/}
+              {/*      color='secondary'*/}
+              {/*      variant='contained'*/}
+              {/*      style={{ marginTop: 0 }}*/}
+              {/*      startIcon={<ForumOutlinedIcon />}*/}
+              {/*      sx={{ display: displayContactMe, whiteSpace: 'nowrap' }}*/}
+              {/*      // onClick={handleContactMe}*/}
+              {/*    >*/}
+              {/*      Contact Me!*/}
+              {/*    </Button>*/}
+              {/*  }*/}
+              {/*</Fade>*/}
+
+              {/********************* Edit Button *********************************/}
               <Fade in={!fade}>
-                {loading ? <Skeleton variant="h3" width={120} sx={{ bgcolor: 'grey.500' }} /> :
-                  <Button
-                    color='secondary'
-                    variant='contained'
-                    style={{ marginTop: 0 }}
-                    startIcon={<ForumOutlinedIcon />}
-                    sx={{ display: displayContactMe, whiteSpace: 'nowrap' }}
-                    onClick={handleContactMe}
-                  >
-                    Contact Me!
-                  </Button>
-                }
+                <Button
+                  color='secondary'
+                  variant='contained'
+                  style={{ marginTop: 0, display: displayEditButton }}
+                  startIcon={<EditIcon />}
+                  sx={{ whiteSpace: 'nowrap' }}
+                  onClick={enterEditMode}
+                >
+                  Edit Profile
+                </Button>
               </Fade>
 
 

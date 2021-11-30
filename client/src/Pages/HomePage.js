@@ -1,17 +1,17 @@
 import HomeNavBar from "../components/HomeNavBar";
 import * as React from "react";
-import {Theme} from "../components/Theme";
+import { Theme } from "../components/Theme";
 import Grid from "@mui/material/Grid";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {retrieveData} from "../components/DataStorage";
+import { retrieveData } from "../components/DataStorage";
 import Testcard from "../components/Testcard";
 import Pagination from '@mui/material/Pagination';
-import {Stack, Typography} from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import SkillCardSkeleton from "../components/SkillCardSkeleton";
 import SearchBar from "../components/SearchBar";
-import {v4 as uniqueIdv4} from 'uuid';
+import { v4 as uniqueIdv4 } from 'uuid';
 
 // TODO: Check if the user is logged in, if not, then redirect user to login or landing page.
 
@@ -36,7 +36,7 @@ const HomePage = () => {
     // Fetches the profile data
     axios.get(
       "./api/user/profile",
-      {headers: {Authorization: `Bearer ${token}`}}
+      { headers: { Authorization: `Bearer ${token}` } }
     )
       .then(function (response) {
         // storeData('firstName', response.data["firstName"]);
@@ -52,10 +52,11 @@ const HomePage = () => {
     // Fetches the logged user's Id
     axios.get(
       "api/user/id",
-      {headers: {Authorization: `Bearer ${token}`}}
+      { headers: { Authorization: `Bearer ${token}` } }
     )
-      .then(function(response) {
+      .then(function (response) {
         setLoggedUserId(response.data["userId"]);
+        localStorage.setItem('currentID', response.data["userId"]);
       })
       .catch(console.log)
 
@@ -82,7 +83,7 @@ const HomePage = () => {
 
     await axios.get(`/api/skills/?page=${page}&limit=${limit}&search=${searchText}`,
       {
-        headers: {'Authorization': `Bearer ${token}`}
+        headers: { 'Authorization': `Bearer ${token}` }
       })
       .then((res) => {
 
@@ -112,15 +113,17 @@ const HomePage = () => {
           <Testcard
             key={fetchedSkill._id}
             skillid={fetchedSkill._id}
-            skilldescription = {fetchedSkill.summary}
-            skillname = {fetchedSkill.title}
-            skillcity = {fetchedSkill.city}
-            skillstate = {fetchedSkill.state}
-            skillimage = {fetchedSkill.imageURL}
-            skilluserid = {fetchedSkill.userFullName}
-            skilluserdirectid = {fetchedSkill.userId}
+            skilldescription={fetchedSkill.summary}
+            skillname={fetchedSkill.title}
+            skillcity={fetchedSkill.city}
+            skillstate={fetchedSkill.state}
+            skillimage={fetchedSkill.imageURL}
+            skilluserid={fetchedSkill.userFullName}
+            skilluserdirectid={fetchedSkill.userId}
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}
+            skillcountry={fetchedSkill.country}
+
           />
         </Grid>
       )
@@ -134,10 +137,10 @@ const HomePage = () => {
 
   const skillListSkeleton = () => {
 
-    let content = Array.from({length: limit}, (() => 10)).map(() => {
+    let content = Array.from({ length: limit }, (() => 10)).map(() => {
       return (
         <Grid item xs={12} sm={6} md={4} lg={3} key={uniqueIdv4()}>
-          <SkillCardSkeleton/>
+          <SkillCardSkeleton />
         </Grid>
       );
     })
@@ -174,8 +177,8 @@ const HomePage = () => {
       <HomeNavBar
         loggedUserAvatar={loggedUserAvatar}
         loggedUserId={loggedUserId}
-        onKeyDown={(textToSearch) => {handleEnterKey(textToSearch)}}
-        onClick={() => {handleResetSearch()}}
+        onKeyDown={(textToSearch) => { handleEnterKey(textToSearch) }}
+        onClick={() => { handleResetSearch() }}
       />
 
       {/******************************** Search Bar MOBILE VERSION ***************************************/}
@@ -183,9 +186,9 @@ const HomePage = () => {
         alignItems: "center",
         height: "60px",
         backgroundColor: Theme.palette.primary.light,
-        display: {sx: "block", sm: "none"}
+        display: { sx: "block", sm: "none" }
       }}>
-        <Grid item xs sx={{marginLeft: "20px", marginRight: "20px"}}>
+        <Grid item xs sx={{ marginLeft: "20px", marginRight: "20px" }}>
           <SearchBar
             onKeyDown={(textToSearch) => {
               handleEnterKey(textToSearch)
@@ -205,30 +208,30 @@ const HomePage = () => {
       </Grid>
 
       {/*This Box is just an spacer*/}
-      <Box sx={{marginTop: 2}}/>
+      <Box sx={{ marginTop: 2 }} />
 
       {/************************* No Results messages ***********************************************/}
-      <Typography variant="h4" sx={{display: displayNoResultMessage, justifyContent: "center"}}>
+      <Typography variant="h4" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
         No Matches Found
       </Typography>
-      <Typography variant="h6" sx={{display: displayNoResultMessage, justifyContent: "center"}}>
+      <Typography variant="h6" sx={{ display: displayNoResultMessage, justifyContent: "center" }}>
         Try a new search.
       </Typography>
 
 
       {/******************************** Skill Posts *************************************************/}
       {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
-      <Grid container sx={{marginLeft:"5"}}>
+      <Grid container sx={{ marginLeft: "5" }}>
         {loading && skillListSkeleton()}
         {!loading && skillList()}
       </Grid>
-      
+
 
 
       {/******************************** Pagination *************************************************/}
-      <Box sx={{marginTop: 5, display: displayPagination, justifyContent: "center"}}>
+      <Box sx={{ marginTop: 5, display: displayPagination, justifyContent: "center" }}>
         <Stack spacing={2}>
-          <Pagination count={numOfPages} page={page} size="large" onChange={handlePaginationChange}/>
+          <Pagination count={numOfPages} page={page} size="large" onChange={handlePaginationChange} />
         </Stack>
       </Box>
 

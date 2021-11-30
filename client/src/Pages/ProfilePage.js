@@ -26,12 +26,13 @@ import Testcard from '../components/Testcard';
 import axios from "axios";
 import Skeleton from '@mui/material/Skeleton';
 import { Paper } from '@mui/material';
-import Changepassword from '../components/Changepassword';
+import Avatar from '@mui/material/Avatar'
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
 
 
 export default function ProfilePage(props) {
   const token = retrieveData('token');
-  const configuration = {headers: { Authorization: `Bearer ${token}` }};
+  const configuration = { headers: { Authorization: `Bearer ${token}` } };
   const [aboutMeText, setAboutMeText] = useState("");
   const [fade, setFade] = useState(false);
   const [displayNames, setDisplayNames] = useState("inline-flex");
@@ -318,7 +319,8 @@ export default function ProfilePage(props) {
   }
 
   function handleOnMouseOver() {
-    if (!inEditMode && editPermission) {
+    if (!inEditMode && editPermission && (localStorage.getItem('skilledUserID') === localStorage.getItem('currentID'))) {
+
       setDisplayEditButton("inline-flex");
     }
   }
@@ -458,7 +460,7 @@ export default function ProfilePage(props) {
       // const response = await axios.get(URL, config);
       const response = await axios.get(
         `/api/user/profile/${!userId ? "" : userId}`,
-        {headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setFirstName(response.data["firstName"]);
@@ -471,23 +473,19 @@ export default function ProfilePage(props) {
       setCity(response.data["city"]);
       setState(response.data["state"]);
       setCountry(response.data["country"]);
-      localStorage.setItem('recent-image',response.data["profilePic"]);
-      localStorage.setItem('firstName',response.data["firstName"]);
-      localStorage.setItem('lastName',response.data["lastName"]);
+      localStorage.setItem('recent-image', response.data["profilePic"]);
+      localStorage.setItem('firstName', response.data["firstName"]);
+      localStorage.setItem('lastName', response.data["lastName"]);
+      localStorage.setItem('userID', response.data["_id"]);
 
-      // setProfileUserID(response.data["_id"])
-
-        //ridwans code copy/paste for test
-      // const token = localStorage.getItem('token');
-      // const userId = "";
-      // axios.get(`/api/skills/user/${!userId ? "" : userId}`, {
-      //   headers: { 'Authorization': `Bearer ${token}` }
-      // })
+      setProfileUserID(response.data["_id"])
+      // console.log( response.data);
+      // console.log("user ID: " + response.data["_id"]);
 
       // Fetches reviews
       axios.get(
         `/api/review/get-reviews/${userId}`,
-        {headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}` } }
       )
         .then(function (response) {
           setReviewMessages(response.data);
@@ -515,6 +513,11 @@ export default function ProfilePage(props) {
     })
       .then((res) => {
         setSkillPosts(res.data);
+
+        localStorage.setItem('skilledUserID', res.data[0]["userId"]);
+        // console.log(res.data["country"]);
+        // console.log("userid"+ userId)
+
       })
       .catch((err) => {
         console.log(err);
@@ -583,23 +586,23 @@ export default function ProfilePage(props) {
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
-            skilldescription = {fetchedskill.summary}
-            skillname = {fetchedskill.title}
-            skillcity = {fetchedskill.city}
-            skillstate = {fetchedskill.state}
-            skillimage = {fetchedskill.imageURL}
-            skilluserid = {fetchedskill.userFullName}
-            skilluserdirectid = {fetchedskill.userId}
-            skilluserpic = {fetchedskill.userProfilePic}
-            skillprice = {fetchedskill.price}
-            skillcountry = {fetchedskill.country}
+            skilldescription={fetchedskill.summary}
+            skillname={fetchedskill.title}
+            skillcity={fetchedskill.city}
+            skillstate={fetchedskill.state}
+            skillimage={fetchedskill.imageURL}
+            skilluserid={fetchedskill.userFullName}
+            skilluserdirectid={fetchedskill.userId}
+            skilluserpic={fetchedskill.userProfilePic}
+            skillprice={fetchedskill.price}
+            skillcountry={fetchedskill.country}
           />
         </Grid>
       )
     })
     return (
       <Grid container rowSpacing={3} columnSpacing={5}>
-        { content }
+        {content}
       </Grid>
     )
   }
@@ -1123,17 +1126,31 @@ export default function ProfilePage(props) {
 
       </Box>
 
+      {/******************************* Divider between Skill Listings *******************************/}
+
+
+
+
       {/******************************* Skill Listings *******************************/}
-    
-      <Paper 
-            variant="outlined" 
-            square 
-            style={{backgroundColor: Theme.palette.primary.main, position: "relative",borderWidth:"0px"}}
-            sx={{ p: 10, mt:5 }}
-            >
+
+      <Paper
+        variant="outlined"
+        square
+        style={{ backgroundColor: Theme.palette.primary.main, position: "relative", borderWidth: "0px" }}
+        sx={{ pt: 3, pb: 3, mt: 0 }}
+      >
+        <Grid align='center'>
+
+          <h1 style={{ color: 'white' }}>
+            All Skills
+          </h1>
+
+          <Divider variant="middle" style={{ color: 'white', border: "1px solid" }} sx={{ mb: 2 }} />
+
+        </Grid>
         {skilllist()}
       </Paper>
-     
+
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto" }}>
         <Button

@@ -25,6 +25,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Styles } from "@material-ui/styles";
 // import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 // import {Link as RouterLink} from "react-router-dom";
 // import ProfilePage from '../Pages/ProfilePage';
@@ -53,7 +54,7 @@ export default function Testcard(props) {
   //City and State
   const [cityAdd, setCityAdd] = useState(props.skillcity);
   const [stateAdd, setStateAdd] = useState(props.skillstate);
-  const [cAdd, setcAdd] = useState(props.skillcountry);
+  const [cAdd, setCAdd] = useState(props.skillcountry);
 
 
 
@@ -71,7 +72,7 @@ export default function Testcard(props) {
   //
   const [cityAddTemp, setcityAddTemp] = useState("");
   const [stateAddTemp, setstateAddTemp] = useState("");
-  const [cAddTemp, setcAddTemp] = useState("");
+  const [cAddTemp, setCAddTemp] = useState("");
 
   const [editPermission, setEditPermission] = useState(true);
   const [mousePointer, setMousePointer] = useState("");
@@ -106,7 +107,7 @@ export default function Testcard(props) {
 
     setcityAddTemp(cityAdd); // Copies city name to editable text fields
     setstateAddTemp(stateAdd); // Copies state name to editable text fields
-    // setcAddTemp(cAdd);
+    setCAddTemp(cAdd);
     setpriceTemp(price);
 
     setAboutMeTextTemp(aboutMeText); // Copies Skills text to editable text field
@@ -181,12 +182,13 @@ export default function Testcard(props) {
     //Edit Skill Pic Axios Put
 
     if (okToSaveData) {
+
       setCityAdd(cityAddTemp);
       setStateAdd(stateAddTemp);
       setAboutMeText(aboutMeTextTemp);
       setAboutMeText2(aboutMeText2Temp);
       setPrice(priceTemp);
-      setcAdd(cAddTemp);
+      setCAdd(cAddTemp);
 
       const token = localStorage.getItem("token");
       //value to commit to Backend changable_fields
@@ -198,7 +200,7 @@ export default function Testcard(props) {
         status: "Teaching",
         city: cityAddTemp,
         state: stateAddTemp,
-        country: cAddTemp,
+        country: cAddTemp
       };
 
       console.log(token);
@@ -313,7 +315,7 @@ export default function Testcard(props) {
   }
 
   function handleOnChangeCAddress(e) {
-    setcAddTemp(e.target.value);
+    setCAddTemp(e.target.value);
   }
 
   const Input = styled("input")({
@@ -361,8 +363,15 @@ export default function Testcard(props) {
           border: 4,
           borderRadius: 5,
           borderColor: "black",
-          width: "350px",
-          paddingRight:"2"
+          maxwidth: "350px",
+          minWidth: "300px",
+          // paddingRight:"2",
+          marginRight: 20,
+          marginLeft: 20,
+          marginTop:0
+          // marginRight: 20,
+
+
         }}
       >
         {/* //start of the image-header// */}
@@ -589,8 +598,7 @@ export default function Testcard(props) {
                   </IconButton>
                 </Grid>
 
-                {/* //City// */}
-                <Grid item xs={3}>
+                <Grid item  >
                   <Typography
                     // padding="8px"
                     style={{
@@ -608,65 +616,14 @@ export default function Testcard(props) {
                       display: displayAddress,
                       flexWrap: "wrap",
                       alignContent: "center",
-                      marginTop:2
+                      marginTop:2,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                   >
-                    {cityAdd + " "}
+                    {cityAdd + " "+stateAdd+" "+ cAdd}
                   </Typography>
                 </Grid>
-
-                {/* //State// */}
-                <Grid item xs={3}>
-                  <Typography
-                    // padding="8px"
-                    style={{
-                      alignItems: "center",
-                      // position: "absolute",
-                      textAlign: "left",
-                      width: "100%",
-                      left: "50%",
-                      top: "50%",
-                      // transform:"translate(-50%,-50%)"
-                    }}
-                    variant="body4"
-                    sx={{
-                      fontWeight: 600,
-                      display: displayAddress,
-                      flexWrap: "wrap",
-                      alignContent: "center",
-                      marginTop:2
-                    }}
-                  >
-                    {stateAdd}
-                  </Typography>
-                </Grid>
-
-                {/* //Country// */}
-                <Grid item xs={3}>
-                  <Typography
-                    // padding="8px"
-                    style={{
-                      alignItems: "center",
-                      // position: "absolute",
-                      textAlign: "left",
-                      width: "100%",
-                      left: "50%",
-                      top: "50%",
-                      // transform:"translate(-50%,-50%)"
-                    }}
-                    variant="body4"
-                    sx={{
-                      fontWeight: 600,
-                      display: displayAddress,
-                      flexWrap: "wrap",
-                      alignContent: "center",
-                      marginTop:2
-                    }}
-                  >
-                    {cAdd}
-                  </Typography>
-                </Grid>
-
               </Grid>
             </Paper>
           </div>
@@ -760,7 +717,7 @@ export default function Testcard(props) {
                 </Grid>
 
                 {/* //City// */}
-                <Grid item xs={3}>
+                <Grid item xs={8}>
                   <Typography
                     padding="8px"
                     style={{
@@ -790,7 +747,7 @@ export default function Testcard(props) {
           {/*************************** Price Stuff (Edit Mode) ************************************/}
 
           <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextField
                 label="Price"
                 variant="filled"

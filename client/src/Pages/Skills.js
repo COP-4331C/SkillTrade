@@ -40,22 +40,19 @@ export default function Skills(props) {
   const skilllist = () => {
     let content = skillposts.map((fetchedskill, index) => {
       return(
-        <Grid item xs={3} key={index}>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
           <Testcard
             key={fetchedskill._id}
             skillid={fetchedskill._id}
             skilldescription = {fetchedskill.summary}
             skillname = {fetchedskill.title}
-            skilldescription = {fetchedskill.description}
             skillcity = {fetchedskill.city}
             skillstate = {fetchedskill.state}
             skillimage = {fetchedskill.imageURL}
             skilluserid = {fetchedskill.userFullName}
             skilluserdirectid = {fetchedskill.userId}
-            // avatar={fetchedReview.authorProfilePic}
             skillprice = {fetchedskill.price}
             skilluserpic = {fetchedskill.userProfilePic}
-            //add more
           />
         </Grid>
       )

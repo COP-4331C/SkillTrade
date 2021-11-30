@@ -253,9 +253,10 @@ exports.verifyEmail = async (req, res) => {
     .then(async (data) => {
       const user = await User.findById(userId);
       if (user.emailVerified || user.verificationCode == "") {
-        return res
-          .status(405)
-          .json({ error: "Email is already verified bro!" });
+        res.writeHead(301, {
+          Location: "https://cop4331c.herokuapp.com/Login",
+        });
+        return res.end();
       } else if (user.verificationCode != verificationCode) {
         return res.status(401).json({ error: "Invalid verification code." });
       } else {

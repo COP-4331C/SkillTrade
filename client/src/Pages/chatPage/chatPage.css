@@ -1,0 +1,26 @@
+.chatBoxTop {
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatBoxBottom {
+  margin-top: 5px;
+  display: flex;
+}
+
+.chatMessageInput {
+  width: 100%;
+  padding: 10px;
+}
+
+.chatBoxWrapper {
+  padding: 10px;
+}
+
+.noConversationText {
+  position: absolute;
+  font-size: 50px;
+  color: rgb(224, 220, 220);
+  cursor: default;
+}

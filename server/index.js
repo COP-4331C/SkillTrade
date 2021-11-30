@@ -1,10 +1,19 @@
 const express = require("express");
+const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 require("dotenv").config();
 
-const app = express();
+const server = require("http").Server(app);
+const io = (module.exports.io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+}));
+const socketManager = require("./socketManager");
+
+io.on("connection", socketManager);
 
 // Middleware
 app.use(express.json());
@@ -27,7 +36,7 @@ connect();
 function listen() {
   const port = process.env.PORT || 5000;
 
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server started on port ${port}`);
   });
 

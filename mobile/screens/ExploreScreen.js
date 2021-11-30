@@ -3,7 +3,6 @@ import {
   responsiveScreenWidth,
   responsiveScreenFontSize,
 } from "react-native-responsive-dimensions";// 
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -16,78 +15,93 @@ import {
   FlatList,
   TextInput,
   ActivityIndicator ,//
+  Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";// 
 import { Image, withBadge } from 'react-native-elements'; //
 import { SafeAreaView } from "react-native-safe-area-context";
+import {useIsFocused} from "@react-navigation/native"
+import axios from 'axios';
 
 const ExploreScreen = ({ navigation }) => {
 
   const [skillData, setSkillData] = React.useState([]);
+  const isFocused = useIsFocused() // when screen on top, it is focused
+  const [searchData, setSearchData] = React.useState({
+    search: "",
+    page: 1,
+    limit: 8,
+  });
 
-  async function connectToGetSkillsApi(){
-    // console.warn("test",skillData) // test
+  const contentInputChange = (val) => { // check contentInputChange 
+    if(val.length >= 0 && val.length <= 50){
+      setSearchData({
+            ...searchData,
+            search:val,
+        })
+    } else {
+      Alert.alert('Search content must between 0 to 50 characters', '', 
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+      );
+    }
+  }
+
+  async function connectToGetSkillsApi(){ // for Top Trending item
     let search = "";
     let page = 1;
     let limit = 8;
     await axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`, // can not connect? FIXME
           ) 
         .then(function(response) {
-            // console.warn("test0",response.data.data) // test
             setSkillData(response.data.data)
         })
         .catch(function(error) {
             console.warn(error)
-            // console.warn("test00",response.data.data) // test
-
         });
   }
 
-  useEffect(async() => { connectToGetSkillsApi() }, []) // renew everything when any compontent renew??
-  // console.warn("test1",skillData) // test
 
-  const image = {uri:"https://m.media-amazon.com/images/I/817mtl1sqhL._AC_SL1500_.jpg"};// how to import from asset document??
-  // uri:"https://images.pexels.com/photos/227417/pexels-photo-227417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  useEffect(() => { 
+    if(isFocused){
+      connectToGetSkillsApi() 
+    }
+  }, [isFocused])  // check
+
+  const image = {uri:"https://m.media-amazon.com/images/I/817mtl1sqhL._AC_SL1500_.jpg"};// Blackground image: how to import from asset document??
 
   const recentImage = {uri:"https://images.pexels.com/photos/227417/pexels-photo-227417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"};
   
-  const venice ="Venice the capital  of the northern Italy's Veneto Region in the Adriatic Sea"; //
+  const venice ="Italian is often considered one of the easiest languages for English speakers to learn..."; //
 
-  // const [gallery, setgallery] = useState([
-  //   {
-  //     image: {uri:"https://im0-tub-tr.yandex.net/i?id=0372e7559ea4bb9b277926921e8ca1fd&n=13",},
-  //     title: "Switzerland",
-  //     key: "1",
-  //   },
-  //   {
-  //     image: {uri:"https://portal.andina.pe/EDPfotografia3/Thumbnail/2017/11/09/000462113W.jpg",},
-  //     title: "New Zeland",
-  //     key: "2",
-  //   },
-  //   {
-  //     image: {uri:"https://im0-tub-tr.yandex.net/i?id=4c667d83715020671fb6bae379bafd1b&n=13",},
-  //     title: "Rome",
-  //     key: "3",
-  //   },
-  //   {
-  //     image: {uri:"https://blog.educaistanbul.com/wp-content/uploads/2018/03/tahiti-1.jpg",},
-  //     title: "Tahiti",
-  //     key: "4",
-  //   },
-  // ]);
 
-  // const gpToPost = () => {
-  //   navigation.navigate('Post');
-  // }
 
-  // const [counter, setCounter] = useState(1); //
 
-  // const BadgedIcon = withBadge(counter)(Icon) //
+  const SearchHandler = () => { 
+      if (searchData.search.length > 0 && searchData.search.length < 50 ){ 
+        let searchKey = searchData.search;
+        navigation.navigate('SearchResultScreen', {searchKey}); 
+      }
+      else {
+        Alert.alert('Review must between 1 to 50 characters', '', 
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+        );
+      }  
+  }
+
 
   return (
     <SafeAreaView>
@@ -109,42 +123,43 @@ const ExploreScreen = ({ navigation }) => {
                   style={styles.searchBox}
                   placeholder="search skill"
                   placeholderTextColor="#666" 
+                  onChangeText={(val) => contentInputChange(val)} 
                 ></TextInput>
-                <Feather name='search' size={22} color='#666' style={{ position:'absolute', top: hp("3.5%"), right: wp("30%"), opacity: 0.6,}}/> 
+
+                <TouchableOpacity  onPress={() => SearchHandler()} style={{ position:'absolute', top: hp("3.5%"), right: wp("30%"), opacity: 0.6,}}>
+                  <Feather name='search' size={22} color='#666' /> 
+                </TouchableOpacity> 
+              
               </View> 
               <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ position: "absolute", top: hp("1.5%"), left: "5%", }}>
                 <Feather name="menu" size={hp("4%")} color="#fff" />
               </TouchableOpacity>
-              {/* <TouchableOpacity onPress={() => setCounter(counter+1)} style={{ position: "absolute", top: hp("2%"), right: "5%", }}> 
-                <Feather  type="ionicon"  name="bell" size={hp("3%")}  color="#fff" /> 
-              </TouchableOpacity>  */}
+
           </ImageBackground>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} // 
+        <ScrollView showsVerticalScrollIndicator={false} 
         > 
           <View style={{ padding: 20 }}>
             <Text style={{ fontSize: hp("3%"), fontWeight: "bold" }}>Top Trending</Text>
           </View>
           <View>
             <FlatList
-              showsHorizontalScrollIndicator={false} //
+              showsHorizontalScrollIndicator={false} 
               data={skillData}
               horizontal={true} 
               keyExtractor={(item) => item._id}
               renderItem={({ item }) => {
-                // console.warn(item) //test
                 return (
                   <View style={{paddingVertical: hp("1%"), paddingHorizontal: wp("0.5%"), }}> 
                     <TouchableOpacity
-                      onPress={() => navigation.navigate("SkillDetailScreen", { item, skillData } )} // onPress={goToPost} 
-                      style={{ shadowColor:"#000", shadowOffset: {width:0, height:20}, shadowOpacity:0.34, shadowRadius:6.27, levation:10}} //
+                      onPress={() => navigation.navigate("SkillDetailScreen", { item, skillData } )}
+                      style={{ shadowColor:"#000", shadowOffset: {width:0, height:20}, shadowOpacity:0.34, shadowRadius:6.27, levation:10}} 
                       > 
                           <Image
-                            source={{uri:item.imageURL}} // item.image //
+                            source={{uri:item.imageURL}}
                             style={{width:responsiveScreenWidth(40), marginRight:wp("2%"), height:responsiveScreenHeight(30), borderRadius:10}}
-                            // image={{uri:item.imageURL}} // item.image
-                            PlaceholderContent={<ActivityIndicator size="small" color="#0000ff" />} //
+                            PlaceholderContent={<ActivityIndicator size="small" color="#0000ff" />} 
                           />
                           <View style={styles.imageOverlay}></View>
                           <Feather name='map-pin' size={hp("2.5%")} color='white' style={styles.imageLocationIcon}/>
@@ -170,7 +185,7 @@ const ExploreScreen = ({ navigation }) => {
             <View style={{ position: "absolute", bottom: 0, padding: hp("1%") }}>
               <View style={{ flexDirection: "row" }}>  
                 <Feather name="map-pin" size={22} color="white" style={{ marginLeft: 10, position: "relative", top: 4 }}/>
-                <Text style={{fontSize: 22, color: "white", fontWeight: "normal", marginBottom: "2%", marginHorizontal: 10}}>Venice</Text>
+                <Text style={{fontSize: 22, color: "white", fontWeight: "normal", marginBottom: "2%", marginHorizontal: 10}}>Learn Italian</Text>
               </View>
               <Text
                 style={{fontSize: 14, color: "white", fontWeight: "normal", marginBottom: 6, opacity: 0.9, marginLeft: 16}}> 

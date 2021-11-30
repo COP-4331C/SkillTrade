@@ -23,6 +23,7 @@ import ExploreScreen from './screens/ExploreScreen';
 import SkillDetailScreen from './screens/SkillDetailScreen';
 import HomeScreen from './screens/HomeScreen';
 import VisitorProfileScreen from './screens/VisitorProfileScreen';
+import SearchResultScreen from './screens/SearchResultScreen';
 
 const Drawer = createDrawerNavigator(); 
 
@@ -173,6 +174,7 @@ const App = () => {
         <Drawer.Screen name="SkillDetailScreen" component={SkillDetailScreen} />
         <Drawer.Screen name="HomeScreen" component={HomeScreen} />
         <Drawer.Screen name="VisitorProfileScreen" component={VisitorProfileScreen} />
+        <Drawer.Screen name="SearchResultScreen" component={SearchResultScreen} />
       </Drawer.Navigator>
     )
     :

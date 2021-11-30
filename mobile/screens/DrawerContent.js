@@ -76,13 +76,13 @@ export function DrawerContent(props) {
                         <View style={{flexDirection:'row', marginTop:15}}>
                             <Avatar.Image
                                 source={{
-                                    uri:'https://img9.doubanio.com/icon/ul3580236-4.jpg'
+                                    uri:profileData.profilePic //'https://img9.doubanio.com/icon/ul3580236-4.jpg'
                                 }}
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
                                 <Title style={styles.title}>{profileData.firstName} {profileData.lastName}</Title>
-                                <Caption style={styles.caption}>@wwu</Caption>
+                                {/* <Caption style={styles.caption}>@wwu</Caption> */}
                             </View>
                         </View>
 

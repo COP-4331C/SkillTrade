@@ -58,11 +58,14 @@ const AddReviewScreen = ({navigation}) => {
             content:val,
         })
     } else {
-        setData({
-            ...data,
-            firstname:val,
-            isValidContent:false,
-        })
+      Alert.alert('Review must between 1 to 260 characters', '', 
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+      );
     }
   }
 

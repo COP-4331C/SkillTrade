@@ -6,12 +6,13 @@ import {
   Image, 
   FlatList, 
   TouchableOpacity, 
+  SafeAreaView,
 } from "react-native";
 import moment from "moment";
 import { Entypo,FontAwesome5,FontAwesome } from '@expo/vector-icons'
 import axios from 'axios';
 import StarRating from 'react-native-star-rating';
-
+import {useIsFocused} from "@react-navigation/native"
 
 const Item = ({ title }) => (
   <View>
@@ -19,28 +20,31 @@ const Item = ({ title }) => (
   </View>
 );
 
-const HomeScreen = ({ navigation }) => {
+const SearchResultScreen = ({ navigation, route }) => {
+  const isFocused = useIsFocused() // when screen on top, it is focused
   const [skillData, setSkillData] = React.useState([]);
+  const searchKey = route.params.searchKey;
+  let page = 1;
+  let limit = 8;
 
-  async function connectToGetSkillsApi(){
-    let search = "";
-    let page = 1;
-    let limit = 8;
-    axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`,
+  useEffect(() => { 
+    if(isFocused){
+      connectToGetSkillsApi(searchKey, page, limit) 
+    }
+  }, [isFocused])  
+
+  async function connectToGetSkillsApi(search, page, limit){ 
+    await axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`, 
           ) 
         .then(function(response) {
-            setSkillData(response.data.data)
+          setSkillData(response.data.data)
         })
         .catch(function(error) {
             console.warn(error)
         });
   }
 
-  useEffect(async() => { connectToGetSkillsApi() }, [])
-
-  // const renderItem = ({ item }) => (
-  //   <Item title={item.reviewerName} />
-  // );
+  useEffect(async() => { connectToGetSkillsApi( searchKey, page, limit) }, [])
 
   const renderPost = item =>  { 
       return (
@@ -50,9 +54,8 @@ const HomeScreen = ({ navigation }) => {
                   <TouchableOpacity  
                   onPress = { async() => { 
                     let hostId = item.userId
-                    // console.log("from home", hostId) // test good
                     navigation.navigate('VisitorProfileScreen', {hostId}) 
-                  } } // might have issue in passing item.userId, CHECK
+                  } } 
                   >  
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}> 
                         <View>
@@ -92,8 +95,14 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <SafeAreaView style={styles.goBack}>
+        <TouchableOpacity style={{marginVertical:5}} onPress={() => {navigation.goBack()}}>
+            <Entypo name="back" size={38} color="black" />
+        </TouchableOpacity>
+      </SafeAreaView> 
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Recently posted skill</Text>
+        
+        <Text style={styles.headerTitle}>Search Result: </Text>
       </View>
 
       <FlatList
@@ -107,12 +116,26 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-export default HomeScreen;
+export default SearchResultScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#EBECF4",
+  },
+  goBack:{
+    // paddingTop: 18,
+    // paddingBottom: 16,
+    backgroundColor: "#FFF",
+    // alignItems: "center",
+    justifyContent: "flex-start",
+    // borderBottomWidth: 1,
+    // borderBottomColor: "#EBECF4",
+    // shadowColor: "#454D65",
+    // shadowOffset: { height: 5 },
+    // shadowRadius: 15,
+    // shadowOpacity: 0.2,
+    // zIndex: 10,
   },
   header: {
     paddingTop: 18,

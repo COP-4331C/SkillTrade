@@ -25,12 +25,13 @@ import { is } from '@babel/types';
 const EditReviewScreen = ({navigation, route}) => {
 
   const [data, setData] = React.useState({
-    reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
+    reviewId: route.params.paramKey._id, 
     newContent: route.params.paramKey.content,
     userToken: '',
   }); 
 
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused() // when screen on top, it is focused
+  // hook is a function to interact with react state
 
   useEffect(()=>{
     if (isFocused){
@@ -41,7 +42,9 @@ const EditReviewScreen = ({navigation, route}) => {
       })
       setnewRating(route.params.paramKey.rating)
     }
-  },[isFocused])
+  },[isFocused]) // when isFocused (must be state variables in []) is changed 
+// []: call on first render
+// no [] : call on every single render
 
   // catch newContentInputChange 
   const newContentInputChange = (val) => { 

@@ -1,40 +1,49 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { 
   View, 
   Text, 
-  Button, 
   StyleSheet, 
   SafeAreaView, 
   Image, 
   ScrollView, 
   Linking, 
   TouchableOpacity, 
-  FlatList, 
   SectionList,
   StatusBar, 
   Alert 
 } from 'react-native';
-import { Entypo, Ionicons, AntDesign, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { Directions, TextInput } from 'react-native-gesture-handler';
+import { Entypo, Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
+// import { Colors } from 'react-native/Libraries/NewAppScreen';
+// import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import AddSkillScreen from './AddSkillScreen';
 import moment from "moment";
-import { render } from 'react-dom';
+// import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
-// import { DirectConnect } from 'aws-sdk';
+import {useIsFocused} from "@react-navigation/native"
 
-const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
-  <View > 
-    <Text >{title}</Text> 
-  </View>
-);
+// const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
+//   <View > 
+//     <Text >{title}</Text> 
+//   </View>
+// );
 
-const ProfileScreen = ({navigation}) => {
+const VisitorProfileScreen = ({navigation, route}) => {
 
+  const hostId = route.params.hostId 
+  const isFocused = useIsFocused() 
 
-  // const [isEdit, setIsEdit] = React.useState(false);
+  useEffect(async()=>{
+    if (isFocused){
+      let userToken = null;
+      try {
+          userToken = await SecureStore.getItemAsync('userToken'); 
+      } catch (e) {
+          console.warn(e);
+      }
+      connectToProfileApi(userToken)
+    }
+  },[isFocused]) 
 
   const [profileData, setProfileData] = React.useState({
     firstName: '',
@@ -61,7 +70,6 @@ const ProfileScreen = ({navigation}) => {
       data: skillData,
       renderItem: ({ item }) => 
         renderSkills(item),
-        // {return <Text style={styles.row}>{item.title}</Text>}
     },
     {
       _id: '1',
@@ -69,74 +77,43 @@ const ProfileScreen = ({navigation}) => {
       data: learnSkillData,
       renderItem: ({ item }) => 
         renderLearnSkills(item),
-      // <Text style={styles.rowDark}>{item.text}</Text>,
     },
     {
       _id: '2',
       title: 'REVIEWS',
       data: reviewData,
-      renderItem: ({ item }) => //<Text style={styles.rowDark}>{item.content}</Text>,
+      renderItem: ({ item }) => 
         renderReviews(item),
     },
   ]
 
   useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToProfileApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
-      connectToProfileApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToUserSkillsApi(userToken)
-    connectToLearnSkillsApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
+    if (isFocused){
+      let userToken = null;
+      try {
+          userToken = await SecureStore.getItemAsync('userToken'); 
+      } catch (e) {
+          console.warn(e);
+      }
       connectToUserSkillsApi(userToken)
       connectToLearnSkillsApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }
+  }, [isFocused]); // navigation, 
   
   useEffect(async() => {
-    let userId = null; 
-    try {
-        userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
+    if (isFocused){
+      connectToGetReviewApi(hostId)
     }
-    connectToGetReviewApi(userId)
-    const unsubscribe = navigation.addListener('focus', () => {
-      connectToGetReviewApi(userId)
-    });
-    return unsubscribe;
-  }, [navigation]);
+  }, [isFocused, navigation]); // navigation, 
 
   async function connectToProfileApi(userToken){
-    let userId = null;
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${userId}`,  {
+    axios.get(`https://cop4331c.herokuapp.com/api/user/profile/${hostId}`,  {
             headers: {
               Authorization: `Bearer ${userToken}`  
             }
           })
         .then(function(response) {
+            console.log("test")
             setProfileData(response.data)
         })
         .catch(function(error) {
@@ -145,14 +122,8 @@ const ProfileScreen = ({navigation}) => {
   }
 
   async function connectToUserSkillsApi(userToken){
-    let userId = null;
     let status = 'Teaching';
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${userId}`,  { 
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/${hostId}?status=${status}`, { 
             headers: { 
               Authorization: `Bearer ${userToken}`  
             }
@@ -166,14 +137,8 @@ const ProfileScreen = ({navigation}) => {
   }
 
   async function connectToLearnSkillsApi(userToken){
-    let userId = null;
     let status = 'Learning';
-    try {
-      userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    };
-    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/?status=${status}&userId=${userId}`,  { 
+    axios.get(`https://cop4331c.herokuapp.com/api/skills/user/${hostId}?status=${status}`,  { 
             headers: { 
               Authorization: `Bearer ${userToken}`  
             }
@@ -186,8 +151,8 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
-  function connectToGetReviewApi(userId){
-    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${userId}`,  {
+  function connectToGetReviewApi(){
+    axios.get(`https://cop4331c.herokuapp.com/api/review/get-reviews/${hostId}`,  {
             
           })
         .then(function(response) {
@@ -198,36 +163,10 @@ const ProfileScreen = ({navigation}) => {
         });
   }
 
-  function confirmDeleteSkill (skillId){
-    Alert.alert(
-      "Alert", // "Alert Title"
-      "Do you want to delete this skill?", // "My Alert Msg"
-      [
-        {
-          text: "Cancel",
-          onPress: () => Alert.alert("Cancel Delete"),
-          style: "cancel",
-        },
-        {
-          text: "Confirm",
-          onPress: () =>  deleteSkillHandler(skillId),
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-        onDismiss: () =>
-          Alert.alert(
-            "This alert was dismissed by tapping outside of the alert dialog."
-          ),
-      }
-    );
-  }
-
   const deleteSkillHandler = async(skillId) => { 
     let userToken = null;
     try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+        userToken = await SecureStore.getItemAsync('userToken'); 
     } catch (e) {
         console.warn(e);
     }
@@ -297,14 +236,9 @@ const ProfileScreen = ({navigation}) => {
         Alert.alert("Review Deleted")
     })
     .catch(function(error) {
-        // console.warn(error)
         Alert.alert("You can only delete the review you created.")
     });
   }
-
-  // const renderItem = ({ item }) => (
-  //   <Item title={item.reviewerName} />
-  // );
 
   const renderSkills = post => { 
     return (
@@ -312,12 +246,6 @@ const ProfileScreen = ({navigation}) => {
         <View style={styles.skillContainer}>
           <View style={styles.skillBar}>
             <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-              <AntDesign name="edit" size={18} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
-              <AntDesign name="delete" size={18} color="black" />
-            </TouchableOpacity>
           </View> 
           <Text style={[styles.about, {fontWeight:"600"}]}>Summary: </Text>
           <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.summary}</Text>
@@ -344,21 +272,7 @@ const ProfileScreen = ({navigation}) => {
           <View style={styles.recentItem}>
               <View style={styles.recentItemIndicator}></View>
               <View style={{width:270}}>
-
-              <View style={styles.skillBar}>
                 <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
-                {/* <View style={styles.skillBar}> */}
-                  {/* <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text> */}
-                  <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
-                    <AntDesign name="edit" size={18} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
-                    <AntDesign name="delete" size={18} color="black" />
-                  </TouchableOpacity>
-                {/* </View>  */}
-              </View>
-
-
                 {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
                 <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
                 <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
@@ -406,14 +320,18 @@ const ProfileScreen = ({navigation}) => {
 
   const renderHeader = () => { 
     return (
-      <SafeAreaView style={styles.container}>
-
-        <View style={styles.titleBar}>
-          <Ionicons name="location-sharp" size={24} color="black">
-            <Text style={{fontSize:24}}>{profileData.city}, </Text>
-          </Ionicons>
-          <Text style={{fontSize:24}}>{profileData.state}</Text>
-          {/* <Text style={{fontSize:24}}>{profileData.country}</Text> */}
+      <SafeAreaView style={styles.container}> 
+        <View flexDirection="row" style={{justifyContent:'space-between', marginBottom:10}}> 
+          <TouchableOpacity onPress={() => {navigation.goBack()}}>
+            <Entypo name="back" size={32} color="black" style={{paddingLeft:20, marginTop: 16,}}/>
+          </TouchableOpacity>
+          <View flexDirection="row" style={{paddingRight:20, paddingTop:2}}>
+            <Ionicons name="location-sharp" size={24} color="black" style={{fontSize:24, marginTop: 16,}}>
+              <Text style={{fontSize:24, marginTop: 16,}}>{profileData.city}, </Text>
+            </Ionicons>
+            <Text style={{fontSize:24, marginTop: 16,}}>{profileData.state}</Text>
+            {/* <Text style={{fontSize:24}}>{profileData.country}</Text> */}
+          </View>
         </View>
 
         <View style={{alignSelf:"center"}}>
@@ -478,27 +396,15 @@ const ProfileScreen = ({navigation}) => {
 
   }
 
-  const addButtonHandler = async(title) => {
-    if ( title == "MY SKILLS"){
-      navigation.navigate('AddSkillScreen')
-    } else if ( title == "WANT TO LEARN" ){
-      navigation.navigate('AddSkillScreen')
-    } else if ( title == "REVIEWS" ){
-      let userId = null;
-      try {
-        userId = await SecureStore.getItemAsync('userId'); 
-      } catch (e) {
-          console.warn(e);
-      };
-      try {
-        await SecureStore.setItemAsync('hostId', userId); //update hostId in SecureStore
-      } catch (e) {
-        console.log(e);
-      }
-      navigation.navigate('AddReviewScreen')
-    }
-
-  }
+  // const addButtonHandler = (title) => {
+  //   if ( title == "MY SKILLS"){
+  //     navigation.navigate('AddSkillScreen')
+  //   } else if ( title == "WANT TO LEARN" ){
+  //     navigation.navigate('AddSkillScreen')
+  //   } else if ( title == "REVIEWS" ){
+  //     navigation.navigate('AddReviewScreen')
+  //   }
+  // }
 
   return (
     <SafeAreaView style={{flex: 1}}> 
@@ -510,14 +416,6 @@ const ProfileScreen = ({navigation}) => {
             <View style={styles.sectionContainer}>
               <View style={[{flexDirection: "row"},{justifyContent: 'space-between'}]}>
                 <Text style={styles.sectionTitle}> {section.title} </Text>
-                {/* <TouchableOpacity onPress={()=>{ setIsEdit(!isEdit) }} > 
-                  <Entypo name="email" size={24} color="black" />
-                </TouchableOpacity> */}
-                <TouchableOpacity 
-                  // style = {{display:isEdit ? "block" : 'none'}}
-                  onPress={()=>{ addButtonHandler(section.title) }} > 
-                  <Entypo name="add-to-list" size={24} color="black" />
-                </TouchableOpacity>
               </View>
             </View>
           )
@@ -526,13 +424,32 @@ const ProfileScreen = ({navigation}) => {
         ListHeaderComponent={
           renderHeader()
         }
+        ListFooterComponent={
+            <TouchableOpacity // => navigation.navigate('SkillDetailScreen', {item, skillData})}>
+              onPress={async()=>{ 
+                try {
+                  await SecureStore.setItemAsync('hostId', hostId); //update hostId in SecureStore
+                } catch (e) {
+                  console.log(e);
+                }
+                navigation.navigate('AddReviewScreen') 
+              }}  
+              style={{backgroundColor:"#FFF", }}
+            > 
+              <View flexDirection='row' style={{justifyContent:'flex-end', margin:20, justifyContent:'space-between'} }>
+                <Text style={{fontSize:26}}>Add a review </Text>
+                <Entypo name="add-to-list" size={30} color="black" />
+              </View>
+            </TouchableOpacity>
+            
+        }
       />
     </SafeAreaView>
 
   );
 };
 
-export default ProfileScreen;
+export default VisitorProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -549,8 +466,8 @@ const styles = StyleSheet.create({
       width: undefined
   },
   titleBar: {
-      flexDirection: "row",
-      justifyContent: "center",
+      // flexDirection: "row",
+      // justifyContent: "space-between",
       marginTop: 24,
       marginHorizontal: 16
   },

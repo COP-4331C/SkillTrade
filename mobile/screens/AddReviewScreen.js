@@ -19,7 +19,7 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
-
+import {useIsFocused} from "@react-navigation/native"
 
 const AddReviewScreen = ({navigation}) => {
 
@@ -30,6 +30,27 @@ const AddReviewScreen = ({navigation}) => {
     userToken: '',
   }); 
 
+  const isFocused = useIsFocused() // when screen on top, it is focused
+
+  useEffect(async() => { 
+    if (isFocused){
+      let subjectIdData = null;
+      let userTokenData = null;
+      try {
+        subjectIdData = await SecureStore.getItemAsync('hostId'); 
+        userTokenData = await SecureStore.getItemAsync('userToken'); 
+      } catch (e) {
+          console.warn(e);
+      }
+      setData({
+        ...data,
+        subjectId: subjectIdData,
+        userToken: userTokenData,
+      })
+    }
+  }, [isFocused])
+
+
   const contentInputChange = (val) => { // check contentInputChange 
     if(val.length > 0 && val.length <= 260){
         setData({
@@ -37,35 +58,16 @@ const AddReviewScreen = ({navigation}) => {
             content:val,
         })
     } else {
-        setData({
-            ...data,
-            firstname:val,
-            isValidContent:false,
-        })
+      Alert.alert('Review must between 1 to 260 characters', '', 
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+      );
     }
   }
-
-
-  useEffect(async() => { 
-    let subjectId = '61887889e62859a35bc0de9c'; // = null;
-    // let userTokenData = "eyJhbGciOiJIUzI1NiJ9.dGVzdDEyM0BleGFtcGxlLmNvbQ.UrgrKyUTZ7q7nR1X1t1ACOa-Q-7wG8cluA2zcBa-Fz0"; // = null;
-    let subjectIdData = null;
-    let userTokenData = null;
-    try {
-      // subjectIdData = await SecureStore.getItemAsync('subjectId'); // FIXME: get subjectId from storage ;store subjectId in advance ???
-      subjectIdData = subjectId; // for test
-      userTokenData = await SecureStore.getItemAsync('userToken'); 
-    } catch (e) {
-        console.warn(e);
-    }
-    setData({
-      ...data,
-      subjectId: subjectIdData,
-      userToken: userTokenData,
-    })
-  }, [])
-
-  
 
   // defaultRating varable hold the user input rating as a number within 1~5
   const [defaultRating, setdefaulRating] = useState(0) // initial rating

@@ -28,7 +28,7 @@ export default function AccountMenuMobile(props) {
   };
 
   function displayBackToHomePageButtonIfNeeded() {
-    if (window.location.href.toLowerCase().includes("profile")) {
+    if (!window.location.href.toLowerCase().includes("home")) {
       return (
         <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'right', justifyContent: 'right', height: '100%'}}>
           <Button

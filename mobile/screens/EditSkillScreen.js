@@ -36,33 +36,62 @@ const EditSkillScreen = ({navigation, route}) => {
 
   const [data, setData] = React.useState({
     skillId: route.params.paramKey._id, // {route.params.paramKey._id}
-    // userToken: '',
+    // title: route.params.paramKey.title,
+    // summary: route.params.paramKey.summary,
+    // description: route.params.paramKey.description,
+    // status: route.params.paramKey.status,
+    // price: route.params.paramKey.price,
+    // country: route.params.paramKey.country,
+    // state: route.params.paramKey.state,
+    // city: route.params.paramKey.city,
+    // imageUrl: route.params.paramKey.imageUrl,
   }); 
   // const [id, setId] = useState("");
   // setId(route.params.paramKey._id);
   const [userToken, setToken] = useState("");
-  const [title, setTitle] = useState("");
-  const [summary, setSummary] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
-  const [price, setPrice] = useState("");
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
+  const [title, setTitle] = useState(route.params.paramKey.title);
+  const [summary, setSummary] = useState(route.params.paramKey.summary);
+  const [description, setDescription] = useState(route.params.paramKey.description);
+  const [status, setStatus] = useState(route.params.paramKey.status);
+  const [price, setPrice] = useState(route.params.paramKey.price);
+  const [country, setCountry] = useState(route.params.paramKey.country);
+  const [state, setState] = useState(route.params.paramKey.state);
+  const [city, setCity] = useState(route.params.paramKey.city);
+  // setPickedImagePath(route.params.paramKey.imageUrl)
+  // const [pickedImagePath, setPickedImagePath] = useState(route.params.paramKey.imageUrl);
   const [pickedImagePath, setPickedImagePath] = useState('');
   
-  useEffect(() => {
-    connectToSkillApi(data.skillId);
-  }, []);
+  // useEffect(() => {
+  //   // connectToSkillApi(data.skillId);
+  // }, []);
   const isFocused = useIsFocused()
 
   useEffect(()=>{
     if (isFocused){
       setData({
         ...data,
-        skillId: route.params.paramKey._id
+        skillId: route.params.paramKey._id,
+        // title: route.params.paramKey.title,
+        // summary: route.params.paramKey.summary,
+        // description: route.params.paramKey.description,
+        // status: route.params.paramKey.status,
+        // price: route.params.paramKey.price,
+        // country: route.params.paramKey.country,
+        // state: route.params.paramKey.state,
+        // city: route.params.paramKey.city,
+        // imageUrl: route.params.paramKey.imageUrl,
+
       })
-      connectToSkillApi(data.skillId);
+      setTitle(route.params.paramKey.title)
+      setSummary(route.params.paramKey.summary)
+      setDescription(route.params.paramKey.description)
+      setStatus(route.params.paramKey.status)
+      setPrice(route.params.paramKey.price)
+      setCountry(route.params.paramKey.country)
+      setState(route.params.paramKey.state)
+      setCity(route.params.paramKey.city)
+      // setPickedImagePath(route.params.paramKey.imageUrl)
+      // connectToSkillApi(data.skillId);
     }
   },[isFocused])
   // USE EFFECT ///////////////////////////////////////////////////////////////////////////
@@ -262,7 +291,7 @@ const EditSkillScreen = ({navigation, route}) => {
       })
       .catch(function (error) {
         console.log(error)
-        console.warn("Fail to connetcted to get skill api!");
+        console.warn("Fail to connect to get skill api!");
       });
   }
 
@@ -602,6 +631,7 @@ const EditSkillScreen = ({navigation, route}) => {
             placeholderTextColor="#666666"
             onChangeText={(val) => setCity(val)}
             autoCorrect={false}
+            value = {city}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[

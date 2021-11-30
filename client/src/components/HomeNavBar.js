@@ -55,7 +55,10 @@ export default function HomeNavBar(props) {
 
             {/** ************************** Avatar and My Skills ***************************************/}
             <Grid item xs={6} sm={3} md={3} sx={{justifyContent:"right"}}>
-                <AccountMenuMobile loggedUserAvatar={props.loggedUserAvatar}/>
+                <AccountMenuMobile
+                  loggedUserAvatar={props.loggedUserAvatar}
+                  loggedUserId={props.loggedUserId}
+                />
             </Grid>
             
           </Grid>

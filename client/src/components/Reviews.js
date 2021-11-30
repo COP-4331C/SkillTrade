@@ -134,7 +134,7 @@ export default function Reviews(props) {
       // Set this review as an NOT a new Review.
       setNewReview(false);
 
-      const URL = "./api/review/create-review";
+      const URL = "/api/review/create-review";
       const config = {headers: {Authorization: `Bearer ${token}`}};
 
       const data = {
@@ -149,7 +149,7 @@ export default function Reviews(props) {
     }
     // If the review is an existing review, then send a edit request
     else {
-      const URL = "./api/review/edit-review";
+      const URL = "/api/review/edit-review";
       const config = {headers: {Authorization: `Bearer ${token}`}};
 
       const data = {

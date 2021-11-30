@@ -458,7 +458,7 @@ export default function ProfilePage(props) {
       // const response = await axios.get(URL, config);
       const response = await axios.get(
         `/api/user/profile/${!userId ? "" : userId}`,
-        configuration
+        {headers: { Authorization: `Bearer ${token}` }}
       );
 
       setFirstName(response.data["firstName"]);
@@ -475,8 +475,7 @@ export default function ProfilePage(props) {
       localStorage.setItem('firstName',response.data["firstName"]);
       localStorage.setItem('lastName',response.data["lastName"]);
 
-      setProfileUserID(response.data["_id"])
-      console.log("user ID: " + response.data["_id"]);
+      // setProfileUserID(response.data["_id"])
 
         //ridwans code copy/paste for test
       // const token = localStorage.getItem('token');
@@ -487,10 +486,8 @@ export default function ProfilePage(props) {
 
       // Fetches reviews
       axios.get(
-        `./api/review/get-reviews/${response.data["_id"]}}`,
-        // `./api/review/get-reviews/${!userId ? "" : userId}}`,
-
-        configuration
+        `/api/review/get-reviews/${userId}`,
+        {headers: { Authorization: `Bearer ${token}` }}
       )
         .then(function (response) {
           setReviewMessages(response.data);
@@ -518,7 +515,6 @@ export default function ProfilePage(props) {
     })
       .then((res) => {
         setSkillPosts(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -563,7 +559,6 @@ export default function ProfilePage(props) {
 
     <div key={fetchedReview._id} id={fetchedReview._id}>
       <Reviews
-        // key={fetchedReview._id}
         avatar={fetchedReview.authorProfilePic}
         reviewerName={fetchedReview.authorFullName}
         rating={fetchedReview.rating}
@@ -624,7 +619,7 @@ export default function ProfilePage(props) {
   }
 
   // function handleWriteReview() {
-  const handleWriteReview = event => {
+  const handleWriteReview = () => {
     setDisplayNewReview("block");
     setNewReview(true);
 

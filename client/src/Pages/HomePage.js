@@ -17,6 +17,7 @@ import {v4 as uniqueIdv4} from 'uuid';
 
 const HomePage = () => {
   const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
+  const [loggedUserId, setLoggedUserId] = useState("");
   const token = retrieveData('token');
   const [page, setPage] = React.useState(1);
   const [numOfPages, setNumOfPages] = useState(10);
@@ -42,10 +43,22 @@ const HomePage = () => {
         // storeData('lastName', response.data["lastName"]);
         // storeData('avatar', response.data["profilePic"]);
         setLoggedUserAvatar(response.data["profilePic"]);
+        setLoggedUserId(response.data["_id"]);
       })
       .catch(function (error) {
         console.log(error);
       });
+
+    // Fetches the logged user's Id
+    axios.get(
+      "api/user/id",
+      {headers: {Authorization: `Bearer ${token}`}}
+    )
+      .then(function(response) {
+        setLoggedUserId(response.data["userId"]);
+      })
+      .catch(console.log)
+
   }, [])
 
 
@@ -160,12 +173,9 @@ const HomePage = () => {
       {/******************************** Home Navigation Bar ********************************************/}
       <HomeNavBar
         loggedUserAvatar={loggedUserAvatar}
-        onKeyDown={(textToSearch) => {
-          handleEnterKey(textToSearch)
-        }}
-        onClick={() => {
-          handleResetSearch()
-        }}
+        loggedUserId={loggedUserId}
+        onKeyDown={(textToSearch) => {handleEnterKey(textToSearch)}}
+        onClick={() => {handleResetSearch()}}
       />
 
       {/******************************** Search Bar MOBILE VERSION ***************************************/}

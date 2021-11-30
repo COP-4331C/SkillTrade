@@ -50,10 +50,7 @@ export default function AccountMenuMobile(props) {
       <Box sx={{display: 'flex', alignItems: 'center', textAlign: "right", justifyContent: "right", height: "100%"}}>
         {displayBackToHomePageButtonIfNeeded()}
         <IconButton onClick={handleClick} size="small" sx={{marginLeft: 2}}>
-          {/*<Avatar alt={firstName.charAt(0) + " " + lastName.charAt(0)} src={props.loggedUserAvatar} >*/}
-          <Avatar alt="User Avatar" src={props.loggedUserAvatar}>
-            {/*{firstName.charAt(0) + " " + lastName.charAt(0)}*/}
-          </Avatar>
+          <Avatar alt="User Avatar" src={props.loggedUserAvatar}/>
         </IconButton>
       </Box>
       <Menu

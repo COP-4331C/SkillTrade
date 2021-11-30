@@ -72,12 +72,11 @@ export default function ProfilePage(props) {
   const [twitterLink, setTwitterLink] = useState("");
   const [linkedInLink, setLinkedInLink] = useState("");
   const [newReview, setNewReview] = useState(true);
-  const [loggedUserId, setLoggedUserId] = useState("");
+  let loggedUserId;
   const [loggedUserFirstName, setLoggedFirstName] = useState("");
   const [loggedUserLastName, setLoggedLastName] = useState("");
   const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
   const [reviewMessages, setReviewMessages] = useState([]);
-  // const [mumOfReviews, setNumOfReviews] = useState(0);
   const [newReviewForm, setNewReviewForm] = useState([]);
   const [displayNewReview, setDisplayNewReview] = useState("none");
   const [city, setCity] = useState("");
@@ -436,11 +435,6 @@ export default function ProfilePage(props) {
         .then(function (response) {
           setPhoto(response.data.URL);
           setLoggedUserAvatar(response.data.URL);
-          // localStorage.setItem("loggedUserAvatar", response.data.URL);
-          // setLoggedUser({
-          //   ...loggedUser,
-          //   avatar: response.data.URL
-          // })
         })
         .catch(console.log);
     }
@@ -456,14 +450,36 @@ export default function ProfilePage(props) {
         "/api/user/id",
         {headers: {Authorization: `Bearer ${token}`}}
       );
-      setLoggedUserId(response.data["userId"]);
+      // setLoggedUserId(response.data["userId"]);
+      loggedUserId = response.data["userId"];
       userIdToFetchReviewsFor = response.data["userId"];
+
+      // userId = "" means no id was passed to the profile page
+      // (like when a user's name is click in a skill card). Therefore,
+      if(loggedUserId === userId || userId === "") {
+        setEditPermission(true);
+        setDisableImageUpload(false);
+        setMousePointer("pointer");
+      } else {
+        setEditPermission(false);
+        setDisableImageUpload(true);
+        setMousePointer("");
+      }
+
+      // if (editPermission) {
+      //   setDisableImageUpload(false);
+      //   setMousePointer("pointer");
+      // } else {
+      //   setDisableImageUpload(true);
+      //   setMousePointer("");
+      // }
+
     } catch (error) {
       console.log(error);
     }
 
+    // Gets logged user's avatar, first & last name
     try {
-      // Gets logged user's avatar, first & last name
       const response = await axios.get(
         "/api/user/profile",
         { headers: { Authorization: `Bearer ${token}` }}
@@ -477,10 +493,8 @@ export default function ProfilePage(props) {
     }
 
 
-
+    // Fetches the profile data
     try {
-      // Fetches the profile data
-      // const response = await axios.get(URL, config);
       const response = await axios.get(
         `/api/user/profile/${!userId ? "" : userId}`,
         { headers: { Authorization: `Bearer ${token}` }}
@@ -497,12 +511,8 @@ export default function ProfilePage(props) {
       setState(response.data["state"]);
       setCountry(response.data["country"]);
 
-
-
       if(userId !== "") {
-        // localStorage.setItem("loggedUserAvatar", response.data["profilePic"]);
         userIdToFetchReviewsFor = userId;
-        console.log(userIdToFetchReviewsFor);
       }
 
       // Fetches reviews
@@ -551,16 +561,6 @@ export default function ProfilePage(props) {
       //  setEditPermission = true below. (Note: we can't set editPermission,
       //  to then read its state immediately; it does not work.
 
-      // if(localStorage.getItem('skilledUserID') === localStorage.getItem('loggedUserId'))
-
-      if (editPermission) {
-        setDisableImageUpload(false);
-        setMousePointer("pointer");
-      } else {
-        setDisableImageUpload(true);
-        setMousePointer("");
-      }
-
       setInstagramLink("https://www.instagram.com/" + instagram);
       setTwitterLink("https://twitter.com/" + twitter);
       setLinkedInLink("https://www.linkedin.com/in/" + linkedIn);
@@ -568,7 +568,6 @@ export default function ProfilePage(props) {
       setTimeout(async () => {
         await getProfileData();
         fetchSkills();
-        // fetchReviews();
       }, 1);
 
     } catch (e) {

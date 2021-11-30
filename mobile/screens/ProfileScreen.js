@@ -336,24 +336,57 @@ const ProfileScreen = ({navigation}) => {
   const renderLearnSkills = post => { 
     return (
       <View style={styles.sectionContainer}>
-        <View style={{alignItems:"center"}}>
-          <View style={styles.recentItem}>
-              <View style={styles.recentItemIndicator}></View>
-              <View style={{width:270}}>
-                <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
-                {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
-                <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
-                <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
-                <Text style={[styles.text, {fontWeight: "600"}]}>Description: </Text>
-                <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.description}</Text>
-                <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
-                <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
+        <View style={styles.skillContainer}>
+          <View style={styles.skillBar}>
+            <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text>
+            <TouchableOpacity onPress={() => {navigation.navigate('EditSkillScreen', {paramKey: post,})}} > 
+              <AntDesign name="edit" size={18} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
+              <AntDesign name="delete" size={18} color="black" />
+            </TouchableOpacity>
+
+          </View> 
+          <Text style={[styles.about, {fontWeight:"600"}]}>Summary: </Text>
+          <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.summary}</Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>Description: </Text>
+          <Text style={[styles.about, {fontWeight:"400"}, {paddingLeft:12}]}>{post.description}</Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>Would Like to Pay: <Text style={{fontWeight:"400"}}>{post.price}</Text></Text>
+          <Text style={[styles.about, {fontWeight:"600"}]}>Location: <Text style={{fontWeight:"400"}}>{post.city}</Text></Text>
+          <View style={{marginTop:10}}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <View style={styles.imageContainer}>
+                <Image source={{uri:post.imageURL}} style={styles.image} resizeMode="cover"></Image>
               </View>
+            </ScrollView> 
           </View>
         </View>
       </View>
     );
   };
+
+
+  // const renderLearnSkills = post => { 
+  //   return (
+  //     <View style={styles.sectionContainer}>
+  //       <View style={{alignItems:"center"}}>
+  //         <View style={styles.recentItem}>
+  //             <View style={styles.recentItemIndicator}></View>
+  //             <View style={{width:270}}>
+  //               <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
+  //               {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
+  //               <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
+  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
+  //               <Text style={[styles.text, {fontWeight: "600"}]}>Description: </Text>
+  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.description}</Text>
+  //               <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
+  //               <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
+  //             </View>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   );
+  // };
 
   const renderReviews = post => { 
     return (
@@ -459,7 +492,7 @@ const ProfileScreen = ({navigation}) => {
     );
 
   }
-
+  
   const addButtonHandler = (title) => {
     if ( title == "MY SKILLS"){
       navigation.navigate('AddSkillScreen')

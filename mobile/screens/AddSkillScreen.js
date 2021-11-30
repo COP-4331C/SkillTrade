@@ -1,5 +1,5 @@
 // dark theme customisation at the end at abt 29:57
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import {useIsFocused} from "@react-navigation/native"
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 
@@ -48,7 +49,21 @@ const AddSkillScreen = ({navigation}) => {
   const [city, setCity] = useState("");
   const [pickedImage, setPickedImage] = useState('');
   
+  const isFocused = useIsFocused()
 
+  useEffect(()=>{
+    if (isFocused){
+      setTitle("");
+      setSummary("");
+      setDescription("");
+      setStatus("");
+      setPrice("");
+      setCountry("");
+      setState("");
+      setCity("");
+      setPickedImage('');
+    }
+  },[isFocused])
 
   const createFileFormData = (image, body = {}) => {
     const data = new FormData();
@@ -131,13 +146,13 @@ const AddSkillScreen = ({navigation}) => {
         //   " ", // My Alert Msg
         //   { text: "OK", onPress: () => console.log("OK Pressed") }
         // );
-        Alert.alert(
-          "",
-          "Skill is Added!",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-          { cancelable: true }
-        );
-        // navigation.goBack()
+        // Alert.alert(
+        //   "",
+        //   "Skill is Added!",
+        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        //   { cancelable: true }
+        // );
+        navigation.goBack()
         // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {

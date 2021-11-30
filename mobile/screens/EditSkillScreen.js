@@ -19,6 +19,7 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import {useIsFocused} from "@react-navigation/native"
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 
@@ -29,6 +30,9 @@ const EditSkillScreen = ({navigation, route}) => {
   //   newContent: route.params.paramKey.content,
   //   userToken: '',
   // }); 
+  useEffect(() => {
+    console.log("updated " + title);
+  },[title]);
 
   const [data, setData] = React.useState({
     skillId: route.params.paramKey._id, // {route.params.paramKey._id}
@@ -47,6 +51,20 @@ const EditSkillScreen = ({navigation, route}) => {
   const [city, setCity] = useState("");
   const [pickedImagePath, setPickedImagePath] = useState('');
   
+  useEffect(() => {
+    connectToSkillApi(data.skillId);
+  }, []);
+  const isFocused = useIsFocused()
+
+  useEffect(()=>{
+    if (isFocused){
+      setData({
+        ...data,
+        skillId: route.params.paramKey._id
+      })
+      connectToSkillApi(data.skillId);
+    }
+  },[isFocused])
   // USE EFFECT ///////////////////////////////////////////////////////////////////////////
   useEffect(async() => { 
     console.warn(data.skillId)
@@ -59,9 +77,6 @@ const EditSkillScreen = ({navigation, route}) => {
     setToken(userTokenData);
   }, [])
 
-  useEffect(() => {
-    connectToSkillApi(data.skillId);
-  }, []);
   // USE EFFECT ///////////////////////////////////////////////////////////////////////////
 
   // Camera /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,6 +246,7 @@ const EditSkillScreen = ({navigation, route}) => {
         },
       })
       .then(function (response) {
+        console.log("before " +  title);
         setPickedImagePath({ uri: response.data["imageURL"] });
         setTitle(response.data["title"]);
         setDescription(response.data["description"]);
@@ -240,7 +256,9 @@ const EditSkillScreen = ({navigation, route}) => {
         setCountry(response.data["country"]);
         setState(response.data["state"]);
         setCity(response.data["city"]);
-        console.warn("Connetcted to get skill api!");
+        console.log("Connetcted to get skill i!");
+        console.log("after " +  title);
+        console.log(response.data["title"]);
       })
       .catch(function (error) {
         console.log(error)

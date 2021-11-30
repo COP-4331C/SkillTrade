@@ -13,6 +13,8 @@ import {Link as RouterLink} from "react-router-dom";
 import {logoutUser} from "./Logout";
 import ProfileIcon from '@mui/icons-material/AccountBox';
 import Button from "@mui/material/Button";
+import KeyIcon from '@mui/icons-material/VpnKey';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 export default function AccountMenuMobile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -25,42 +27,10 @@ export default function AccountMenuMobile(props) {
     setAnchorEl(null);
   };
 
-  // Sets the color of the User Avatar
-  // function stringToColor(string) {
-  //   let hash = 0;
-  //   let i;
-  //
-  //   /* eslint-disable no-bitwise */
-  //   for (i = 0; i < string.length; i += 1) {
-  //     hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  //   }
-  //
-  //   let color = '#';
-  //
-  //   for (i = 0; i < 3; i += 1) {
-  //     const value = (hash >> (i * 8)) & 0xff;
-  //     color += `00${value.toString(16)}`.substr(-2);
-  //   }
-  //   /* eslint-enable no-bitwise */
-  //
-  //   return color;
-  // }
-
-  // Sets the initials to be displayed as the user avatar.
-  // function stringAvatar(name) {
-  //   return {
-  //     sx: {
-  //       bgcolor: stringToColor(name),
-  //     },
-  //     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-  //   };
-  // }
-
-
   function displayBackToHomePageButtonIfNeeded() {
     if (window.location.href.toLowerCase().includes("profile")) {
       return (
-        <Box sx={{display: 'flex', alignItems: 'center', textAlign:'right', justifyContent: 'right', height: '100%'}}>
+        <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'right', justifyContent: 'right', height: '100%'}}>
           <Button
             variant="text"
             color="secondary"
@@ -71,20 +41,20 @@ export default function AccountMenuMobile(props) {
         </Box>
       )
     } else {
-      return(<></>);
+      return (<></>);
     }
   }
 
   return (
     <React.Fragment>
-      <Box sx={{ display: 'flex', alignItems:'center', textAlign: "right", justifyContent: "right", height:"100%"}}>
+      <Box sx={{display: 'flex', alignItems: 'center', textAlign: "right", justifyContent: "right", height: "100%"}}>
         {displayBackToHomePageButtonIfNeeded()}
-          <IconButton onClick={handleClick} size="small" sx={{ marginLeft: 2 }}>
-            {/*<Avatar alt={firstName.charAt(0) + " " + lastName.charAt(0)} src={props.loggedUserAvatar} >*/}
-            <Avatar alt="User Avatar" src={props.loggedUserAvatar} >
-              {/*{firstName.charAt(0) + " " + lastName.charAt(0)}*/}
-            </Avatar>
-          </IconButton>
+        <IconButton onClick={handleClick} size="small" sx={{marginLeft: 2}}>
+          {/*<Avatar alt={firstName.charAt(0) + " " + lastName.charAt(0)} src={props.loggedUserAvatar} >*/}
+          <Avatar alt="User Avatar" src={props.loggedUserAvatar}>
+            {/*{firstName.charAt(0) + " " + lastName.charAt(0)}*/}
+          </Avatar>
+        </IconButton>
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -117,8 +87,8 @@ export default function AccountMenuMobile(props) {
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
         <MenuItem component={RouterLink} to="/profile">
           <ListItemIcon>
@@ -132,30 +102,31 @@ export default function AccountMenuMobile(props) {
           </ListItemIcon>
           My account
         </MenuItem>
-        <Divider />
+        <Divider/>
 
         <MenuItem component={RouterLink} to="/change">
           <ListItemIcon>
-              <ConstructionOutlinedIcon />
-            </ListItemIcon>
+            <KeyIcon/>
+          </ListItemIcon>
           Change Password
         </MenuItem>
 
         <MenuItem component={RouterLink} to="/skillpage">
           <ListItemIcon>
-              <ConstructionOutlinedIcon />
-            </ListItemIcon> My Skills
+            <ConstructionOutlinedIcon/>
+          </ListItemIcon> My Skills
         </MenuItem>
 
-        {/* <MenuItem>
+        <MenuItem component={RouterLink} to="/BuyCredits">
           <ListItemIcon>
-            <ConstructionOutlinedIcon />
+            <MonetizationOnIcon />
           </ListItemIcon>
-          My Skills
-        </MenuItem> */}
+          My Skill Credits
+        </MenuItem>
+
         <MenuItem onClick={() => logoutUser()}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout fontSize="small"/>
           </ListItemIcon>
           Logout
         </MenuItem>

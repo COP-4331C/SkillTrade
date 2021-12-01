@@ -83,7 +83,7 @@ export default function Testcard(props) {
     text: "",
   });
 
-  const [photo, setPhoto] = useState(props.skillimage);
+  const [photo, setPhoto] =  useState(props.skillimage);
 
   function enterEditMode() {
     setEditMode(true); // Turns edit mode mode (set variable to true)
@@ -199,6 +199,8 @@ export default function Testcard(props) {
 
       axios
         .put(`/api/skills/${props.skillid}`, payload, {
+          // .post(`/api/skills/${props.skillid}`, formData, {
+
           headers: {Authorization: `Bearer ${token}`},
         })
         .then((res) => {
@@ -225,7 +227,7 @@ export default function Testcard(props) {
 
   const handleCloseDel = () => {
     setOpenDel(false);
-    refreshPage();
+    // refreshPage();
   };
 
   //Delete Skill Axios Delete
@@ -316,9 +318,14 @@ export default function Testcard(props) {
 
   //Upload Skill Pic Axios Post
   function handleskillpic(e) {
+
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
+    // setPhoto(e.target.files[0]);
 
+    console.log(e.target.files[0])
+    console.log(props.skillid);
+    
     const token = localStorage.getItem("token");
     axios
       .post(`/api/skills/${props.skillid}`, formData, {
@@ -329,6 +336,8 @@ export default function Testcard(props) {
       })
       .then(function (response) {
         setPhoto(response.data.URL);
+        console.log(response.data.URL);
+        console.log(props.skillid);
       })
       .catch(console.log);
   }
@@ -355,7 +364,7 @@ export default function Testcard(props) {
           border: 4,
           borderRadius: 5,
           borderColor: "black",
-          maxwidth: "350px",
+          maxWidth: "350px",
           minWidth: "300px",
           // paddingRight:"2",
           marginRight: 20,
@@ -366,21 +375,20 @@ export default function Testcard(props) {
       >
         {/* //start of the image-header// */}
         <Box position="relative">
-          <label htmlFor="icon-button-file-2">
+          <label htmlFor={props.skillid}>
             <Input
               accept=".png, .jpg, .jpeg"
-              id="icon-button-file-2"
+              id={props.skillid}
               type="file"
               name="photo"
               onChange={handleskillpic}
-              disabled={disableImageUpload}
+              // disabled={disableImageUpload}
             />
             {/** **************************** Image ********************** **/}
             <img
+              // src={this.state.photo}
               src={photo}
               style={{
-                // background: {photo},
-                // backgroundSize: "300px",
                 width: 350,
                 height: 200,
                 borderRadius: "4px 0 0 4px",
@@ -388,6 +396,12 @@ export default function Testcard(props) {
                 cursor: mousePointer
                 // opacity: imageOpacity
               }}
+              // sx={{
+              //   display: displayEditFields,
+              //   color: "black",
+              //   marginTop: "10px",
+              // }}
+              
               alt="user"
             />
           </label>
@@ -521,8 +535,7 @@ export default function Testcard(props) {
                     sx={{
                       fontSize: 14,
                       fontWeight: 600,
-                      display: displayAboutMeText2,
-                      flexWrap: "wrap",
+                      display: displayAboutMeText2,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               flexWrap: "wrap",
                       alignContent: "center",
                       marginTop: 1
                     }}
@@ -598,7 +611,8 @@ export default function Testcard(props) {
                       width: "100%",
                       left: "50%",
                       top: "50%",
-                      // transform:"translate(-50%,-50%)"
+                      textOverflow: "ellipsis",
+                      
                     }}
                     variant="body4"
                     sx={{
@@ -694,7 +708,7 @@ export default function Testcard(props) {
               style={{position: "relative", borderWidth: "0px"}}
               sx={{height: "auto", display: displayContainer}}
             >
-              <Grid container sx={{mb: 0}}>
+              <Grid container sx={{mb: 0}} >
                 {/* //icon// */}
                 <Grid item xs={2}>
                   <IconButton
@@ -744,6 +758,7 @@ export default function Testcard(props) {
                 rows={1}
                 value={priceTemp}
                 fullWidth
+                type="number"
                 onChange={handleOnChangePrice}
                 sx={{
                   display: displayEditFields,

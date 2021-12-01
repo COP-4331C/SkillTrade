@@ -42,11 +42,13 @@ const [aboutMeText2, setAboutMeText2] = useState("");
 
 
 //City and State
-const [cityAdd, setCityAdd] = useState("Oralndo");
-const [stateAdd, setStateAdd] = useState("Florida");
+const [cityAdd, setCityAdd] = useState("");
+const [stateAdd, setStateAdd] = useState("");
+const [cAdd, setCAdd] = useState("");
 
 const [cityAddTemp, setcityAddTemp] = useState("");
 const [stateAddTemp, setstateAddTemp] = useState("");
+const [cAddTemp, setCAddTemp] = useState("");
 
 //Skills explanation display/edit mode variable
 const [aboutMeText2Temp, setAboutMeText2Temp] = useState("");
@@ -114,6 +116,7 @@ function handleSave() {
     setStateAdd(stateAddTemp);
     setAboutMeText(aboutMeTextTemp);
     setAboutMeText2(aboutMeText2Temp);
+    setCAdd(cAddTemp);
 
     const userId = "";
     const token = localStorage.getItem('token');
@@ -126,21 +129,23 @@ function handleSave() {
       price: priceTemp,
       status: "Teaching",
       state: stateAddTemp,
-      city: cityAddTemp
+      city: cityAddTemp,
+      country: cAddTemp
     };
 
       axios.post(`/api/skills/`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
-      setopenMod(false)
+      console.log("success")
+      setopenMod(true)
     })
     .catch((err) => {
       console.log(err);
     })
 
-handleClose();  
-refreshPage();
+// handleClose();  
+// refreshPage();
 }}
 
 
@@ -190,10 +195,14 @@ function handleOnChangePrice(e) {
   setpriceTemp(e.target.value);
 }
 
+function handleOnChangeCAddress(e) {
+  setCAddTemp(e.target.value);
+}
+
 
   return (
     <div >
-      {/* <form onSubmit={handleSave}> */}
+      <form onSubmit={handleSave}>
       <Paper variant="outlined" 
             square 
             style={{ borderWidth:"0px"}}
@@ -289,8 +298,25 @@ function handleOnChangePrice(e) {
 
             <Grid item xs={3}>
               <TextField required
+                label="Country"
+                variant="filled"
+                rows={1}
+                value={cAddTemp}
+                fullWidth
+                onChange={handleOnChangeCAddress}
+                // sx={{display: displayEditFields,color:"black", marginTop: "10px"}}
+                // helperText={aboutMeText2Error.text}
+                // error={aboutMeText2Error.state}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container >
+            <Grid item xs={12} sm={12} md={12} lg={12} >
+              <TextField required
                 label="Price"
                 variant="filled"
+                type="number"
                 rows={1}
                 value={priceTemp}
                 fullWidth
@@ -300,7 +326,6 @@ function handleOnChangePrice(e) {
                 // error={aboutMeText2Error.state}
               />
             </Grid>
-
           </Grid>
 
          {/******************** Cancel+SAVE Button *********************/}
@@ -329,22 +354,22 @@ function handleOnChangePrice(e) {
                     <Button
                       color="secondary"
                       variant="contained"
-                      // type='submit'
-                      onClick={handleClickOpen}
+                      type='submit'
+                      onClick={handleSave}
                       // handleClickOpen
                     ><SaveIcon/>
                     </Button>
                     <div>
                       <Dialog open={openMod} onClose={handleCloseMod}>
-                        <DialogTitle>Add Skill!</DialogTitle>
+                        <DialogTitle>Skill Added!</DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            Please make sure the the input information is correct for your skill. Hit save once confirmed to add your Brand New Skill!
+                            Your brand new skill has been added! It is time to get started with Skill Trading!
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                          <Button onClick={handleSave}>Save</Button>
-                          {/* <Button onClick={handleClose}>Subscribe</Button> */}
+                          {/* <Button onClick={handleSave}>Save</Button> */}
+                          <Button onClick={handleCloseMod}>Close</Button>
                         </DialogActions>
                       </Dialog>
                     </div>
@@ -361,7 +386,7 @@ function handleOnChangePrice(e) {
     </Grid>
     </Box>
     </Modal>
-    {/* </form> */}
+    </form>
     </div>
   );
 }

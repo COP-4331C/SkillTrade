@@ -536,6 +536,7 @@ export default function ProfilePage(props) {
     })
       .then((res) => {
         setSkillPosts(res.data);
+        console.log(res.data)
       })
       .catch((err) => {
         console.log(err);
@@ -1156,16 +1157,28 @@ export default function ProfilePage(props) {
       </Box>
 
       {/******************************* Divider between Skill Listings *******************************/}
-      
+
+      <Grid align='center'>
+
+        <h1 style={{ color: 'primary' }}>
+          My Skills
+        </h1>
+
+        {/* <Divider variant="middle" style={{ color: 'white', border: "1px solid" }} sx={{ mb: 2 }} /> */}
+
+      </Grid>
+
+
       {/******************************* Skill Listings *******************************/}
 
       <Paper
-        variant="outlined"
+        elevation={3}
+        // variant="outlined"
         square
         style={{ backgroundColor: Theme.palette.primary.main, position: "relative", borderWidth: "0px" }}
-        sx={{ pt: 3, pb: 3, mt: 0 }}
+        sx={{ pt: 5, pb: 5, mt: 0, mb:5 }}
       >
-        <Grid align='center'>
+        {/* <Grid align='center'>
 
           <h1 style={{ color: 'white' }}>
             All Skills
@@ -1173,7 +1186,7 @@ export default function ProfilePage(props) {
 
           <Divider variant="middle" style={{ color: 'white', border: "1px solid" }} sx={{ mb: 2 }} />
 
-        </Grid>
+        </Grid> */}
         {skilllist()}
       </Paper>
 

@@ -91,7 +91,7 @@ const ForgetPasswordScreen = ({navigation}) => {
     }*/
 
     function connectToForgotPasswordApi(email) {
-      axios.patch(
+      axios.post(
           "https://cop4331c.herokuapp.com/api/user/forgot-password",
           {
             email: email
@@ -211,7 +211,8 @@ const ForgetPasswordScreen = ({navigation}) => {
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.signIn}
-                        onPress={() => {/*connectToForgotPasswordApi(username)*/}}
+                        onPress={() => {connectToForgotPasswordApi(data.username)
+                          navigation.goBack() }}
                     >
                     <LinearGradient
                         colors={['#08d4c4', '#01ab9d']}

@@ -500,7 +500,7 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{display: displayContainer, marginTop: 1}}
+                    sx={{display: displayContainer, marginTop: 1, cursor:"default"}}
                   >
                     <DescriptionIcon/>
                   </IconButton>
@@ -584,7 +584,7 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{display: displayContainer, paddingTop: 0, marginTop: 2}}
+                    sx={{display: displayContainer, paddingTop: 0, marginTop: 2, cursor:"default"}}
                   >
                     <PersonPinCircleIcon/>
                   </IconButton>
@@ -702,7 +702,7 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{display: displayContainer}}
+                    sx={{display: displayContainer, cursor:"default"}}
                   >
                     <MonetizationOnTwoToneIcon/>
                   </IconButton>

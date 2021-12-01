@@ -38,6 +38,7 @@ export default function ProfilePage(props) {
   const [displayEditFields, setDisplayEditFields] = useState("none");
   const [displayAboutMeText, setDisplayAboutMeText] = useState("block")
   const [displaySocial, setDisplaySocial] = useState("none");
+  const [displayWriteReviewButton, setDisplayWriteReviewButton] = useState("");
   const [inEditMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -458,16 +459,20 @@ export default function ProfilePage(props) {
 
       // userId = "" means no id was passed to the profile page
       // (like when a user's name is click in a skill card). Therefore,
-      if(loggedUserId === userId || userId === "") {
+      if(loggedUserId === userId || userId === "") {    // Case: Logged user can edit
         setEditPermission(true);
         setDisableImageUpload(false);
         setMousePointer("pointer");
         setDisplayEditButton("inline-flex");
+        setDisplayWriteReviewButton("none");
+
+      // Case: logged user is visiting a profile, so can't edit it
       } else {
         setEditPermission(false);
         setDisableImageUpload(true);
         setMousePointer("");
         setDisplayEditButton("none");
+        setDisplayWriteReviewButton("block");
       }
 
     } catch (error) {
@@ -1195,7 +1200,7 @@ export default function ProfilePage(props) {
       </Paper>
 
       {/******************************* Write a Review Button *******************************/}
-      <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto" }}>
+      <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto", display:displayWriteReviewButton }}>
         <Button
           variant="contained"
           color="secondary"

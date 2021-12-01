@@ -118,7 +118,7 @@ const HomePage = () => {
             skilluserpic={fetchedSkill.userProfilePic}
             skillprice={fetchedSkill.price}
             skillcountry={fetchedSkill.country}
-            skillClickableLink={false}
+            skillClickableLink={true}
             skillPhotoEditable={false}
           />
         </Grid>

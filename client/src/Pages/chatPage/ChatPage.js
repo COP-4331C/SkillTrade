@@ -118,7 +118,6 @@ export default function ChatPage() {
     });
 
     try {
-      console.log(message);
       const res = await axios.post("/api/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");

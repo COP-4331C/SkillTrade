@@ -19,7 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Directions, TextInput } from 'react-native-gesture-handler';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import AddSkillScreen from './AddSkillScreen';
+import EditSkillScreen from './EditSkillScreen';
 import moment from "moment";
 import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
@@ -312,7 +312,7 @@ const ProfileScreen = ({navigation}) => {
         <View style={styles.skillContainer}>
           <View style={styles.skillBar}>
             <Text style={[styles.about, {fontWeight:"700"}]}>{post.title}</Text>
-            <TouchableOpacity onPress={()=>{ navigation.navigate('EditSkillScreen')}} > 
+            <TouchableOpacity onPress={() => {navigation.navigate('EditSkillScreen', {paramKey: post,})}} > 
               <AntDesign name="edit" size={18} color="black" />
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{ confirmDeleteSkill(post._id) }} > 
@@ -367,11 +367,35 @@ const ProfileScreen = ({navigation}) => {
                 <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
                 <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
               </View>
+            {/* </ScrollView>  */}
           </View>
         </View>
       </View>
     );
   };
+
+
+  // const renderLearnSkills = post => { 
+  //   return (
+  //     <View style={styles.sectionContainer}>
+  //       <View style={{alignItems:"center"}}>
+  //         <View style={styles.recentItem}>
+  //             <View style={styles.recentItemIndicator}></View>
+  //             <View style={{width:270}}>
+  //               <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
+  //               {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
+  //               <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
+  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
+  //               <Text style={[styles.text, {fontWeight: "600"}]}>Description: </Text>
+  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.description}</Text>
+  //               <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
+  //               <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
+  //             </View>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   );
+  // };
 
   const renderReviews = post => { 
     return (

@@ -151,10 +151,10 @@ const EditProfileScreen = ({ navigation }) => {
         // handleCountryChange(response.data["country"]);
         // handleStateChange(response.data["state"]);
         //handleCityChange(response.data["city"]);
-        console.warn("Connetcted to profile!");
+        // console.warn("Connetcted to profile!");
       })
       .catch(function (error) {
-        console.warn("Fail to connetcted to profile!");
+        console.warn(error);
       });
   }
 
@@ -235,7 +235,7 @@ const EditProfileScreen = ({ navigation }) => {
         }
       )
       .then(function (response) {
-        console.warn("profile changed");
+        // console.warn("profile changed");
         // navigation.goBack()
         /*Alert.alert(
                     "Profile Changed!", // Alert Title
@@ -252,7 +252,7 @@ const EditProfileScreen = ({ navigation }) => {
         // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
-        console.warn("profile not changed");
+        // console.warn("profile not changed");
         Alert.alert("Must Have a First Name!", "Please try again.", {
           text: "OK",
           onPress: () => console.log("OK Pressed"),
@@ -291,25 +291,25 @@ const EditProfileScreen = ({ navigation }) => {
         }
       )
       .then(function (response) {
-        console.warn("profile picture is changed");
+        // console.warn("profile picture is changed");
         // navigation.goBack()
         // Alert.alert(
         //   "Profile Changed!", // Alert Title
         //   " ", // My Alert Msg
         //   { text: "OK", onPress: () => console.log("OK Pressed") }
         // );
-        Alert.alert(
-          "",
-          "Profile Picture is Changed!",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-          { cancelable: true }
-        );
+        // Alert.alert(
+        //   "",
+        //   "Profile Picture is Changed!",
+        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        //   { cancelable: true }
+        // );
         // navigation.goBack()
         // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
         console.log(error.message);
-        console.warn("profile picture is not changed");
+        // console.warn("profile picture is not changed");
       });
   }
 
@@ -528,9 +528,10 @@ const EditProfileScreen = ({ navigation }) => {
                 </ImageBackground>
               </View>
             </TouchableOpacity>
-            <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "bold" }}>
+            {/* <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "bold" }}>
               {firstName} {lastName}
-            </Text>
+            </Text> */}
+            <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text>
           </View>
 
         

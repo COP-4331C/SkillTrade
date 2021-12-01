@@ -52,7 +52,6 @@ export default function Testcard(props) {
   const [cAdd, setCAdd] = useState(props.skillcountry);
 
 
-
   //Skills explanation display/edit mode variable
   const [displayAboutMeText2, setDisplayAboutMeText2] = useState("block");
   const [aboutMeText2Temp, setAboutMeText2Temp] = useState("");
@@ -201,7 +200,7 @@ export default function Testcard(props) {
       console.log(token);
       axios
         .put(`/api/skills/${props.skillid}`, payload, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {Authorization: `Bearer ${token}`},
         })
         .then((res) => {
           console.log("success");
@@ -227,8 +226,8 @@ export default function Testcard(props) {
 
   const handleCloseDel = () => {
     setOpenDel(false);
-    refreshPage() ;
-};
+    refreshPage();
+  };
 
   //Delete Skill Axios Delete
   function handleDeleteButton() {
@@ -237,7 +236,7 @@ export default function Testcard(props) {
     console.log(token);
     axios
       .delete(`/api/skills/${props.skillid}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       })
       .then((res) => {
         console.log("success");
@@ -338,8 +337,6 @@ export default function Testcard(props) {
 
   useEffect(() => {
     try {
-      // if (editPermission) {
-      console.log("props.skillEditable: " + props.skillEditable);
       if (props.skillEditable) {
         setDisableImageUpload(false);
         setMousePointer("pointer");
@@ -365,7 +362,7 @@ export default function Testcard(props) {
           // paddingRight:"2",
           marginRight: 20,
           marginLeft: 20,
-          marginTop:0
+          marginTop: 0
           // marginRight: 20,
 
 
@@ -413,7 +410,7 @@ export default function Testcard(props) {
             padding
             sx={{ backgroundColor: "white", alignContent: "center" }}
           >
-            <Typography variant="body5" color="black" style={{ paddingTop: 1 }}>
+            <Typography variant="body5" color="black" style={{paddingTop: 1}}>
               I can teach you...
             </Typography>
           </Box>
@@ -437,7 +434,7 @@ export default function Testcard(props) {
                 position: "relative",
                 borderWidth: "0px",
               }}
-              sx={{ height: "72px", display: displayContainer }}
+              sx={{height: "72px", display: displayContainer}}
             >
               <Typography
                 padding
@@ -497,17 +494,17 @@ export default function Testcard(props) {
             <Paper
               variant="outlined"
               square
-              style={{ position: "relative", borderWidth: "0px" }}
-              sx={{ height: "120px", display: displayContainer }}
+              style={{position: "relative", borderWidth: "0px"}}
+              sx={{height: "120px", display: displayContainer}}
             >
               <Grid container>
                 <Grid item xs={2}>
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer, marginTop:1 }}
+                    sx={{display: displayContainer, marginTop: 1}}
                   >
-                    <DescriptionIcon />
+                    <DescriptionIcon/>
                   </IconButton>
                 </Grid>
 
@@ -515,7 +512,7 @@ export default function Testcard(props) {
                   <Typography
                     paddingTop="8px"
                     style={{
-                      
+
                       alignItems: "center",
                       // position: "absolute",
                       textAlign: "left",
@@ -531,7 +528,7 @@ export default function Testcard(props) {
                       display: displayAboutMeText2,
                       flexWrap: "wrap",
                       alignContent: "center",
-                      marginTop:1
+                      marginTop: 1
                     }}
                   >
                     {aboutMeText2}
@@ -580,8 +577,8 @@ export default function Testcard(props) {
             <Paper
               variant="outlined"
               square
-              style={{ position: "relative", borderWidth: "0px" }}
-              sx={{ height: "auto", display: displayContainer }}
+              style={{position: "relative", borderWidth: "0px"}}
+              sx={{height: "auto", display: displayContainer}}
             >
               <Grid container>
                 {/* //icon// */}
@@ -589,13 +586,13 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer, paddingTop:0, marginTop:2 }}
+                    sx={{display: displayContainer, paddingTop: 0, marginTop: 2}}
                   >
-                    <PersonPinCircleIcon />
+                    <PersonPinCircleIcon/>
                   </IconButton>
                 </Grid>
 
-                <Grid item  >
+                <Grid item>
                   <Typography
                     // padding="8px"
                     style={{
@@ -613,12 +610,12 @@ export default function Testcard(props) {
                       display: displayAddress,
                       flexWrap: "wrap",
                       alignContent: "center",
-                      marginTop:2,
+                      marginTop: 2,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                     }}
                   >
-                    {cityAdd + " "+stateAdd+" "+ cAdd}
+                    {cityAdd + " " + stateAdd + " " + cAdd}
                   </Typography>
                 </Grid>
               </Grid>
@@ -698,18 +695,18 @@ export default function Testcard(props) {
             <Paper
               variant="outlined"
               square
-              style={{ position: "relative", borderWidth: "0px" }}
-              sx={{ height: "auto", display: displayContainer }}
+              style={{position: "relative", borderWidth: "0px"}}
+              sx={{height: "auto", display: displayContainer}}
             >
-              <Grid container sx={{ mb: 0 }}>
+              <Grid container sx={{mb: 0}}>
                 {/* //icon// */}
                 <Grid item xs={2}>
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer }}
+                    sx={{display: displayContainer}}
                   >
-                    <MonetizationOnTwoToneIcon />
+                    <MonetizationOnTwoToneIcon/>
                   </IconButton>
                 </Grid>
 
@@ -772,22 +769,22 @@ export default function Testcard(props) {
               flexWrap: "wrap-reverse",
             }}
           >
-            <Grid container justifyContent="center" >
+            <Grid container justifyContent="center">
               <Grid
                 item
                 xs={3}
-                sx={{ paddingBottom: 0, paddingTop: 0 }}
-                style={{ paddingBottom: 0, paddingTop: 0 }}
-                >
+                sx={{paddingBottom: 0, paddingTop: 0}}
+                style={{paddingBottom: 0, paddingTop: 0}}
+              >
                 <Fade in={fade}>
                   <Button
                     variant="outlined"
-                    style={{ backgroundColor: Theme.palette.third.notmain }}
+                    style={{backgroundColor: Theme.palette.third.notmain}}
                     onClick={handleClickOpenDel}
-                    sx={{ display: displayButton, marginTop:1 }}
+                    sx={{display: displayButton, marginTop: 1}}
                   >
                     {" "}
-                    <DeleteForeverIcon />
+                    <DeleteForeverIcon/>
                   </Button>
                 </Fade>
               </Grid>
@@ -798,10 +795,10 @@ export default function Testcard(props) {
                     variant="contained"
                     color="primary"
                     onClick={handleCancelButton}
-                    sx={{ display: displayButton, marginTop:1 }}
+                    sx={{display: displayButton, marginTop: 1}}
                   >
                     {" "}
-                    <CancelPresentationIcon />
+                    <CancelPresentationIcon/>
                   </Button>
                 </Fade>
               </Grid>
@@ -814,9 +811,9 @@ export default function Testcard(props) {
                     onClick={handleSave}
                     // type="submit"
                     // onClick={editSkills }
-                    sx={{ display: displayButton, marginTop:1 }}
+                    sx={{display: displayButton, marginTop: 1}}
                   >
-                    <SaveIcon />
+                    <SaveIcon/>
                   </Button>
                 </Fade>
               </Grid>
@@ -826,7 +823,7 @@ export default function Testcard(props) {
                   <DialogTitle>Delete Skill!</DialogTitle>
                   <DialogContent>
                     <DialogContentText>
-                    Are you sure you want to delete this skill? Rememeber this change can not be undone!
+                      Are you sure you want to delete this skill? Rememeber this change can not be undone!
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
@@ -846,7 +843,7 @@ export default function Testcard(props) {
 
         <Divider
           variant="middle"
-          style={{ color: "black", border: "1px solid" }}
+          style={{color: "black", border: "1px solid"}}
         />
 
         <Grid
@@ -856,42 +853,54 @@ export default function Testcard(props) {
           onMouseOver={handleOnMouseOver}
           onMouseLeave={handleOnMouseLeave}
         >
-          <Grid item xs={3} justifyContent="left">
-          <Link href={'profile/'+props.skilluserdirectid}
-                style={{ textDecoration: 'none' }} >
-            <Avatar alt="User Pic" src={props.skilluserpic} />
-          </Link>
+
+          {/******************** Avatar ********************/}
+
+          <Grid item xs={2} justifyContent="left">
+            {/*if editable, show the avatar with the link*/}
+            {props.skillEditable && <Link href={'profile/' + props.skilluserdirectid}
+                  style={{textDecoration: 'none'}}>
+              <Avatar alt="User Pic" src={props.skilluserpic}/>
+            </Link>}
+            {/*if not editable, show the avatar only*/}
+            {!props.skillEditable && <Avatar alt="User Pic" src={props.skilluserpic}/>}
           </Grid>
 
-        <Grid item xs={6} justifyContent="left">
-          
-          <Link href={'profile/'+props.skilluserdirectid}
-            style={{ textDecoration: 'none' }} 
-                sx={{
-                textAlign: "left",
-                marginTop: "20px",
-                color: "black",
-                fontWeight: 600
-              }}>
-
+          {/******************** Name ********************/}
+          <Grid item xs={8} sx={{display:"flex", alignItems:"center"}}>
+            {props.skillEditable && <Link href={'profile/' + props.skilluserdirectid}
+                  style={{textDecoration: 'none'}}
+                  sx={{
+                    textAlign: "left",
+                    fontWeight: 600
+                  }}>
               {props.skilluserid}
+            </Link>}
+            {!props.skillEditable &&
+              <Box
+                // style={{textDecoration: 'none'}}
+                sx={{
+                  textAlign: "left",
+                  fontWeight: 600,
+                }}
+              >
+                {props.skilluserid}
+            </Box>}
+          </Grid>
 
-        </Link>
-        </Grid>
-
-          <Grid item xs={3} justifyContent="right">
+          <Grid item xs={2} justifyContent="right">
             <IconButton
               aria-label="edit"
               variant="outlined"
               color="secondary"
               onClick={enterEditMode}
-              sx={{ display: displayEditButton, alignItems: "right" }}
+              sx={{display: displayEditButton, alignItems: "right"}}
               align="bottom"
               position="absolute"
               top="50%"
               transform="translateY(-50%)"
             >
-              <EditIcon />
+              <EditIcon/>
             </IconButton>
           </Grid>
         </Grid>

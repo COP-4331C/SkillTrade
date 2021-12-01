@@ -32,7 +32,7 @@ const UserSchema = mongoose.Schema({
   },
   skillCredits: {
     type: Number,
-    default: 0,
+    default: 1000, // SETTING DEFAULT TO 1000 FOR PRESENTATION PURPOSES
     required: true,
   },
   updatedAt: {

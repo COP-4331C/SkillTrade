@@ -1199,6 +1199,14 @@ export default function ProfilePage(props) {
         {skilllist()}
       </Paper>
 
+
+      {/******************************* My Reviews Title *******************************/}
+      <Grid align='center'>
+        <h1 style={{ color: 'primary' }}>
+          My Reviews
+        </h1>
+      </Grid>
+      
       {/******************************* Write a Review Button *******************************/}
       <Box sx={{ maxWidth: 980, flexGrow: 1, marginTop: 1, marginX: "auto", display:displayWriteReviewButton }}>
         <Button

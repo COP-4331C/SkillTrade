@@ -462,10 +462,12 @@ export default function ProfilePage(props) {
         setEditPermission(true);
         setDisableImageUpload(false);
         setMousePointer("pointer");
+        setDisplayEditButton("inline-flex");
       } else {
         setEditPermission(false);
         setDisableImageUpload(true);
         setMousePointer("");
+        setDisplayEditButton("none");
       }
 
     } catch (error) {
@@ -731,8 +733,8 @@ export default function ProfilePage(props) {
             minHeight: 450,
             borderRadius: "0 4px 4px 0",
           }}
-          onMouseOver={handleOnMouseOver}
-          onMouseLeave={handleOnMouseLeave}
+          // onMouseOver={handleOnMouseOver}
+          // onMouseLeave={handleOnMouseLeave}
         >
           {/** *********************** Names *************************** **/}
 

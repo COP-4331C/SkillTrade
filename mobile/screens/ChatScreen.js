@@ -216,7 +216,7 @@ const ChatScreen = ({ navigation }) => {
                 onChangeText={(val) => setNewMessage(val)}
                 value={newMessage}
                 style={{
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: "#e7e6eb",
                   borderRadius: 50,
                   paddingVertical: 10,
                   paddingHorizontal: 20,

@@ -144,12 +144,12 @@ export default function AccountMenuMobile(props) {
           </ListItemIcon>
           Conversations
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <ListItemIcon>
             <FolderSharedOutlinedIcon fontSize="medium" />
           </ListItemIcon>
           My account
-        </MenuItem>
+        </MenuItem> */}
         <Divider />
 
         <MenuItem component={RouterLink} to="/change">

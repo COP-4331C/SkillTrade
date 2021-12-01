@@ -9,7 +9,7 @@ const UserSchema = mongoose.Schema({
     required: true,
     maxLength: [320, "Email must be less than 320 characters."],
     match: [/.+\@.+\..+/, "Please fill a valid email address"],
-    lowercase: true
+    lowercase: true,
   },
   passwordHash: {
     type: String,
@@ -45,10 +45,12 @@ const UserSchema = mongoose.Schema({
     default: Date.now,
     required: true,
   },
-  profile: { // Nested object in user model
+  profile: {
+    // Nested object in user model
     type: ProfileSchema,
     required: true,
-  }
+  },
+  purchasedSkills: [String],
 });
 
 UserSchema.virtual("password")

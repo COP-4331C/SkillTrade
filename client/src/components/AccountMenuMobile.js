@@ -132,7 +132,7 @@ export default function AccountMenuMobile(props) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem component={RouterLink} to="/profile">
+        <MenuItem component={RouterLink} to="/profile" >
           <ListItemIcon>
             <ProfileIcon fontSize="medium" />
           </ListItemIcon>

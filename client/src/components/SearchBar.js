@@ -1,60 +1,18 @@
 import { useState } from "react";
-import { alpha, styled } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
 import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
-import { IconButton } from "@mui/material";
+import {IconButton, TextField} from "@mui/material";
 import ResetIcon from "@mui/icons-material/Close";
 import * as React from "react";
+import {Theme} from "./Theme";
+import InputAdornment from "@mui/material/InputAdornment";
+import {createTheme, makeStyles} from "@material-ui/core";
+import { ThemeProvider } from "@mui/material";
+import {grey} from "@material-ui/core/colors";
 
 export default function SearchBar(props) {
   const [searchText, setSearchText] = useState("");
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, props.bgColor),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, props.bgColorHover),
-    },
-    // marginRight: theme.spacing(2),
-    // marginLeft: 20,
-    marginX: "10px",
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-    "& .MuiInputBase-root": {
-      width: "100%",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      // paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      paddingLeft: "50px",
-      // paddingLeft: props.inputBasePaddingLeft,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "40ch",
-      },
-    },
-  }));
 
   function handleSearchBarOnChange(e) {
     setSearchText(e.target.value);
@@ -74,6 +32,27 @@ export default function SearchBar(props) {
     props.onClick();
   };
 
+  // Helps to override the Text Field Styles
+  const textFieldTheme = createTheme({
+    palette: {
+      secondary: {
+        main: Theme.palette.secondary.main,
+      },
+    }
+  });
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      '& .MuiFormLabel-root': {
+        color: grey[500]
+      },
+      '& .MuiFilledInput-root': {
+        color: "white"
+      },
+    }
+  }));
+  const classes = useStyles();
+
   return (
     <Grid
       item
@@ -84,34 +63,42 @@ export default function SearchBar(props) {
         display: { xs: props.xs, sm: props.sm, md: props.md },
       }}
     >
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          key="Home-search-bar"
-          placeholder="Search for a skill to learn..."
-          inputProps={{ "aria-label": "search" }}
+      <ThemeProvider theme={textFieldTheme}>
+        <TextField
+          id="outlined-search"
+          variant="outlined"
+          placeholder="Search for a skill to learn"
+          type="text"
+          color="secondary"
+          size="small"
+          className={classes.root}
+          sx={{ backgroundColor: "#c4c4c4", width: props.searchBarWidth }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <IconButton
+                onClick={(e) => handleSearchReset(e)}
+              >
+                <ResetIcon
+                  fontSize={"small"}
+                  // sx={{marginRight: "5px", display:{displayResetIcon} }}
+                  sx={{cursor: "pointer", color:Theme.palette.primary.light }}
+
+                />
+              </IconButton>
+            )
+          }}
           onChange={handleSearchBarOnChange}
           value={searchText}
           onKeyDown={(e) => handleEnterPressed(e)}
-          // onFocus={() => setDisplayResetIcon("block")}
-          // onBlur={() => setDisplayResetIcon("none")}
-          endAdornment={
-            <IconButton
-              color={props.xIconColor}
-              onClick={(e) => handleSearchReset(e)}
-            >
-              <ResetIcon
-                fontSize={"small"}
-                // sx={{marginRight: "5px", display:{displayResetIcon} }}
-                sx={{ marginRight: "5px", cursor: "pointer" }}
-                // onClick={() => setSearchText("")}
-              />
-            </IconButton>
-          }
         />
-      </Search>
+
+      </ThemeProvider>
+
     </Grid>
   );
 }

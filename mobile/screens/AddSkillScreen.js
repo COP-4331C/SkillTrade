@@ -1,6 +1,7 @@
 // dark theme customisation at the end at abt 29:57
 import React, {useState} from 'react';
 import {
+  Alert,
   View,
   Text,
   TouchableOpacity,
@@ -46,7 +47,7 @@ const AddSkillScreen = ({navigation}) => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [pickedImage, setPickedImage] = useState('');
+  const [pickedImagePath, setPickedImagePath] = useState('');
   
 
   const createFileFormData = (image, body = {}) => {
@@ -78,7 +79,7 @@ const AddSkillScreen = ({navigation}) => {
     city,
     image
     ) {
-      console.warn("enters the function")
+      // console.warn("enters the function")
     // const data = createFileFormData(image, {
     //   title: title,
     //   summary: summary,
@@ -89,20 +90,20 @@ const AddSkillScreen = ({navigation}) => {
     //   state: state,
     //   city: city,
     // });
-    console.warn("body")
-    console.log(image);
+    // console.warn("body")
+    // console.log(image);
     // console.log(data);
-    console.warn("axios connect")
-    console.log(        {
-      title: title,
-      summary: summary,
-      description: description,
-      status: status,
-      price: price,
-      country: country,
-      state: state,
-      city: city,
-    })
+    // console.warn("axios connect")
+    // console.log(        {
+    //   title: title,
+    //   summary: summary,
+    //   description: description,
+    //   status: status,
+    //   price: price,
+    //   country: country,
+    //   state: state,
+    //   city: city,
+    // })
     axios
       .post(
         `https://cop4331c.herokuapp.com/api/skills`, 
@@ -123,25 +124,30 @@ const AddSkillScreen = ({navigation}) => {
         }
       )
       .then(function (response) {
-        console.log("skill is added");
-        // navigation.goBack()
-        // Alert.alert(
-        //   "Profile Changed!", // Alert Title
-        //   " ", // My Alert Msg
-        //   { text: "OK", onPress: () => console.log("OK Pressed") }
-        // );
-        // Alert.alert(
-        //   "",
-        //   "Skill is Added!",
-        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        //   { cancelable: true }
-        // );
+        Alert.alert(
+          "Skill is Added!", // Alert Title
+          " ", // My Alert Msg
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+        )
         navigation.goBack()
-        // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
         // console.log(error.message);
-        console.warn("Skill is not added");
+        Alert.alert(
+          "Skill is not added", // Alert Title
+          " ", // My Alert Msg
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+        )
       });
   }
   // This function is triggered when the "Select an image" button pressed
@@ -160,7 +166,7 @@ const AddSkillScreen = ({navigation}) => {
     // console.log(result);
 
     if (!result.cancelled) {
-      setPickedImage(result); // Marked: changed all uri to url, to avoid empty uri warning
+      setPickedImagePath(result); // Marked: changed all uri to url, to avoid empty uri warning
       // console.log(result.url);
     }
   }
@@ -178,10 +184,10 @@ const AddSkillScreen = ({navigation}) => {
     const result = await ImagePicker.launchCameraAsync();
 
     // Explore the result
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
-      setPickedImage(result);
+      setPickedImagePath(result);
       // console.log(result.uri);
     }
   }
@@ -192,10 +198,14 @@ const AddSkillScreen = ({navigation}) => {
         <Text style={styles.panelTitle}>Upload Photo</Text>
         <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
       </View>
-      <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
+      <TouchableOpacity style={styles.panelButton} 
+      // onPress={openCamera}
+      >
         <Text style={styles.panelButtonTitle}>Take Photo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={showImagePicker}>
+      <TouchableOpacity style={styles.panelButton} 
+      // onPress={showImagePicker}
+      >
         <Text style={styles.panelButtonTitle}>Choose From Libary</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.panelButton} onPress={() => bs.current.snapTo(1)}>
@@ -222,7 +232,7 @@ const AddSkillScreen = ({navigation}) => {
     <View style={styles.container}>
       
 
-      {/* <BottomSheet 
+      <BottomSheet 
         ref={bs}
         snapPoints={[330, 0]}
         renderContent={renderInner}
@@ -230,7 +240,7 @@ const AddSkillScreen = ({navigation}) => {
         initialSnap={1}
         callbackNode={fall}
         enabledContentGestureInteraction={true}
-      /> */}
+      />
       <Animated.View style={{margin: 20,
       opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),      
       }}>
@@ -279,10 +289,10 @@ const AddSkillScreen = ({navigation}) => {
                     />
                   </View>
                 </ImageBackground> */}
-                {/* <ImageBackground
+                <ImageBackground
                 resizeMode='cover' 
                 source={{
-                  uri: pickedImagePath,
+                  uri: pickedImagePath.uri,
                 }}
 
                 style={{height:100, width: 100}}
@@ -303,11 +313,11 @@ const AddSkillScreen = ({navigation}) => {
                     }}/>
                   </View>
 
-                </ImageBackground> */}
+                </ImageBackground>
 
               </View>
             </TouchableOpacity>
-            {/* <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text> */}
+            <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text>
           </View>
         </View>
 
@@ -497,7 +507,7 @@ const AddSkillScreen = ({navigation}) => {
             country,
             state,
             city,
-            pickedImage
+            pickedImagePath
           );
         }}>
           <Text style={styles.panelButtonTitle}>Add Skill</Text>

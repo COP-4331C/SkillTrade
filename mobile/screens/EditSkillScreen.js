@@ -1,6 +1,7 @@
 // dark theme customisation at the end at abt 29:57
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   View,
   Text,
   TouchableOpacity,
@@ -25,6 +26,7 @@ import {useIsFocused} from "@react-navigation/native"
 
 
 const EditSkillScreen = ({navigation, route}) => {
+  console.disableYellowBox = true;
   // const [data, setData] = React.useState({
   //   reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
   //   newContent: route.params.paramKey.content,
@@ -98,7 +100,7 @@ const EditSkillScreen = ({navigation, route}) => {
   },[isFocused])
   // USE EFFECT ///////////////////////////////////////////////////////////////////////////
   useEffect(async() => { 
-    console.warn(data.skillId)
+    // console.warn(data.skillId)
     let userTokenData = null; 
     try {
       userTokenData = await SecureStore.getItemAsync('userToken'); 
@@ -292,8 +294,18 @@ const EditSkillScreen = ({navigation, route}) => {
         console.log(response.data["title"]);
       })
       .catch(function (error) {
-        console.log(error)
-        console.warn("Fail to connect to get skill api!");
+        // console.log(error)
+        // console.warn("Fail to connect to get skill api!");
+        Alert.alert(
+          "Fail to connect to get skill api!", // Alert Title
+          " ", // My Alert Msg
+          [ // an array of objects (each object is a button)
+            { 
+                text: "OK", 
+                onPress: () => console.log("OK Pressed") 
+            },
+          ], 
+        )
       });
   }
 
@@ -320,23 +332,30 @@ const EditSkillScreen = ({navigation, route}) => {
           }
         })
       .then(function(response) {
-          // Alert.alert(
-          //   "Skill updated!", // Alert Title
-          //   " ", // My Alert Msg
-          //   [ // an array of objects (each object is a button)
-          //     { 
-          //         text: "OK", 
-          //         onPress: () => console.log("OK Pressed") 
-          //     },
-          //   ], 
-          // )
-          console.warn("skill edited and working")
+          Alert.alert(
+            "skill edited and working!", // Alert Title
+            " ", // My Alert Msg
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
           navigation.goBack()
       })
       .catch(function(error) {
           console.log(error)
-          console.warn("edit skill not working")
-          // navigation.goBack()
+          Alert.alert(
+            "Fail to edit skill!", // Alert Title
+            " ", // My Alert Msg
+            [ // an array of objects (each object is a button)
+              { 
+                  text: "OK", 
+                  onPress: () => console.log("OK Pressed") 
+              },
+            ], 
+          )
           
       });
   }
@@ -376,25 +395,12 @@ const EditSkillScreen = ({navigation, route}) => {
         }
       )
       .then(function (response) {
-        console.warn("profile picture is changed");
+        // console.warn("profile picture is changed");
         // navigation.goBack()
-        // Alert.alert(
-        //   "Profile Changed!", // Alert Title
-        //   " ", // My Alert Msg
-        //   { text: "OK", onPress: () => console.log("OK Pressed") }
-        // );
-        // Alert.alert(
-        //   "",
-        //   "Profile Picture is Changed!",
-        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        //   { cancelable: true }
-        // );
-        // navigation.goBack()
-        // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
         console.log(error.message);
-        console.warn("profile picture is not changed");
+        // console.warn("profile picture is not changed");
       });
   }
 

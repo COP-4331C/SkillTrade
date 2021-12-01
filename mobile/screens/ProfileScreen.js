@@ -23,6 +23,7 @@ import EditSkillScreen from './EditSkillScreen';
 import moment from "moment";
 import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
+import {useIsFocused} from "@react-navigation/native";
 // import { DirectConnect } from 'aws-sdk';
 
 const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
@@ -33,7 +34,7 @@ const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
 
 const ProfileScreen = ({navigation}) => {
 
-
+    const isFocused = useIsFocused() 
   // const [isEdit, setIsEdit] = React.useState(false);
 
   const [profileData, setProfileData] = React.useState({
@@ -81,48 +82,71 @@ const ProfileScreen = ({navigation}) => {
   ]
 
   useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToProfileApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
+    if (isFocused){
+      let userToken = null;
+      try {
+          userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+      } catch (e) {
+          console.warn(e);
+      }
       connectToProfileApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(async() => {
-    let userToken = null;
-    try {
-        userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToUserSkillsApi(userToken)
-    connectToLearnSkillsApi(userToken)
-    const unsubscribe = navigation.addListener('focus', () => {
       connectToUserSkillsApi(userToken)
       connectToLearnSkillsApi(userToken)
-    });
-    return unsubscribe;
-  }, [navigation]);
-  
-  useEffect(async() => {
-    let userId = null; 
-    try {
-        userId = await SecureStore.getItemAsync('userId'); 
-    } catch (e) {
-        console.warn(e);
-    }
-    connectToGetReviewApi(userId)
-    const unsubscribe = navigation.addListener('focus', () => {
+
+      let userId = null; 
+      try {
+          userId = await SecureStore.getItemAsync('userId'); 
+      } catch (e) {
+          console.warn(e);
+      }
       connectToGetReviewApi(userId)
-    });
-    return unsubscribe;
-  }, [navigation]);
+
+    }
+  }, [isFocused]); //  navigation
+
+  // useEffect(async() => {
+  //   let userToken = null;
+  //   try {
+  //       userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+  //   } catch (e) {
+  //       console.warn(e);
+  //   }
+  //   connectToProfileApi(userToken)
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     connectToProfileApi(userToken)
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]); //isFocused
+
+  // useEffect(async() => {
+  //   let userToken = null;
+  //   try {
+  //       userToken = await SecureStore.getItemAsync('userToken'); // need to add 'await' 
+  //   } catch (e) {
+  //       console.warn(e);
+  //   }
+  //   connectToUserSkillsApi(userToken)
+  //   connectToLearnSkillsApi(userToken)
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     connectToUserSkillsApi(userToken)
+  //     connectToLearnSkillsApi(userToken)
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
+  
+  // useEffect(async() => {
+  //   let userId = null; 
+  //   try {
+  //       userId = await SecureStore.getItemAsync('userId'); 
+  //   } catch (e) {
+  //       console.warn(e);
+  //   }
+  //   connectToGetReviewApi(userId)
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     connectToGetReviewApi(userId)
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
 
   async function connectToProfileApi(userToken){
     let userId = null;
@@ -374,28 +398,6 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
-
-  // const renderLearnSkills = post => { 
-  //   return (
-  //     <View style={styles.sectionContainer}>
-  //       <View style={{alignItems:"center"}}>
-  //         <View style={styles.recentItem}>
-  //             <View style={styles.recentItemIndicator}></View>
-  //             <View style={{width:270}}>
-  //               <Text style={[styles.text, {color:"#41444B", fontWeight:"700"}]}>{post.title} -  </Text>
-  //               {/* <Text style={[styles.text, {fontWeight: "400"}]}>entry level / </Text> */}
-  //               <Text style={[styles.text, {fontWeight: "600"}]}>Summary: </Text>
-  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.summary}</Text>
-  //               <Text style={[styles.text, {fontWeight: "600"}]}>Description: </Text>
-  //               <Text style={[styles.text, {fontWeight: "400"}, {paddingLeft:15}]}>{post.description}</Text>
-  //               <Text style={[styles.text, {fontWeight: "500"}]}>Would like to pay {post.price} dollars</Text>
-  //               <Text style={[styles.text, {fontWeight: "500"}]}>Location: {post.city}</Text>
-  //             </View>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   );
-  // };
 
   const renderReviews = post => { 
     return (

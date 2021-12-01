@@ -25,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
   async function connectToGetSkillsApi(){
     let search = "";
     let page = 1;
-    let limit = 8;
+    let limit = 30;
     axios.get(`https://cop4331c.herokuapp.com/api/skills?search=${search}&page=${page}&limit=${limit}`,
           ) 
         .then(function(response) {

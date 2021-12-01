@@ -200,6 +200,16 @@ const SignInScreen = ({navigation}) => {
             .then(function(response) {
                 // console.warn('test good') // for test 
                 // console.warn("good job")
+                Alert.alert(
+                    'Please verify in Email!', 
+                    'Check your email for email verification.', 
+                    [ // an array of objects (each object is a button)
+                        { 
+                            text: "OK", 
+                            onPress: () => console.log("OK Pressed") 
+                        },
+                    ], 
+                );
                 navigation.goBack()
             })
             .catch(function(error) {

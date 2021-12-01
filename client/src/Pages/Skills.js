@@ -84,7 +84,7 @@ export default function Skills(props) {
             // variant="outlined" 
             square 
             style={{backgroundColor: Theme.palette.primary.main, position: "relative", width:"100vw", borderWidth:"0px"}}
-            sx={{ p: 10, mt:5 }}
+            sx={{ pt: 5, pb: 5, mt: 0, mb:5 }}
             >
         {skilllist()}
       </Paper>

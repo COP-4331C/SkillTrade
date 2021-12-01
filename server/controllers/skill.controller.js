@@ -11,7 +11,7 @@ exports.createSkill = async (req, res) => {
   if ((req.body.price && req.body.price < 0) || req.body.price > 999999)
     req.body.price = 100;
 
-  const skill = new Skill(body);
+  const skill = new Skill(req.body);
 
   skill
     .save()

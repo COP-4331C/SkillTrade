@@ -1,5 +1,6 @@
 const Skill = require("../models/skill.model");
 const User = require("../models/user.model");
+const Conversation = require("../models/conversation.model");
 const { multerFile, uploadFileToS3 } = require("../middleware/upload");
 const Review = require("../models/review.model");
 
@@ -7,7 +8,10 @@ exports.createSkill = async (req, res) => {
   const user = await User.findOne({ email: req.email });
   req.body.userId = user._id;
 
-  const skill = new Skill(req.body);
+  if ((req.body.price && req.body.price < 0) || req.body.price > 999999)
+    req.body.price = 100;
+
+  const skill = new Skill(body);
 
   skill
     .save()
@@ -121,6 +125,9 @@ exports.editSkill = async (req, res) => {
     "city",
   ];
 
+  if ((newValues.price && newValues.price < 0) || newValues.price > 999999)
+    newValues.price = 100;
+
   for (const p of changeable_fields) skill[p] = newValues[p];
 
   skill
@@ -228,6 +235,65 @@ exports.createSkillWithPhoto = async (req, res) => {
     .save()
     .then(() => {
       return res.status(200).json({ message: "Successfully created skill!" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ error: err });
+    });
+};
+
+exports.purchase = async (req, res) => {
+  console.log("1");
+  const { skillId } = req.body;
+  const skill = await Skill.findById(skillId);
+
+  if (!skill) return res.status(400).json({ error: "Skill does not exist." });
+
+  const user = await User.findOne({ email: req.email });
+
+  console.log("2");
+  if (user._id == skill.userId)
+    return res
+      .status(400)
+      .json({ error: "You cannot purchase your own skill." });
+
+  if (user.purchasedSkills?.includes(skill._id))
+    return res
+      .status(400)
+      .json({ error: "You have already purchased this skill." });
+
+  console.log(user.skillCredits);
+  console.log(skill.price);
+  if (user.skillCredits < skill.price)
+    return res
+      .status(400)
+      .json({ error: "Not enough skill credits to purchase." });
+
+  console.log("3");
+  let conversations = await Conversation.find({ members: { $in: [user._id] } });
+  if (!conversations)
+    return res.status(500).json({ error: "Failed to purchase skill." });
+
+  console.log("4");
+  if (!conversations.find((c) => c.members.includes(skill.userId))) {
+    const conversation = new Conversation({
+      members: [user._id.toString(), skill.userId.toString()],
+    });
+    try {
+      await conversation.save();
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to purchase skill." });
+    }
+  }
+
+  console.log("5");
+  user.skillCredits -= skill.price;
+  if (!user.purchasedSkills) user.purchasedSkills = [];
+  user.purchasedSkills.push(skill._id);
+
+  user
+    .save()
+    .then(() => {
+      return res.status(200).json({ message: "Successfully purchased skill!" });
     })
     .catch((err) => {
       return res.status(400).json({ error: err });

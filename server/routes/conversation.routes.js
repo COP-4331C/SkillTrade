@@ -4,7 +4,7 @@ const conversations = require("../controllers/conversation.controller");
 
 const authenticateToken = require("../middleware/auth.js");
 
-router.post("/", conversations.create);
+// router.post("/", conversations.create);
 
 router.get("/:userId", conversations.fetchUserConversations);
 

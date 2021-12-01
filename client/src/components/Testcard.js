@@ -227,6 +227,16 @@ export default function Testcard(props) {
     // refreshPage();
   };
 
+  const [openPurchase, setOpenPurchase] = React.useState(false);
+
+  const handleClickOpenPurchase = () => {
+    setOpenPurchase(true);
+  };
+
+  const handleClosePurchase = () => {
+    setOpenPurchase(false);
+  };
+
   //Delete Skill Axios Delete
   function handleDeleteButton() {
     const token = localStorage.getItem("token");
@@ -244,6 +254,27 @@ export default function Testcard(props) {
       });
 
     exitEditMode();
+    refreshPage();
+  }
+
+  function handlePurchaseButton() {
+    const token = localStorage.getItem("token");
+
+    axios
+      .post(
+        "/api/skills/purchase",
+        { skillId: props.skillid },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        setOpenPurchase(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     refreshPage();
   }
 
@@ -714,6 +745,9 @@ export default function Testcard(props) {
                     color="secondary"
                     aria-label="edit"
                     sx={{ display: displayContainer, cursor: "default" }}
+                    onClick={() => {
+                      handleClickOpenPurchase();
+                    }}
                   >
                     <MonetizationOnTwoToneIcon />
                   </IconButton>
@@ -850,6 +884,32 @@ export default function Testcard(props) {
                       onClick={handleDeleteButton}
                     >
                       Delete
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+              <div>
+                <Dialog open={openPurchase} onClose={handleClosePurchase}>
+                  <DialogTitle>
+                    Purchase Skill For {price} Skill Credits
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to purchase this skill?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      aria-label="close-modal-button"
+                      onClick={handleClosePurchase}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      aria-label="purchase-button"
+                      onClick={handlePurchaseButton}
+                    >
+                      Purhcase
                     </Button>
                   </DialogActions>
                 </Dialog>

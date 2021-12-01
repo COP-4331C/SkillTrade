@@ -213,7 +213,7 @@ const HomePage = () => {
 
       {/******************************** Skill Posts *************************************************/}
       {/*When loading is true, the Skeletons are displayed, otherwise the skillList are displayed.*/}
-      <Grid container sx={{ marginLeft: "5" }}>
+      <Grid container sx={{ marginLeft: "5", paddingLeft: "20px", paddingRight:"20px" }}>
         {loading && skillListSkeleton()}
         {!loading && skillList()}
       </Grid>

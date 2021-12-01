@@ -336,7 +336,7 @@ export default function Registration() {
 
           {/********************* Terms and conditions checkbox *********************/}
           <div style={{paddingTop:15}}>
-            <input type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
+            <input aria-label="terms-conditions-checkbox" type="checkbox" style={{color:"primary"}} id="agree" onChange={checkboxHandler} />
             <label>I agree to </label><a href="https://www.termsandconditionsgenerator.com/live.php?token=InuuJUo6I4Xz1FPgMfkmmri3Fj6fvJ6e" style={{ textDecoration: 'none', color:"black" }} htmlFor="agree"><b>terms and conditions</b></a>
           </div>
 
@@ -348,6 +348,7 @@ export default function Registration() {
             variant='contained'
             fullWidth
             style={{ margin: '20px 0' }}
+            aria-label="Reistration Button"
           >
             Register
           </Button>

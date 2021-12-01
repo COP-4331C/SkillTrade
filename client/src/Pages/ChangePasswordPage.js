@@ -350,6 +350,7 @@ export default function ChangePasswordPage() {
             variant='contained'
             fullWidth
             style={{margin: '20px 0'}}
+            aria-label="change-password-button"
           >
             Submit
           </Button>
@@ -364,7 +365,7 @@ export default function ChangePasswordPage() {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button aria-label="close-modal-button" onClick={handleClose}>Close</Button>
                 {/* <Button onClick={handleClose}>Subscribe</Button> */}
               </DialogActions>
             </Dialog>

@@ -1086,6 +1086,7 @@ export default function ProfilePage(props) {
                   style={{ padding: "6px 64px" }}
                   onClick={handleCancelButton}
                   sx={{ display: displayButton }}
+                  aria-label="cancel-review-button"
                 > Cancel
                 </Button>
               </Fade>
@@ -1129,6 +1130,7 @@ export default function ProfilePage(props) {
                   startIcon={<EditIcon />}
                   sx={{ whiteSpace: 'nowrap' }}
                   onClick={enterEditMode}
+                  aria-label="edit-profile-button"
                 >
                   Edit Profile
                 </Button>
@@ -1144,6 +1146,7 @@ export default function ProfilePage(props) {
                   style={{ marginTop: 0, padding: "6px 64px" }}
                   onClick={handleSave}
                   sx={{ display: displayButton }}
+                  aria-label="save-review-button"
                 >
                   Save
                 </Button>
@@ -1196,6 +1199,7 @@ export default function ProfilePage(props) {
           color="secondary"
           fullWidth={true}
           onClick={handleWriteReview}
+          aria-label="write-review-button"
         >
           Write a review
         </Button>

@@ -338,6 +338,8 @@ const handleClose = () => {
             color='secondary'
             variant='contained'
             fullWidth
+            aria-label="login-button"
+
             style={{ margin: '8px 0' }}
           >
             Sign in
@@ -345,7 +347,7 @@ const handleClose = () => {
 
           {/*********************  Forgot my password *********************/}
 
-          <Button onClick={handleClickOpen}> Forgot Password </Button>
+          <Button aria-label="Forgot-Password" onClick={handleClickOpen}> Forgot Password </Button>
 
             <div>
               <Dialog open={open} onClose={handleClose}>

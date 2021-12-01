@@ -38,7 +38,8 @@
     "react-native-star-rating": "^1.1.0",
     "react-native-vector-icons": "^9.0.0",
     "react-native-web": "0.17.1",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "socket.io-client": "^4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

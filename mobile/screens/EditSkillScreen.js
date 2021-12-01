@@ -26,7 +26,7 @@ import {useIsFocused} from "@react-navigation/native"
 
 
 const EditSkillScreen = ({navigation, route}) => {
-  console.disableYellowBox = true;
+  // console.disableYellowBox = true;
   // const [data, setData] = React.useState({
   //   reviewId: route.params.paramKey._id, // {route.params.paramKey._id}
   //   newContent: route.params.paramKey.content,
@@ -582,7 +582,7 @@ const EditSkillScreen = ({navigation, route}) => {
             keyboardType='decimal-pad'
             onChangeText={(val) => setPrice(val)}
             autoCorrect={false}
-            value = {price}
+            value = {price.toString()}
             // Some dark theme stuff here
             // style={styles.textInput}
             style={[

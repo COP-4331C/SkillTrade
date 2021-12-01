@@ -888,13 +888,17 @@ export default function Testcard(props) {
             </Box>}
           </Grid>
 
-          <Grid item xs={2} justifyContent="right">
+          <Grid item xs={2} sx={{display:"flex", alignItems: "center"}}>
             <IconButton
               aria-label="edit"
               variant="outlined"
               color="secondary"
               onClick={enterEditMode}
-              sx={{display: displayEditButton, alignItems: "right"}}
+              sx={{
+                display: displayEditButton,
+                alignItems: "right",
+                padding: 0
+              }}
               align="bottom"
               position="absolute"
               top="50%"

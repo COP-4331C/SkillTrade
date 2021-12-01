@@ -47,10 +47,8 @@ export default function HomeNavBar(props) {
               xs="none"
               sm="flex"
               md="flex"
-              bgColor={0.15}
-              bgColorHover={0.25}
               searchBarColumns={6}
-              xIconColor="secondary"
+              searchBarWidth={"100%"}
             />}
 
             {/** ************************** Avatar and My Skills ***************************************/}

@@ -195,10 +195,8 @@ const HomePage = () => {
             xs="flex"
             sm="none"
             md="none"
-            bgColor={0.80}
-            bgColorHover={1}
             searchBarColumns={12}
-            xIconColor="primary"
+            searchBarWidth={"100%"}
           />
         </Grid>
       </Grid>

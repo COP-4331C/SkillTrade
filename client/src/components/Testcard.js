@@ -744,7 +744,7 @@ export default function Testcard(props) {
                   <IconButton
                     color="secondary"
                     aria-label="edit"
-                    sx={{ display: displayContainer, cursor: "default" }}
+                    sx={{ display: displayContainer }}
                     onClick={() => {
                       handleClickOpenPurchase();
                     }}

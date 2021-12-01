@@ -197,7 +197,6 @@ export default function Testcard(props) {
         country: cAddTemp
       };
 
-      console.log(token);
       axios
         .put(`/api/skills/${props.skillid}`, payload, {
           headers: {Authorization: `Bearer ${token}`},
@@ -233,7 +232,6 @@ export default function Testcard(props) {
   function handleDeleteButton() {
     const token = localStorage.getItem("token");
 
-    console.log(token);
     axios
       .delete(`/api/skills/${props.skillid}`, {
         headers: {Authorization: `Bearer ${token}`},
@@ -332,7 +330,7 @@ export default function Testcard(props) {
       .then(function (response) {
         setPhoto(response.data.URL);
       })
-      .catch("error" + console.log);
+      .catch(console.log);
   }
 
   useEffect(() => {

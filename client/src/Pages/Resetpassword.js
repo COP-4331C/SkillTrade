@@ -150,15 +150,12 @@ const handleClose = () => {
     const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     const isOk = re.test(values.password);
 
-    console.log(isOk);
 
     if (valid()&&isOk ) {
 
       const userId = params.get('userId');
       const resetCode = params.get('resetCode');
 
-      // console.log(userId);
-      // console.log(resetCode);
       params.get('userId')
       params.get('resetCode')
 
@@ -173,7 +170,6 @@ const handleClose = () => {
 
       axios.patch(URL, resetPayload)
         .then(function (response) {
-          console.log(response);
           setOpen(true);
         })
 

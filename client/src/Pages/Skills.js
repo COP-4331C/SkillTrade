@@ -23,7 +23,7 @@ export default function Skills(props) {
       setSkillPosts(res.data);
     })
     .catch((err) => {
-      console.log("error");
+      console.log(err);
     })
   }
 

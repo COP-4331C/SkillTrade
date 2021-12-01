@@ -128,13 +128,11 @@ function handleSave() {
       state: stateAddTemp,
       city: cityAddTemp
     };
-  
-      console.log(token);
+
       axios.post(`/api/skills/`, payload,{
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
-      console.log("success")
       setopenMod(false)
     })
     .catch((err) => {

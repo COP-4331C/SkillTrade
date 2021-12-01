@@ -159,7 +159,6 @@ export default function Registration() {
     const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     const isOk = re.test(values.password);
 
-    console.log(isOk);
 
     if (valid()&&isOk ) {
 
@@ -174,7 +173,6 @@ export default function Registration() {
 
       axios.post(URL, registerPayload)
         .then(function (response) {
-          console.log(response);
           setOpen(true);
         })
 

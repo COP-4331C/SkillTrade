@@ -231,8 +231,6 @@ const handleClose = () => {
 
     axios.post(`/api/user/forgot-password`,payload)
     .then(function(res) {
-      console.log("success");
-      console.log(res);
       setOpen(false);
       
   })

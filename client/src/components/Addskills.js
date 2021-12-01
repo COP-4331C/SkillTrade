@@ -283,7 +283,7 @@ function handleOnChangeCAddress(e) {
             </Grid>
 
             <Grid item xs={4}>
-              <TextField required
+              <TextField 
                 label="State"
                 variant="filled"
                 rows={1}
@@ -297,7 +297,7 @@ function handleOnChangeCAddress(e) {
             </Grid>
 
             <Grid item xs={3}>
-              <TextField required
+              <TextField 
                 label="Country"
                 variant="filled"
                 rows={1}

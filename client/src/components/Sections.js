@@ -71,8 +71,8 @@ export const Sections = () => {
               <li>Add a skill posts for thousands of people to see</li>
               <li>When someone wants to learn your skill, they will contact you</li>
               <li>After both parties agree to the terms</li>
-              <li>Schedule a a day and time to meet online or in person</li>
-              <li>And voila! You just earn some credits!</li>
+              <li>Schedule a day and time to meet online or in person</li>
+              <li>And voila! You just earned some credits!</li>
             </ul>
           </Typography>
         </Grid>

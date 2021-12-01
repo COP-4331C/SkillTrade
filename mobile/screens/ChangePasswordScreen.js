@@ -82,7 +82,7 @@ const ChangePasswordScreen = ({navigation}) => {
     }
 
     function connectToChangePasswordApi(userToken, oldPassword, newPassword){
-        axios.put('https://cop4331c.herokuapp.com/api/user/change-password', { 
+        axios.patch('https://cop4331c.herokuapp.com/api/user/change-password', { 
                 oldPassword: oldPassword,
                 newPassword: newPassword 
             }, {

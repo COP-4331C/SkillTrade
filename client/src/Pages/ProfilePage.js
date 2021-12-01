@@ -536,11 +536,6 @@ export default function ProfilePage(props) {
     })
       .then((res) => {
         setSkillPosts(res.data);
-
-        // localStorage.setItem('skilledUserID', res.data[0]["userId"]);
-        // console.log(res.data["country"]);
-        // console.log("userid"+ userId)
-
       })
       .catch((err) => {
         console.log(err);
@@ -606,6 +601,7 @@ export default function ProfilePage(props) {
             skilluserpic={fetchedskill.userProfilePic}
             skillprice={fetchedskill.price}
             skillcountry={fetchedskill.country}
+            skillEditable={false}
           />
         </Grid>
       )

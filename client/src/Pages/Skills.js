@@ -20,8 +20,7 @@ export default function Skills(props) {
         headers: { 'Authorization': `Bearer ${token}`}
     })
     .then((res) => {
-      setSkillPosts(res.data); 
-      console.log(res.data);
+      setSkillPosts(res.data);
     })
     .catch((err) => {
       console.log("error");
@@ -54,7 +53,7 @@ export default function Skills(props) {
             skillprice = {fetchedskill.price}
             skilluserpic = {fetchedskill.userProfilePic}
             skillcountry = {fetchedskill.country}
-
+            skillEditable = {true}
           />
         </Grid>
       )

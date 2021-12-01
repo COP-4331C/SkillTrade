@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import { Divider, Fade, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SaveIcon from "@mui/icons-material/Save";
-import {Theme} from "../components/Theme";
+import {Theme} from "./Theme";
 import EditIcon from '@mui/icons-material/Edit';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
@@ -25,11 +25,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Styles } from "@material-ui/styles";
-// import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-// import {Link as RouterLink} from "react-router-dom";
-// import ProfilePage from '../Pages/ProfilePage';
-// import { Redirect } from 'react-router';
 
 
 export default function Testcard(props) {
@@ -343,12 +338,14 @@ export default function Testcard(props) {
 
   useEffect(() => {
     try {
-      if (editPermission) {
+      // if (editPermission) {
+      console.log("props.skillEditable: " + props.skillEditable);
+      if (props.skillEditable) {
         setDisableImageUpload(false);
         setMousePointer("pointer");
       } else {
         setDisableImageUpload(true);
-        setMousePointer("");
+        setMousePointer("default");
       }
     } catch (e) {
       console.log(e.message);
@@ -395,7 +392,7 @@ export default function Testcard(props) {
                 height: 200,
                 borderRadius: "4px 0 0 4px",
                 display: "block",
-                cursor: mousePointer,
+                cursor: mousePointer
                 // opacity: imageOpacity
               }}
               alt="user"

@@ -19,9 +19,6 @@ import PrivateRoutes from "./components/PrivateRoutes";
 
 function App() {
 
-
-
-
   return (
     <Router>
       <div className="App">

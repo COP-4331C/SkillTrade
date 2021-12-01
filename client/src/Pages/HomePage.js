@@ -13,8 +13,6 @@ import SkillCardSkeleton from "../components/SkillCardSkeleton";
 import SearchBar from "../components/SearchBar";
 import { v4 as uniqueIdv4 } from 'uuid';
 
-// TODO: Check if the user is logged in, if not, then redirect user to login or landing page.
-
 const HomePage = () => {
   const [loggedUserAvatar, setLoggedUserAvatar] = useState("");
   const [loggedUserId, setLoggedUserId] = useState("");

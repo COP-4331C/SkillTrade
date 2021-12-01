@@ -536,7 +536,6 @@ export default function ProfilePage(props) {
     })
       .then((res) => {
         setSkillPosts(res.data);
-        console.log(res.data)
       })
       .catch((err) => {
         console.log(err);

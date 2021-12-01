@@ -404,7 +404,7 @@ export default function Testcard(props) {
               type="file"
               name="photo"
               onChange={handleskillpic}
-              // disabled={disableImageUpload}
+              disabled={disableImageUpload}
             />
             {/** **************************** Image ********************** **/}
             <img

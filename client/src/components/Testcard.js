@@ -270,12 +270,12 @@ export default function Testcard(props) {
       )
       .then((res) => {
         setOpenPurchase(true);
+        alert("Successfully purchased skill!");
+        refreshPage();
       })
       .catch((err) => {
-        console.log(err);
+        alert("Failed to purchase skill");
       });
-
-    refreshPage();
   }
 
   function validateTextMaxLength(text, max) {
@@ -909,7 +909,7 @@ export default function Testcard(props) {
                       aria-label="purchase-button"
                       onClick={handlePurchaseButton}
                     >
-                      Purhcase
+                      Purchase
                     </Button>
                   </DialogActions>
                 </Dialog>

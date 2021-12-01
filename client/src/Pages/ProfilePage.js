@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import { Divider, Fade, Rating, Stack, ThemeProvider } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SaveIcon from "@mui/icons-material/Save";
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
@@ -100,6 +99,7 @@ export default function ProfilePage(props) {
   const [loading, setLoading] = useState(true);
   const userId = props.match.params?.userId ?? ""   // Gets user Id from URL
   const [loggedUserIdForReviews, setLoggedUserIdForReviews] = useState("");
+  const [rating, setRating] = useState(0);
 
 
   function enterEditMode() {
@@ -559,11 +559,21 @@ export default function ProfilePage(props) {
     }
   }, []);
 
+  useEffect(() => {
+    setRating(ratingSum/numOfReviews);
+  }, [reviewMessages]);
+
+  let ratingSum = 0;
+  let numOfReviews = 0;
 
   // Creates a list of reviews. For each review in reviewList
   // Render the Review component with the data passed to it.
   // reviewMessages is an array manually declared at the end of this file.
   const reviewList = reviewMessages.map((fetchedReview) => {
+
+    ratingSum = ratingSum + fetchedReview.rating;
+    numOfReviews = numOfReviews + 1;
+
     return(
       <div key={fetchedReview._id} id={fetchedReview._id}>
         <Reviews
@@ -1081,16 +1091,15 @@ export default function ProfilePage(props) {
               </Fade>
 
               {/*********************************** Rating  ************************************/}
-              {/*TODO calculate the rating on review load*/}
               <Box sx={{ display: displayContactMe }}>
                 {loading ? <Skeleton variant="h3" width={120} sx={{ bgcolor: 'grey.500' }} /> :
                   <StyledRating
-                    defaultValue={4.5}
+                    defaultValue={5}
+                    value={rating}
                     precision={0.5}
                     icon={<StarIcon fontSize="inherit" />}
-                    emptyIcon={<StarBorderOutlinedIcon fontSize="inherit" />}
+                    emptyIcon={<StarBorderOutlinedIcon fontSize="inherit" sx={{color:"gray"}} />}
                     readOnly
-                    sx={{}}
                   />
                 }
               </Box>
@@ -1147,10 +1156,7 @@ export default function ProfilePage(props) {
       </Box>
 
       {/******************************* Divider between Skill Listings *******************************/}
-
-
-
-
+      
       {/******************************* Skill Listings *******************************/}
 
       <Paper

@@ -1,5 +1,5 @@
 // dark theme customisation at the end at abt 29:57
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -19,7 +19,6 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import {useIsFocused} from "@react-navigation/native"
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
 // For dark theme go through video again, skipping that part
 
@@ -49,21 +48,6 @@ const AddSkillScreen = ({navigation}) => {
   const [city, setCity] = useState("");
   const [pickedImage, setPickedImage] = useState('');
   
-  const isFocused = useIsFocused()
-
-  useEffect(()=>{
-    if (isFocused){
-      setTitle("");
-      setSummary("");
-      setDescription("");
-      setStatus("");
-      setPrice("");
-      setCountry("");
-      setState("");
-      setCity("");
-      setPickedImage('');
-    }
-  },[isFocused])
 
   const createFileFormData = (image, body = {}) => {
     const data = new FormData();
@@ -238,7 +222,7 @@ const AddSkillScreen = ({navigation}) => {
     <View style={styles.container}>
       
 
-      <BottomSheet 
+      {/* <BottomSheet 
         ref={bs}
         snapPoints={[330, 0]}
         renderContent={renderInner}
@@ -246,7 +230,7 @@ const AddSkillScreen = ({navigation}) => {
         initialSnap={1}
         callbackNode={fall}
         enabledContentGestureInteraction={true}
-      />
+      /> */}
       <Animated.View style={{margin: 20,
       opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),      
       }}>
@@ -263,7 +247,9 @@ const AddSkillScreen = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-                <ImageBackground
+
+                
+                {/* <ImageBackground
                   resizeMode="cover"
                   source={{
                     uri: pickedImage.uri,
@@ -292,7 +278,7 @@ const AddSkillScreen = ({navigation}) => {
                       }}
                     />
                   </View>
-                </ImageBackground>
+                </ImageBackground> */}
                 {/* <ImageBackground
                 resizeMode='cover' 
                 source={{
@@ -321,7 +307,7 @@ const AddSkillScreen = ({navigation}) => {
 
               </View>
             </TouchableOpacity>
-            <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text>
+            {/* <Text style={{marginBottom: 5, fontSize: 15, fontWeight: 'bold'}}>Click the camera icon to add a picture.</Text> */}
           </View>
         </View>
 

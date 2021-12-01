@@ -58,8 +58,8 @@ const EditSkillScreen = ({navigation, route}) => {
   const [state, setState] = useState(route.params.paramKey.state);
   const [city, setCity] = useState(route.params.paramKey.city);
   // setPickedImagePath(route.params.paramKey.imageUrl)
-  // const [pickedImagePath, setPickedImagePath] = useState(route.params.paramKey.imageUrl);
   const [pickedImagePath, setPickedImagePath] = useState('');
+  // const [pickedImagePath, setPickedImagePath] = useState('');
   
   // useEffect(() => {
   //   // connectToSkillApi(data.skillId);
@@ -67,6 +67,8 @@ const EditSkillScreen = ({navigation, route}) => {
   const isFocused = useIsFocused()
 
   useEffect(()=>{
+    console.log(route.params.paramKey.imageURL)
+    // setPickedImagePath(route.params.paramKey.imageURL)
     if (isFocused){
       setData({
         ...data,
@@ -90,7 +92,7 @@ const EditSkillScreen = ({navigation, route}) => {
       setCountry(route.params.paramKey.country)
       setState(route.params.paramKey.state)
       setCity(route.params.paramKey.city)
-      // setPickedImagePath(route.params.paramKey.imageUrl)
+      // setPickedImagePath(route.params.paramKey.imageURL)
       // connectToSkillApi(data.skillId);
     }
   },[isFocused])
@@ -381,12 +383,12 @@ const EditSkillScreen = ({navigation, route}) => {
         //   " ", // My Alert Msg
         //   { text: "OK", onPress: () => console.log("OK Pressed") }
         // );
-        Alert.alert(
-          "",
-          "Profile Picture is Changed!",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-          { cancelable: true }
-        );
+        // Alert.alert(
+        //   "",
+        //   "Profile Picture is Changed!",
+        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        //   { cancelable: true }
+        // );
         // navigation.goBack()
         // navigation.navigate('ProfileScreen')
       })

@@ -14,9 +14,14 @@ import Resetpassword from "./Pages/Resetpassword";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import SkillCreditsPage from "./Pages/SkillCreditsPage";
 import ChatPage from "./Pages/chatPage/ChatPage";
-// import Resetpassword from "./Pages/Resetpassword";
+import PrivateRoutes from "./components/PrivateRoutes";
+
 
 function App() {
+
+
+
+
   return (
     <Router>
       <div className="App">
@@ -25,17 +30,16 @@ function App() {
             <Route path="/" exact component={LandingPage} />
             <Route path="/registration" component={RegistrationPage} />
             <Route path="/login" component={LoginPage} />
-            <Route path="/home" component={HomePage} />
-            <Route path="/profile/:userId?" component={ProfilePage} />
-            <Route path="/card/:userId?" component={Testcard} />
-            <Route path="/cards/:userId?" component={Addskills} />
-            <Route path="/skillpage/:userId?" component={Skills} />
             <Route path="/Resetpassword" component={Resetpassword} />
-            <Route path="/change" component={ChangePasswordPage} />
-            <Route path="/BuyCredits" component={SkillCreditsPage} />
-            <Route path="/Chat" component={ChatPage} />
-
-            {/* <Route path="/card/:userId?" component={Testcard}/> */}
+            {/*<PrivateRoutes exact path="/home" name="company" component={props => <HomePage {...props}/>} />*/}
+            <PrivateRoutes exact path="/home" component={HomePage} />
+            <PrivateRoutes path="/profile/:userId?" component={ProfilePage} />
+            <PrivateRoutes path="/card/:userId?" component={Testcard} />
+            <PrivateRoutes path="/cards/:userId?" component={Addskills} />
+            <PrivateRoutes path="/skillpage/:userId?" component={Skills} />
+            <PrivateRoutes path="/change" component={ChangePasswordPage} />
+            <PrivateRoutes path="/BuyCredits" component={SkillCreditsPage} />
+            <PrivateRoutes path="/Chat" component={ChatPage} />
           </Switch>
         </Box>
         <Footer className="App-footer" />

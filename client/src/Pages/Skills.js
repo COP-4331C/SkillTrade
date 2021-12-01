@@ -53,7 +53,8 @@ export default function Skills(props) {
             skillprice = {fetchedskill.price}
             skilluserpic = {fetchedskill.userProfilePic}
             skillcountry = {fetchedskill.country}
-            skillEditable = {false}
+            skillClickableLink={false}
+            skillPhotoEditable={true}
           />
         </Grid>
       )

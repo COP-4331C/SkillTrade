@@ -1,14 +1,14 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {TextField} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
-import { Divider, Fade, Link } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {Divider, Fade, Link} from "@mui/material";
+import {styled} from "@mui/material/styles";
 import SaveIcon from "@mui/icons-material/Save";
 import {Theme} from "./Theme";
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,8 +17,8 @@ import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Paper } from '@mui/material';
-import { Avatar } from '@mui/material';
+import {Paper} from '@mui/material';
+import {Avatar} from '@mui/material';
 import axios from 'axios';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -337,7 +337,7 @@ export default function Testcard(props) {
 
   useEffect(() => {
     try {
-      if (props.skillEditable) {
+      if (props.skillPhotoEditable) {
         setDisableImageUpload(false);
         setMousePointer("pointer");
       } else {
@@ -350,7 +350,7 @@ export default function Testcard(props) {
   }, []);
 
   return (
-    <Grid container sx={{ display: "flex" }} justifyContent="center">
+    <Grid container sx={{display: "flex"}} justifyContent="center">
       {/* //start of card// */}
       <Card
         sx={{
@@ -364,8 +364,6 @@ export default function Testcard(props) {
           marginLeft: 20,
           marginTop: 0
           // marginRight: 20,
-
-
         }}
       >
         {/* //start of the image-header// */}
@@ -408,7 +406,7 @@ export default function Testcard(props) {
         >
           <Box
             padding
-            sx={{ backgroundColor: "white", alignContent: "center" }}
+            sx={{backgroundColor: "white", alignContent: "center"}}
           >
             <Typography variant="body5" color="black" style={{paddingTop: 1}}>
               I can teach you...
@@ -857,18 +855,20 @@ export default function Testcard(props) {
           {/******************** Avatar ********************/}
 
           <Grid item xs={2} justifyContent="left">
-            {/*if editable, show the avatar with the link*/}
-            {props.skillEditable && <Link href={'profile/' + props.skilluserdirectid}
+            {/*if disable links is true, show the avatar with the link*/}
+            {props.skillClickableLink &&
+            <Link href={'profile/' + props.skilluserdirectid}
                   style={{textDecoration: 'none'}}>
               <Avatar alt="User Pic" src={props.skilluserpic}/>
             </Link>}
             {/*if not editable, show the avatar only*/}
-            {!props.skillEditable && <Avatar alt="User Pic" src={props.skilluserpic}/>}
+            {!props.skillClickableLink && <Avatar alt="User Pic" src={props.skilluserpic}/>}
           </Grid>
 
           {/******************** Name ********************/}
-          <Grid item xs={8} sx={{display:"flex", alignItems:"center"}}>
-            {props.skillEditable && <Link href={'profile/' + props.skilluserdirectid}
+          <Grid item xs={8} sx={{display: "flex", alignItems: "center"}}>
+            {props.skillClickableLink &&
+            <Link href={'profile/' + props.skilluserdirectid}
                   style={{textDecoration: 'none'}}
                   sx={{
                     textAlign: "left",
@@ -876,19 +876,19 @@ export default function Testcard(props) {
                   }}>
               {props.skilluserid}
             </Link>}
-            {!props.skillEditable &&
-              <Box
-                // style={{textDecoration: 'none'}}
-                sx={{
-                  textAlign: "left",
-                  fontWeight: 600,
-                }}
-              >
-                {props.skilluserid}
+            {!props.skillClickableLink &&
+            <Box
+              // style={{textDecoration: 'none'}}
+              sx={{
+                textAlign: "left",
+                fontWeight: 600,
+              }}
+            >
+              {props.skilluserid}
             </Box>}
           </Grid>
 
-          <Grid item xs={2} sx={{display:"flex", alignItems: "center"}}>
+          <Grid item xs={2} sx={{display: "flex", alignItems: "center"}}>
             <IconButton
               aria-label="edit"
               variant="outlined"

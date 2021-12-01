@@ -601,7 +601,8 @@ export default function ProfilePage(props) {
             skilluserpic={fetchedskill.userProfilePic}
             skillprice={fetchedskill.price}
             skillcountry={fetchedskill.country}
-            skillEditable={false}
+            skillClickableLink={false}
+            skillPhotoEditable={false}
           />
         </Grid>
       )

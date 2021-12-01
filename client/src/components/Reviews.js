@@ -315,6 +315,7 @@ export default function Reviews(props) {
                     color="error"
                     onClick={handleClickOpen}
                     sx={{marginTop:2, padding: "6px 35px", display: displayDeleteButton}}
+                    aria-label="delete-review-button"
                   > Delete Review
                   </Button>
                 </Fade>
@@ -326,6 +327,7 @@ export default function Reviews(props) {
                     color="primary"
                     onClick={handleCancelButton}
                     sx={{marginTop:2, padding: "6px 64px", display: displayButtons}}
+                    aria-label="cancel-button"
                   > Cancel
                   </Button>
                 </Fade>
@@ -338,6 +340,7 @@ export default function Reviews(props) {
                     variant="contained"
                     onClick={() => handleSave()}
                     sx={{marginTop:2, padding: "6px 64px", display: displayButtons}}
+                    aria-label="save-button"
                   >
                     Save
                   </Button>
@@ -370,6 +373,7 @@ export default function Reviews(props) {
               variant="contained"
               onClick={() => handleDeleteReview()}
               color="error"
+              aria-label="delete-review-button"
             >
               Yes, Delete
             </Button>
@@ -379,6 +383,7 @@ export default function Reviews(props) {
               variant="outlined"
               onClick={handleClose}
               autoFocus
+              aria-label="cancel-button"
             >
               Cancel, Keep
             </Button>

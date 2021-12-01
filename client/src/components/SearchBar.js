@@ -101,6 +101,7 @@ export default function SearchBar(props) {
             <IconButton
               color={props.xIconColor}
               onClick={(e) => handleSearchReset(e)}
+              aria-label="reset-button"
             >
               <ResetIcon
                 fontSize={"small"}

@@ -795,6 +795,7 @@ export default function Testcard(props) {
                     style={{backgroundColor: Theme.palette.third.notmain}}
                     onClick={handleClickOpenDel}
                     sx={{display: displayButton, marginTop: 1}}
+                    aria-label="delete-button"
                   >
                     {" "}
                     <DeleteForeverIcon/>
@@ -809,6 +810,7 @@ export default function Testcard(props) {
                     color="primary"
                     onClick={handleCancelButton}
                     sx={{display: displayButton, marginTop: 1}}
+                    aria-label="cancel-button"
                   >
                     {" "}
                     <CancelPresentationIcon/>
@@ -822,8 +824,7 @@ export default function Testcard(props) {
                     color="secondary"
                     variant="contained"
                     onClick={handleSave}
-                    // type="submit"
-                    // onClick={editSkills }
+                    aria-label="save-button"
                     sx={{display: displayButton, marginTop: 1}}
                   >
                     <SaveIcon/>
@@ -840,8 +841,8 @@ export default function Testcard(props) {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleCloseDel}>Cancel</Button>
-                    <Button onClick={handleDeleteButton}>Delete</Button>
+                    <Button aria-label="close-modal-button" onClick={handleCloseDel}>Cancel</Button>
+                    <Button aria-label="delete-button" onClick={handleDeleteButton}>Delete</Button>
                   </DialogActions>
                 </Dialog>
               </div>
@@ -909,6 +910,7 @@ export default function Testcard(props) {
               variant="outlined"
               color="secondary"
               onClick={enterEditMode}
+              aria-label="edit-icon-button"
               sx={{
                 display: displayEditButton,
                 alignItems: "right",

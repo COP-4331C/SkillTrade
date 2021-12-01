@@ -344,6 +344,7 @@ function handleOnChangeCAddress(e) {
                       variant="contained"
                       color="primary"
                       onClick={handleCancelButton}
+                      aria-label="cancel-skills-button"
                       // sx={{display: displayButton}}
                     > <CancelPresentationIcon/>
                     </Button>
@@ -357,6 +358,7 @@ function handleOnChangeCAddress(e) {
                       variant="contained"
                       type='submit'
                       onClick={handleSave}
+                      aria-label="save-skills-button"
                       // handleClickOpen
                     ><SaveIcon/>
                     </Button>
@@ -370,7 +372,7 @@ function handleOnChangeCAddress(e) {
                         </DialogContent>
                         <DialogActions>
                           {/* <Button onClick={handleSave}>Save</Button> */}
-                          <Button onClick={handleCloseMod}>Close</Button>
+                          <Button aria-label="close-modal-button" onClick={handleCloseMod}>Close</Button>
                         </DialogActions>
                       </Dialog>
                     </div>

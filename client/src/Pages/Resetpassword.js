@@ -292,6 +292,7 @@ const handleClose = () => {
           {/********************* Sign in button *********************/}
           <Button
             // disabled={!agree}
+            aria-label="reset-password-button"
             type='submit'
             color='secondary'
             variant='contained'
@@ -310,7 +311,7 @@ const handleClose = () => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button aria-label="close-modal-button" onClick={handleClose}>Close</Button>
               </DialogActions>
             </Dialog>
           </div>

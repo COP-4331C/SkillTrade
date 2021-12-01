@@ -655,7 +655,7 @@ export default function Testcard(props) {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    {cityAdd + " " + stateAdd + " " + cAdd}
+                    {[cityAdd, stateAdd, cAdd].join(" ")}
                   </Typography>
                 </Grid>
               </Grid>

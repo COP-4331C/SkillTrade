@@ -20,7 +20,7 @@ import * as SecureStore from 'expo-secure-store';
 import moment from "moment";
 // import { render } from 'react-dom';
 import StarRating from 'react-native-star-rating';
-import {useIsFocused} from "@react-navigation/native"
+import {useIsFocused} from "@react-navigation/native";
 
 // const Item = ({ title }) => ( // style={styles.item} // style={styles.title} ?
 //   <View > 

@@ -36,63 +36,8 @@ const EditProfileScreen = ({ navigation }) => {
     city: "",
     country: "",
     state: "",
-    /*firstname: '',
-    lastname: '',
-    password: '',
-    confirm_password: '',
-    check_email_InputChange: false,
-    check_firstnameInputChange: false,
-    check_lastnameInputChange: false,
-    secureTextEntry: true,
-    confirm_secureTextEntry: true,
-    isValidUser: true,
-    // firstClickUser: false,
-    isValidPassword: true, 
-    // firstClickPassword: false,
-    isValidFirstName: true,
-    // firstClickFirstName: false,
-    isValidLastName: true,
-    isValidConfirmPassword: true,
-    // firstClickConfirmPassword: false,
-  // isAllThere: true,*/
   });
-  {
-    /*const firstNameInputChange = (val) => { // check firstNameInputChange 
-  if(val.length > 0 && val.length <= 50){
-      setData({
-          ...data,
-          firstName:val,
-          //check_firstnameInputChange:true,
-          //isValidFirstName:true,
-          // firstClickUser: true
-      })
-  } else {
-      setData({
-          ...data,
-          firstName:val,
-          // check_firstnameInputChange:false,
-          // isValidFirstName:false,
-          // firstClickUser: true
-      })
-  }
-}*/
-  }
-
-  {
-    /* const [profileData, setProfileData] = React.useState({
-    firstName: '',
-    lastName: '',
-    aboutMe: '',
-    profilePic: '',
-    instagram: '',
-    twitter: '',
-    linkedIn: '',
-    _id: '',
-    city: '',
-    country: '',
-    state: '',
-  });*/
-  }
+  
 
   //let userToken = 'eyJhbGciOiJIUzI1NiJ9.dGVzdEBleGFtcGxlLmNvbQ.BGWbZofno0_fxz6vrrawBovDRO-RAlEe6oLCEjEC4gc';
   const [pickedImagePath, setPickedImagePath] = useState("");
@@ -141,64 +86,12 @@ const EditProfileScreen = ({ navigation }) => {
         setState(response.data["state"]);
         setCity(response.data["city"]);
         setLoading(false);
-        // handleFirstNameChange(response.data["firstName"]);
-        // console.warn("the firstname is " + data.firstName)
-        // handleLastNameChange(response.data["lastName"]);
-        // handleAboutMeChange(response.data["aboutMe"]);
-        // handleTwitterChange(response.data["twitter"]);
-        // handleInstagramChange(response.data["instagram"]);
-        // handleLinkedInChange(response.data["linkedIn"]);
-        // handleCountryChange(response.data["country"]);
-        // handleStateChange(response.data["state"]);
-        //handleCityChange(response.data["city"]);
-        // console.warn("Connetcted to profile!");
       })
       .catch(function (error) {
         console.warn(error);
       });
   }
 
-  /*useEffect(() => {
-    connectToProfileApi()
-  }, [])
-
-  async function getValueFor() {
-    let userToken = null;
-    try {
-        userToken =  await SecureStore.getItemAsync('userToken'); // need to add 'await' 
-        return userToken
-    } catch (e) {
-        console.warn('SecureStore error');
-    }
-  }
-
-  function connectToProfileApi(){
-    let userToken = getValueFor()
-    axios.get('https://cop4331c.herokuapp.com/api/user/profile',  {
-            headers: {
-              Authorization: `Bearer ${userToken}`  
-            }
-          })
-        .then(function(response) {
-          handlePicChange(response.data["profilePic"]);
-          handleFirstNameChange(response.data["firstName"]);
-          handleLastNameChange(response.data["lastName"]);
-          handleAboutMeChange(response.data["aboutMe"]);
-          handleTwitterChange(response.data["twitter"]);
-          handleInstagramChange(response.data["instagram"]);
-          handleLinkedInChange(response.data["linkedIn"]);
-          handleCountryChange(response.data["country"]);
-          handleStateChange(response.data["state"]);
-          handleCityChange(response.data["city"]);
-            // setData(response.data)
-            // setPickedImagePath(response.profilePic)
-            // setTwitterUrlPath(response.twitter)
-            // console.warn(profileData)
-        })
-        .catch(function(error) {
-            console.warn("Fail to connetcted to profile!")
-        });
-  }*/
   // connect to edit-profile api
   function connectToEditProfileApi(
     userToken,
@@ -235,13 +128,6 @@ const EditProfileScreen = ({ navigation }) => {
         }
       )
       .then(function (response) {
-        // console.warn("profile changed");
-        // navigation.goBack()
-        /*Alert.alert(
-                    "Profile Changed!", // Alert Title
-                    " ", // My Alert Msg
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
-                )*/
         Alert.alert(
           "",
           "Profile Changed!",
@@ -249,10 +135,8 @@ const EditProfileScreen = ({ navigation }) => {
           { cancelable: true }
         );
         navigation.goBack();
-        // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
-        // console.warn("profile not changed");
         Alert.alert("Must Have a First Name!", "Please try again.", {
           text: "OK",
           onPress: () => console.log("OK Pressed"),
@@ -275,11 +159,11 @@ const EditProfileScreen = ({ navigation }) => {
     return data;
   };
   // endpoint for uploading a picture
-  function uploadProfilePic(userToken, image) {
+  async function uploadProfilePic(userToken, image) {
     const data = createFileFormData(image);
     console.log(image);
     console.log(data);
-    axios
+    await axios
       .post(
         "https://cop4331c.herokuapp.com/api/user/upload-profile-pic",
         data,
@@ -292,20 +176,6 @@ const EditProfileScreen = ({ navigation }) => {
       )
       .then(function (response) {
         // console.warn("profile picture is changed");
-        // navigation.goBack()
-        // Alert.alert(
-        //   "Profile Changed!", // Alert Title
-        //   " ", // My Alert Msg
-        //   { text: "OK", onPress: () => console.log("OK Pressed") }
-        // );
-        // Alert.alert(
-        //   "",
-        //   "Profile Picture is Changed!",
-        //   [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        //   { cancelable: true }
-        // );
-        // navigation.goBack()
-        // navigation.navigate('ProfileScreen')
       })
       .catch(function (error) {
         console.log(error.message);

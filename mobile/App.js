@@ -67,7 +67,7 @@ const App = () => {
     }
   };
 
-  // LogBox.ignoreAllLogs(true); // Disable warning logbox
+  LogBox.ignoreAllLogs(true); // Disable warning logbox
 
   // create a loginState variable and assign value,
   // in the meanwhile, create a dispatch method use for changing the value of loginState.

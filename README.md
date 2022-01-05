@@ -39,7 +39,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Screen Shot][product-screenshot]](https://cop4331c.herokuapp.com/)
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Skill%20Trade%20wellcome%20page.png?raw=true)
 
 This is a project in Course: COP 4331C -- Processes for Object-Oriented Software Development <br>
 under the guidance of Prof. Rick Leinecker <br>
@@ -55,7 +55,7 @@ Here's our ideas: <br> <br>
 In this app, you can set what kind of skill you have and what kind of skill you want to learn, Users can exchange other's teaching time by their own teaching time or money or virtual currency which publish by the web.  <br>
 For example, you know Spanish at an advanced level, and you want to look for someone who can teach you beginning-level Chinese. You can post an announcement that you want a beginning-level teacher (you can call them "skiller") as below: " I would love to exchange 2 hours beginning-level Chinese education time with 1.5 hours advanced level Spanish education. also would like to pay by  virtual currency, please contact me if you are interested in".  <br>
 In the meanwhile, you can also search other's posts and try to find if anyone public Chinese related announcement. You can also set your skill public so that it is visible to others. they can send you a private message for quoting for your skill.  <br>
-For example, you search the “talent” page and find a person who has advanced-level Chinese skills. You can message him that "I want to learn some Chinese. If you want to learn some Spanish, we can exchange our skills. If you are not interested in learning Spanish I can pay you $20 per hour for the education. How do you think?" <br>
+For example, you search the “talent” page and find a person who has advanced-level Chinese skills. You can message him that "I want to learn some Chinese. If you want to learn some Spanish, we can exchange our skills. If you are not interested in learning Spanish I can pay you $20 per hour for the education. How do you think?" <br> </br>
 
 What we did:  <br>
 *  <br>
@@ -99,16 +99,48 @@ Mobile application demo: </br>
 
 <!-- ROADMAP -->
 ## Roadmap
-Use Case Diagram </br>
- </br>
-Entity Relationship Diagram (ERD) </br>
- </br>
-Class Diagram </br>
- </br>
-Activity Diagram </br>
- </br>
-Gantt Chart </br>
- </br>
+
+<details>
+           <summary>Use Case Diagram</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Charts/Use%20Case%20Diagram.png?raw=true)
+
+  </p>
+</details>
+
+<details>
+           <summary>Entity Relationship Diagram (ERD)</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Charts/Entity%20Relationship%20Diagram%20(ERD).png?raw=true)
+  </p>
+</details>
+
+<details>
+           <summary>Class Diagram</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Charts/Class%20Diagram.png?raw=true)
+  </p>
+</details>
+
+<details>
+           <summary>Activity Diagram</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Charts/Activity%20Diagram.png?raw=true) 
+  </p>
+</details>
+
+<details>
+           <summary>Gantt Chart</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Charts/Gantt%20Chart.png?raw=true) </br>
+  </p>
+</details>
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -144,30 +176,14 @@ Distributed under the MIT License. See file `LICENSE` for more information.
 <!-- TEAMMEMBERS -->
 ## Team Members
 
-Sterling Downs    -- Project Manager & Database
-Oscar Acuna       -- Web Frontend
-Muhtasim Ridwan   -- Web Frontend
-Weiyuan Wu        -- Mobile Frontend
-Raj Doshi         -- Mobile Frontend
-Rafa Lom          -- APIs
-Pedro Contipelli  -- APIs
+Sterling Downs    -- Project Manager & Database </br>
+Oscar Acuna       -- Web Frontend </br>
+Muhtasim Ridwan   -- Web Frontend </br>
+Weiyuan Wu        -- Mobile Frontend </br>
+Raj Doshi         -- Mobile Frontend </br>
+Rafa Lom          -- APIs </br>
+Pedro Contipelli  -- APIs </br>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png

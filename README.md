@@ -3,7 +3,7 @@
 <br />
 <div align="center">
 
-  <h3 align="center">Skill Trade Project</h3>
+  <h1 align="center">Skill Trade Project</h1>
 
   <p align="center">
     A awesome platform to learn skills between each others!
@@ -50,20 +50,20 @@ Mobile (demo): https://www.youtube.com/watch?v=6xdiIJK4ELs <br/>
 
 There are couple skill trading websites available on internet; however, We didn't find one that really match our needs so we created this enhanced one. We want to create a skills exchanging platform so amazing that it'll be the one that you love to use -- We define this website and it's mobile application not only a learning flatform but also a sosial application.
 
-Here's our ideas: <br> <br>
+<h3> Here's our ideas:</h3> <br>
 In this app, you can set what kind of skill you have and what kind of skill you want to learn, Users can exchange other's teaching time by their own teaching time or money or virtual currency which publish by the web.  <br>
 For example, you know Spanish at an advanced level, and you want to look for someone who can teach you beginning-level Chinese. You can post an announcement that you want a beginning-level teacher (you can call them "skiller") as below: " I would love to exchange 2 hours beginning-level Chinese education time with 1.5 hours advanced level Spanish education. also would like to pay by  virtual currency, please contact me if you are interested in".  <br>
 In the meanwhile, you can also search other's posts and try to find if anyone public Chinese related announcement. You can also set your skill public so that it is visible to others. they can send you a private message for quoting for your skill.  <br>
 For example, you search the “talent” page and find a person who has advanced-level Chinese skills. You can message him that "I want to learn some Chinese. If you want to learn some Spanish, we can exchange our skills. If you are not interested in learning Spanish I can pay you $20 per hour for the education. How do you think?" <br> </br>
 
-What you can do in our application:  <br>
+<h3> What you can do in our application: </h3>  <br>
 * Build and edit your profile page with your basic information and profile picture.<br>
 * Post a skill that you would like to teach with descrition and picture.<br>
 * Post a skill that you would like to learn. <br>
 * Message other user to negotiate time and price.<br>
 * Buy virtual currency as a payment method in your account. <br>
 * Write a review under other's profile page.
-* Search post by keyword.
+* Search post by keyword.<br><br>
 
 Of course, no one app will satisfy everyone since their needs may be different. So we'll be adding more functionality in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this Project!
 

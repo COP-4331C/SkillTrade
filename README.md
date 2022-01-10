@@ -180,7 +180,7 @@ Distributed under the MIT License. See file `LICENSE` for more information.
 <!-- TEAMMEMBERS -->
 ## Team Members
 
-Sterling Downs    -- Project Manager & Database </br>
+Sterling Downs    -- Project Manager </br>
 Oscar Acuna       -- Web Frontend </br>
 Muhtasim Ridwan   -- Web Frontend </br>
 Weiyuan Wu        -- Mobile Frontend </br>

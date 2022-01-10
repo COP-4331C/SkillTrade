@@ -93,6 +93,55 @@ Of course, no one app will satisfy everyone since their needs may be different. 
 
 Web sites demo: </br>
 
+<details>
+           <summary>Skill Trade wellcome page</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Skill%20Trade%20wellcome%20page.png?raw=true)
+
+  </p>
+</details>
+
+<details>
+           <summary>Home Page</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/HomePage.png?raw=true)
+
+  </p>
+</details>
+
+<details>
+           <summary>Profile Page</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Profile%20Page.png?raw=true)
+
+  </p>
+</details>
+
+<details>
+           <summary>Chat Page</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Chat%20Page.png?raw=true)
+
+  </p>
+</details>
+
+<details>
+           <summary>Skill Credits</summary>
+           <p>
+             
+![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Skill%20Credits.png?raw=true)
+
+  </p>
+</details>
+
+
+
+
+</br></br>
 Mobile application demo: (click the below image to play) </br>
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/6xdiIJK4ELs/0.jpg)](https://www.youtube.com/watch?v=6xdiIJK4ELs&feature=youtu.be)

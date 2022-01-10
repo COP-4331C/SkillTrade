@@ -46,8 +46,7 @@ under the guidance of Prof. Rick Leinecker <br>
 University of Central Florida (UCF) <br>
 Fall 2021 <br>
 Web: https://cop4331c.herokuapp.com/ <br/>
-Mobile: show in below demo. 
-<br/>
+Mobile (demo): https://www.youtube.com/watch?v=6xdiIJK4ELs <br/>
 
 There are couple skill trading websites available on internet; however, We didn't find one that really match our needs so we created this enhanced one. We want to create a skills exchanging platform so amazing that it'll be the one that you love to use -- We define this website and it's mobile application not only a learning flatform but also a sosial application.
 

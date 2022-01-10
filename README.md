@@ -57,11 +57,14 @@ For example, you know Spanish at an advanced level, and you want to look for som
 In the meanwhile, you can also search other's posts and try to find if anyone public Chinese related announcement. You can also set your skill public so that it is visible to others. they can send you a private message for quoting for your skill.  <br>
 For example, you search the “talent” page and find a person who has advanced-level Chinese skills. You can message him that "I want to learn some Chinese. If you want to learn some Spanish, we can exchange our skills. If you are not interested in learning Spanish I can pay you $20 per hour for the education. How do you think?" <br> </br>
 
-What we did:  <br>
-*  <br>
-*  <br>
-*  <br>
-*  <br>
+What you can do in our application:  <br>
+* Build and edit your profile page with your basic information and profile picture.<br>
+* Post a skill that you would like to teach with descrition and picture.<br>
+* Post a skill that you would like to learn. <br>
+* Message other user to negotiate time and price.<br>
+* Buy virtual currency as a payment method in your account. <br>
+* Write a review under other's profile page.
+* Search post by keyword.
 
 Of course, no one app will satisfy everyone since their needs may be different. So we'll be adding more functionality in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this Project!
 
@@ -92,6 +95,8 @@ Of course, no one app will satisfy everyone since their needs may be different. 
 Web sites demo: </br>
 
 Mobile application demo: </br>
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/6xdiIJK4ELs/0.jpg)](https://www.youtube.com/watch?v=6xdiIJK4ELs&feature=youtu.be)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

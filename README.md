@@ -48,7 +48,7 @@ Fall 2021 <br>
 Web: https://cop4331c.herokuapp.com/ <br/>
 Mobile (demo): https://www.youtube.com/watch?v=6xdiIJK4ELs <br/>
 
-There are couple skill trading websites available on internet; however, We didn't find one that really match our needs so we created this enhanced one. We want to create a skills exchanging platform so amazing that it'll be the one that you love to use -- We define this website and it's mobile application not only a learning flatform but also a sosial application.
+There are a few skill trading websites available on internet. However, many of these websites are modelled of the idea of group learning rather than personalized learning. We want to create a skill exchange platform that helps users learn skills in the personalized manner that they deserve. We define this website and it's mobile application not only as a learning platform but also as a social application.
 
 <h3> Here's our ideas:</h3> <br>
 In this app, you can set what kind of skill you have and what kind of skill you want to learn, Users can exchange other's teaching time by their own teaching time or money or virtual currency which publish by the web.  <br>
@@ -58,14 +58,14 @@ For example, you search the “talent” page and find a person who has advanced
 
 <h3> What you can do in our application: </h3>  <br>
 * Build and edit your profile page with your basic information and profile picture.<br>
-* Post a skill that you would like to teach with descrition and picture.<br>
+* Post a skill that you would like to teach with description and picture.<br>
 * Post a skill that you would like to learn. <br>
-* Message other user to negotiate time and price.<br>
+* Message another user to negotiate time and price.<br>
 * Buy virtual currency as a payment method in your account. <br>
 * Write a review under other's profile page.
 * Search post by keyword.<br><br>
 
-Of course, no one app will satisfy everyone since their needs may be different. So we'll be adding more functionality in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this Project!
+Of course, no one app will satisfy everyone since their needs may be different. So we'll be adding more functionality in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to everyone that hascontributed towards expanding this Project!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -94,7 +94,7 @@ Of course, no one app will satisfy everyone since their needs may be different. 
 Web sites demo: </br>
 
 <details>
-           <summary>Skill Trade wellcome page</summary>
+           <summary>Skill Trade welcome page</summary>
            <p>
              
 ![alt text](https://github.com/COP-4331C/Large-Project/blob/main/Web%20Layouts/Skill%20Trade%20wellcome%20page.png?raw=true)
